@@ -3,8 +3,7 @@ GPU-accelerated OpenFMO
 
 **GPU-accelerated OpenFMO version 1.0 relaesed. (2018-04-01)**
 
-**Tentative new OpenFMO official site:** http://www.openfmo.org/_new/ ; 
-(Original one: http://www.openfmo.org/ )
+**OpenFMO official site:** http://www.openfmo.org/ ;  
 
 What is OpenFMO?
 ----------------
@@ -426,7 +425,7 @@ Executing OpenFMO
    -ng and -np command-line arguments.**
 
    The details of the command-line arguments to *ofmo-master* 
-   are listed in Table 1 at OpenFMO official site ( http://www.openfmo.org/_new/ ). 
+   are listed in Table 1 at OpenFMO official site ( http://www.openfmo.org/ ). 
 
 
 3. Multi-thread Execution of "skeleton-RHF"
@@ -572,7 +571,7 @@ Input File Format
 
 
    See the details of input format, input groups, and their options 
-   used in OpenFMO at OpenFMO official site ( http://www.openfmo.org/_new/ ).
+   used in OpenFMO at OpenFMO official site ( http://www.openfmo.org/ ).
 
      file-block:: sample input
 
@@ -617,7 +616,7 @@ Samples
 -------
 
 You can download some input/output files for "skeleton-RHF" and OpenFMO
-at OpenFMO official site ( http://www.openfmo.org/_new/ ).
+at OpenFMO official site ( http://www.openfmo.org/ ).
 
 
 

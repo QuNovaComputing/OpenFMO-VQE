@@ -7,7 +7,11 @@
  *
  * 4中心クーロン相互作用項を、最後の1つを除いて、worker=0でも
  * 計算させるようにした
- *
+ * 
+ * A file that describes functions related to fragment electronic state calculation
+ * The calculation of the 2-center Coulomb integral is now divided for each integral type.
+ * The 4-center Coulomb interaction term is now calculated even with worker = 0, except for the last one.
+ * 
  * */
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,6 +112,7 @@ static int is_in_fragment( const int ifrag, const int nmonomer,
 
 /* --------------------------------------------------------------
  * ハイブリッド並列時のワーカー数、ワーカーIDの取得に関わる関数群
+ * Function group related to acquisition of worker number and worker ID at the time of hybrid parallel
  * -------------------------------------------------------------- */
 static int _nworkers_ = 1;
 static int *_workerid_ = NULL;
@@ -162,8 +167,10 @@ static int ofmo_mt_get_workerid( const int mythread ) {
 }
 /* -----------------------------------------------------
  * モノマーをAO数の大きい順に並び替えたリストの作成
+ * Creating a list of monomers sorted in descending order of AO number
  * ----------------------------------------------------- */
 /** ２つの整数を比較する関数
+ *  A function that compares two integers
  * */
 static int comp2( const void *p1, const void *p2 ) {
     return ( (*(int*)p2) - (*(int*)p1) );	// good

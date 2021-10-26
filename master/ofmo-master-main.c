@@ -87,7 +87,7 @@ static void ofmo_get_service_name_header( char *header ) {
     }
 }
 
-// ----- SCC収束条件を決める関数 -----
+// ----- Function that determines the SCC convergence condition -----
 static int ofmo_get_monomer_scfconv( double dE ) {
     static int scfconv_now = 2, called=false, scfconv;
     static double sccconvd;
@@ -279,8 +279,8 @@ static int ofmo_create_worker( int worker_size, int workerid,
     return 0;
 }
 
-/* ************ OmniRPCの関数のまね **************** */
-// 非同期で、ワーカーにジョブを渡す
+/* ************ Mimicking OmniRPC functions **************** */
+// Asynchronously pass the job to the worker
 static MPI_Request ofmo_call_async_worker( MPI_Comm comm_worker,
 	int imsg_sz, int imsg[],
 	int dmsg_sz, double dmsg[] ) {
@@ -485,7 +485,7 @@ int main( int argc, char *argv[] ) {
     int resultlen;
     char hostname[MPI_MAX_PROCESSOR_NAME];
 
-    // ****************** マスタープロセスの初期化 *********************
+    // ****************** Master process initialization *********************
     MPI_Init( &argc, &argv );
     ET0 = et0 = MPI_Wtime();
     MPI_Comm_size( MPI_COMM_WORLD, &nprocs );
@@ -495,9 +495,9 @@ int main( int argc, char *argv[] ) {
         MPI_Finalize();
         return 0;
     }
-    // 入力データ、環境変数などの読み込み
-    // マスタープロセスだけが、直接、これらのデータにアクセスできると仮定
-    // 入力ファイル名の取得
+    // Reading input data, environment variables, etc.
+    // Assume that only the master process can access these data directly
+    // Get input file name
     /*
     if ( (p=getenv("OFMO_INPUT")) == NULL ) {
 	dbg("OFMO_INPUT variable is not set\n");
@@ -511,7 +511,7 @@ int main( int argc, char *argv[] ) {
     dens[0] = '\0';
     if ( (p=getenv("OFMO_FILE_NAME")) != NULL ) strncpy( dens, p, MAXSTRLEN );
 
-    // 起動可能プロセス数の取得
+    // Get the number of bootable processes
     /*
     if ( (p=getenv("OFMO_NPROCS")) == NULL ) {
 	dbg("OFMO_NPROCS variable is not set\n");
@@ -674,7 +674,7 @@ int main( int argc, char *argv[] ) {
     strncpy( port_name_prefix, p, MAXSTRLEN);
     port_name_prefix[MAXSTRLEN-1] = '\0';
 #endif
-    // プロファイルデータファイル名のヘッダ取得
+    // Get header of profile data file name
     if ( (p=getenv("OFMO_HEADER")) != NULL ) {
 	strncpy( header, p, MAXSTRLEN );
 	header[MAXSTRLEN-1] = '\0';
@@ -691,14 +691,14 @@ int main( int argc, char *argv[] ) {
     else strncpy( bindir, "./", MAXSTRLEN );
     }
     bindir[MAXSTRLEN-1] = '\0';
-    // ローカルな入力ファイルの置き場所
+    // Location of local input files
     if (local_input_dir[0]=='\0') {
     if ( (p=getenv("OFMO_LOCAL_INPUT_DIR")) != NULL )
 	strncpy( local_input_dir, p, MAXSTRLEN );
     else strncpy( local_input_dir, "./", MAXSTRLEN );
     }
     local_input_dir[MAXSTRLEN-1] = '\0';
-    // 入力データを読み込む
+    // Read input data
     if ( ofmo_init( input, MPI_COMM_WORLD ) != 0 ) {
 	dbg("failure in input from file (%s)\n", input );
 	//MPI_Abort( MPI_COMM_WORLD, 6 );
@@ -726,7 +726,7 @@ int main( int argc, char *argv[] ) {
       if (ierr!=0) eribfsz = 0;
     }
 
-    // 各ワーカーのプロセス数（グループサイズ）の計算
+    // Calculation of the number of processes (group size) for each worker
     group_size = ( nmaxprocs - (nioprocs*niogroup) - 1 ) / ngroup;
 
     printf("ngroup       = %d\n", ngroup );
@@ -759,7 +759,7 @@ int main( int argc, char *argv[] ) {
     printf("master host name = %s\n", hostname );
     printf("-----------------------------------------------------\n");
 
-    // FMO計算で用いるデータ構造の決定
+    // Determining the data structure used in FMO calculations
     int retval, maxworkers=ngroup, nfrag;
     int ndata=11, nmservs=niogroup, mserv_size=nioprocs, mserv_id;
     int *data_target, *data_offset, *data_nelems;
@@ -773,7 +773,7 @@ int main( int argc, char *argv[] ) {
 	    "Finish Initialization", (et1-et0), (et1-ET0) );
     fflush(stdout);
 
-    // populationデータ作成のための初期化
+    // Initialization for population data creation
     double *atpop_total, *aopop_total, *aopop_frg, *atpop_frg;
     int *fsao2tuao, *fatom2tatom, fnao, fnat, bufsz_aop, bufsz_atp;
     int nao, natom, maxnfao, maxnfatom, nbody;
@@ -790,7 +790,7 @@ int main( int argc, char *argv[] ) {
     memset( atpop_total, '\0', sizeof(double)*natom );
     memset( aopop_total, '\0', sizeof(double)*nao );
 
-    // *************** メモリサーバーの起動 *****************
+    // *************** Start memory server *****************
     MPI_Comm *comm_mservs;
     int *used_mservs;
     et0 = MPI_Wtime();
@@ -820,7 +820,7 @@ int main( int argc, char *argv[] ) {
 	    "Finish to Create Memory Servers", (et1-et0), (et1-ET0) );
     fflush(stdout);
 
-    // ******************** workerの起動 *********************
+    // ******************** Start worker *********************
     int workerid, nworkers=ngroup, worker_size=group_size;
     int comped_data_size, max_comped_data_size;
     int limit, ndiv, nmod, def_mserv_id;
@@ -863,7 +863,7 @@ int main( int argc, char *argv[] ) {
 	    "Finish to Create Workers", (et1-et0), (et1-ET0) );
     fflush(stdout);
 
-    // *************** メモリサーバーとワーカーとの接続要求 *************
+    // *************** Connection request between memory server and worker *************
     et0 = MPI_Wtime();
     imsg[OFMO_I_CMD] = OFMO_ACCEPT;
     for ( workerid=0; workerid<nworkers; workerid++ ) {
@@ -880,7 +880,7 @@ int main( int argc, char *argv[] ) {
     printf("##T %38s : lap time= %10.6f ( total etime= %10.6f )\n",
 	    "Finish to Connect Mservs & Workers", (et1-et0), (et1-ET0) );
     fflush(stdout);
-    // ワーカーのバリア
+    // Worker barrier
     ofmo_worker_barrier( nworkers, comm_workers );
 
     int ifrag;
@@ -888,21 +888,21 @@ int main( int argc, char *argv[] ) {
     MPI_Request *req_workers;
     int **issued_job_list;
 
-    /* ワーカーに指示したジョブのリスト */
+    /* List of jobs instructed to workers */
     issued_job_list = ofmo_alloc_imatrix( nworkers, (MAXNJOB*2) );
     for ( workerid=0; workerid<nworkers; workerid++ ) {
 	for ( int i=0; i<(MAXNJOB*2); i++ )
 	    issued_job_list[workerid][i]=-1;
     }
-    ofmo_init_frag_order();	// モノマーをAO数の大きい順にソート
+    ofmo_init_frag_order();	// Sort monomers in descending order of AO number
 
     req_workers = (MPI_Request*)malloc( sizeof(MPI_Request) * ngroup );
     dmsgs = ofmo_alloc_dmatrix( ngroup, OFMO_DMSG_SZ );
 
-    // ******************* 初期密度行列計算 *********************
+    // ******************* Initial density matrix calculation *********************
     int calc_init_dens = true;
     et0 = MPI_Wtime();
-    // ファイルからデータを読み込む
+    // Read data from file
     //if ( (p=getenv("OFMO_FILE_NAME")) != NULL ) {
     if ( dens[0] != '\0' ) {
         p = dens;
@@ -915,7 +915,7 @@ int main( int argc, char *argv[] ) {
 	ifrag = 0;
 	imsg[OFMO_I_CMD]  = OFMO_INIT_DENS;
 	imsg[OFMO_I_NMON] = 1;
-	// まずはじめに、すべてのワーカーに一通り、ジョブを投げる
+	// First of all, throw a job to all workers
 	for ( workerid=0; workerid<nworkers; workerid++ ) {
 	    imsg[OFMO_I_MON1] = ifrag;
 	    req_workers[workerid] =
@@ -932,8 +932,7 @@ int main( int argc, char *argv[] ) {
 			OFMO_IMSG_SZ, imsg, OFMO_DMSG_SZ, dmsgs[workerid] );
 	    ifrag += group_size;
 	}
-	// 最初に戻ってきた１つのワーカーに対して、モノマー間距離の
-	// 計算を依頼する
+	// Ask the first worker to calculate the intermonomer distance
 	workerid = ofmo_waitany_worker( nworkers, req_workers );
 	imsg[OFMO_I_CMD] = OFMO_DISTANCE;
 	req_workers[workerid] =
@@ -941,11 +940,11 @@ int main( int argc, char *argv[] ) {
 		    OFMO_IMSG_SZ, imsg, OFMO_DMSG_SZ, dmsgs[workerid] );
 	printf("calc. inter-frag distance list = %d\n", workerid );
 	fflush( stdout );
-	// すべてのワーカープロセスでの密度行列計算が終了するのを待つ
+	// Wait for the density matrix calculation in all worker processes to finish
 	ofmo_waitall_worker( nworkers, req_workers );
-	// ここでバリア同期をとる
+	// Barrier synchronization here
 	ofmo_worker_barrier( nworkers, comm_workers );
-	// モノマーデータの交換（更新）を行う
+	// Exchange (update) monomer data
 	//ofmo_mserv_barrier( nmservs, comm_mservs );
 	ofmo_update_monomer_data_worker( nworkers, comm_workers );
 	ofmo_update_monomer_data_master();
@@ -955,7 +954,7 @@ int main( int argc, char *argv[] ) {
 	    "Finish to Calculate Initial Density", (et1-et0), (et1-ET0) );
     fflush(stdout);
     if ( nbody == 0 ) goto final;
-    // ============= モノマーSCC計算 =================
+    // ============= Monomer SCC calculation =================
     double etscc0, etscc1;
     int itera, maxscc, sccconv, scfconv_now;
     double total_energy, total_energy0;
@@ -966,7 +965,7 @@ int main( int argc, char *argv[] ) {
     imsg[OFMO_I_NMON]   = 1;
     ofmo_data_get_vals("maxscc sccconv", &maxscc, &sccconv );
     scc_tol = pow( 0.1e0, (double)sccconv );
-    if ( calc_init_dens == false ) {	// ファイルから読み込んだ場合
+    if ( calc_init_dens == false ) {	// When reading from a file
 	double *e0s;
 	e0s = (double*)malloc( sizeof(double) * nfrag );
 	ofmo_master_get( comm_mservs[0], OFMO_ENERGY0, -1, e0s );
@@ -974,6 +973,7 @@ int main( int argc, char *argv[] ) {
 	for ( ifrag=0; ifrag<nfrag; ifrag++ ) total_energy0_prev += e0s[ifrag];
 	free( e0s );
     }
+    // Start Iteration
     printf("---- start SCC (maxscc=%d, sccconv=%d) ----\n",
 	    maxscc, sccconv );
     fflush(stdout);
@@ -983,7 +983,7 @@ int main( int argc, char *argv[] ) {
 	imsg[OFMO_I_SCC]  = itera;
 	imsg[OFMO_I_CONV] = scfconv_now = ofmo_get_monomer_scfconv( dE );
 	total_energy = total_energy0 = 0.e0;
-	// すべてのモノマー計算を各グループに割り振る
+	// Allocate all monomer calculations to each group
 	for ( int i=0; i<nfrag; i++ ) {
 	    imsg[OFMO_I_MON1] = frag_order[i];
 	    //imsg[OFMO_I_MON1] = i;
@@ -1000,7 +1000,7 @@ int main( int argc, char *argv[] ) {
 		    imsg_sz, imsg, dmsg_sz, dmsgs[workerid] );
 	    issued_job_list[workerid][0] = imsg[OFMO_I_MON1];
 	}
-	// すべてのワーカーの終了を待つ
+	// Wait for the end of all workers
 	ofmo_waitall_worker( nworkers, req_workers );
 
 	for ( workerid=0; workerid<nworkers; workerid++ ) {
@@ -1013,7 +1013,7 @@ int main( int argc, char *argv[] ) {
 	printf(" energy = %16.8f  energy0 = %16.8f  ( %10.6f )\n",
 		total_energy, total_energy0, (et1-et0) );
 	fflush( stdout );
-	// モノマーデータの交換（更新）を行う
+	// Exchange (update) monomer data
 	ofmo_worker_barrier( nworkers, comm_workers );
 	//ofmo_mserv_barrier( nmservs, comm_mservs );
 	ofmo_update_monomer_data_worker( nworkers, comm_workers );

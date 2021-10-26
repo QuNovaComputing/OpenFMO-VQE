@@ -109,7 +109,7 @@ static struct _val_carrier_ vc[] = {
     {"matx", PP_DBLE, NULL, "x-coordinate of atoms in each monomer"},
     {"maty", PP_DBLE, NULL, "y-coordinate of atoms in each monomer"},
     {"matz", PP_DBLE, NULL, "z-coordinate of atoms in each monomer"},
-    /* 分子全体の基底関数データ */
+    /* Basis set data for the entire molecule */
     {"nsbs", INT, NULL, "# of kind of basis set used in calculation"},
     {"bslst", PP_CHAR, NULL, "list of basis set names"},
     {"maxlqn", INT, NULL, "maximum orbital quantum number"},
@@ -119,7 +119,7 @@ static struct _val_carrier_ vc[] = {
     {"ushel_lqn", P_INT, NULL, "orbital quantum number of CS"},
     {"ushel_ini", P_INT, NULL, "leading AO number of CS"},
     {"atm_lcs", P_INT, NULL, "leading CS number of atom"},
-    /* モノマー基底関数に関するデータ */
+    /* Data on monomer basis functions */
     {"maxnfcs", INT, NULL, "maximum number of CS in each monomer"},
     {"maxnfao", INT, NULL, "maximum number of AO in each monomer"},
     {"maxnfps", INT, NULL, "maximum number of PS in each monomer"},
@@ -134,14 +134,14 @@ static struct _val_carrier_ vc[] = {
     {"mshel_ini", PP_INT, NULL, "leading AO number of each monomer"},
     {"mprim_exp", PP_DBLE, NULL, "orbital exponent"},
     {"mprim_coe", PP_DBLE, NULL, "contraction coef. with norm. coef."},
-    /* モノマーAO変換テーブル */
+    /* Monomer AO conversion table */
     {"msao2muao", PP_INT, NULL, "monomer sorted AO to monomer unsorted AO"},
     {"msao2tuao", PP_INT, NULL, "monomer sorted AO to total unsorted AO"},
     {"muao2tuao", PP_INT, NULL, "monomer unsorted AO to total unsorted AO"},
-    /* モノマーpopulationデータ */
+    /* Monomer population data */
     {"maopop", PP_DBLE, NULL, "AO population data for monomers"},
     {"matpop", PP_DBLE, NULL, "atomic population data for monomers"},
-    /* フラグメント（モノマー以外）のデータ */
+    /* Fragment (non-monomer) data */
     {"fnatom", INT, NULL, "# of atom in fragment"},
     {"fncs", INT, NULL, "# of CS in fragment"},
     {"fnao", INT, NULL, "# of AO in fragment"},

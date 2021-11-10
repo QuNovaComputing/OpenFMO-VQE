@@ -128,14 +128,14 @@ static void ofmo_scf_dealloc() {
 
 /** SCF関数内部で利用する配列を確保する関数
  *
- * SCF関数内部で利用する配列を確保する関数。
- * 以下の配列を確保している。
+ * SCF function A function that allocates an array to be used inside.
+ * The following sequence is secured.
  *
- * @arg \c _U_ 重なり行列をCholesky分解した結果（正方行列）
- * @arg \c _Dold_ SCFステップの１つ前の密度行列（圧縮U形式）
- * @arg \c _G_ ２電子ハミルトン行列を代入する配列（圧縮U形式）
- * @arg \c _dD_ SCFステップの１つ前との密度行列差（圧縮U形式）
- * @arg \c _dG_ 密度行列差を元に計算した２電子ハミルトン行列（圧縮U形式）。
+ * @arg \c _U_ Cholesky decomposition result of overlap matrix (square matrix)
+ * @arg \c _Dold_ Density matrix immediately before the SCF step (compressed U format)
+ * @arg \c _G_ Array to substitute 2-electron Hamilton matrix (compressed U format)
+ * @arg \c _dD_ Density matrix difference from the one before the SCF step (compressed U format)
+ * @arg \c _dG_ Two-electron Hamilton matrix (compressed U format) calculated based on the density matrix difference.
  *     incrementalなFock行列生成時に用いる
  * @arg \c _T_ \c MPI_Allreduce 関数などの利用時に用いる一時配列(正方行列）
  * @arg _C_ MO係数行列が代入される配列（正方行列）
@@ -144,8 +144,8 @@ static void ofmo_scf_dealloc() {
  *
  * @param[in] nao AO数
  *
- * @retval  0 正常終了（領域の確保が出来た）
- * @retval -1 異常終了（領域確保に失敗した）
+ * @retval  0 Normal termination (area was secured)
+ * @retval -1 Abnormal termination (failed to secure area)
  *
  * @ingroup ofmo-rhf
  * */
@@ -195,7 +195,7 @@ int ofmo_scf_init( const int nao ) {
     return 0;
 }
 
-/** 核間反発エネルギーを求める
+/** Seeking internuclear repulsive energy
  *
  * 核間反発エネルギーを計算する。単位はhartreeである。
  *
@@ -233,20 +233,20 @@ double ofmo_calc_nuclear_repulsion(
     return enuc;
 }
 
-/** 閉殻系の電子密度行列をMO係数行列から求める
+/** Find the electron density matrix of a closed shell system from the MO coefficient matrix
  *
- * 閉殻系の電子密度行列を、与えられたMO係数行列を用いて計算する
+ * Calculate the electron density matrix of a closed shell system using a given MO coefficient matrix
  *
  * @attention
- * @li 内部で利用している関数 \c ofmo_transpose_matrix ,
+ * @li Functions used internally \c ofmo_transpose_matrix ,
  *     \c ofmo_dot_product
- * @li 内部で利用している一時配列 \c _T_
+ * @li Temporary array used internally
+ * 	   \c _T_
  *
- * @param[in] nao AO数
- * @param[in] nocc 閉殻軌道数。電子数の半分である。
- * @param[in] C[nao*nao] MO係数行列が代入された配列
- * @param[out] D[nao*(nao+1)/2] 計算された密度行列要素が代入される
- *     配列（圧縮U形式）
+ * @param[in] nao AO number
+ * @param[in] nocc Number of closed shell orbitals. It is half the number of electrons.
+ * @param[in] C[nao*nao] Array to which MO coefficient matrix is ​​assigned
+ * @param[out] D[nao*(nao+1)/2] Array to which the calculated density matrix elements are assigned (compressed U format)
  *
  * @ingroup ofmo-rhf
  * */
@@ -266,22 +266,23 @@ int ofmo_scf_make_rhf_density(const int nao, const int nocc,
     return 0;
 }
 
-/** Fock行列を計算して、電子エネルギーを求める
+/** Calculate the Fock matrix to find the electron energy
  *
- * 与えられた１電子ハミルトン行列と２電子ハミルトン行列をもとに、
- * Fock行列を計算する。また、それらと密度行列を使って、電子エネルギー
- * を求める。
+ * The Fock matrix is ​​calculated based on the given 1-electron Hamilton matrix
+ * and 2-electron Hamilton matrix. We also use them and the density matrix
+ * to find the electron energy.
  *
  * @attention
- * @li 与えられる配列は、すべて、圧縮U形式である
+ * @li All given arrays are in compressed U format
  *
- * @param[in] nao AO数（＝行列サイズ）
- * @param[in] D[] 密度行列
- * @param[in] H[] 一電子ハミルトン行列。\c const 形式ではないが、
- *     実質、この関数呼び出しでは値が変化しない
- * @param[out] F[] Fock行列（H+G）
+ * @param[in] nao Number of AOs (= matrix size)
+ * @param[in] D[] Density matrix
+ * @param[in] H[] One-electron Hamilton matrix. 
+ * 		\ c Not in const format, but in effect this function call doesn't
+ * 		change the value
+ * @param[out] F[] Fock matrix (H + G)
  *
- * @return 計算された電子エネルギーの値
+ * @return Calculated electron energy value
  *
  * @ingroup ofmo-rhf
  * */
@@ -298,7 +299,7 @@ double ofmo_scf_rhf_energy(const int nao, const double D[],
 }
 
 
-/** Mulliken population解析を行う
+/** Perform Mulliken population analysis
  *
  * @param[in] nat 原子数
  * @param[in] nao AO数
@@ -561,40 +562,40 @@ int ofmo_scf_rhf(
 	MPI_Comm comm, const int maxlqn, const double Enuc,
 	const int ncs, const int nao,
 	const int leading_cs[],
-	// 基底関数データ
+	// Basis set data
 	const int shel_atm[], const int shel_ini[],
 	const double atom_x[], const double atom_y[],
 	const double atom_z[],
-	// カットオフテーブルデータ
+	// Cutoff table data
 	const int leading_cs_pair[], const double csp_schwarz[],
 	const int csp_ics[], const int csp_jcs[],
 	const int csp_leading_ps_pair[],
 	const double psp_zeta[], const double psp_dkps[],
 	const double psp_xiza[],
-	// 分子データ
+	// Molecular data
 	const int nat,
 	const int nocc,
-	// 積分データ
+	// Integral data
 	double S[], double H[],
-	// 制御用データ
+	// Control data
 	const int maxscfcyc, const double scfe, const double scfd,
-	// 結果代入用データ
+	// Result substitution data
 	double D[], double C[], double moe[], double *Etot) {
     int nao2;
     double *U, *Dold, *dG, *dD, *TMP, *F;
     double Eold, Enew, deltaD = 1.e100, deltaE;
     int itera, myrank, nprocs;
     double errdiis=0.0e0;
-    // 様々な閾値関連変数
+    // Various threshold related variables
     double tol_diis = 1.e-2;
-    // 様々なフラグ
+    // Various flags
     int dodiis=false, flag_scf;
     //int doshift=false;
     int ierr;
     // ODA
     int koda;
     double *Foda, *Doda, Eoda, lambda1;
-    // シフト演算子関連
+    // Shift operator related
     //double shifto = 1.0, shiftv =1.0;
     int cid_gmat;
     int tid_init, tid_gmat, tid_allred, tid_diis, tid_diag, tid_bcast;
@@ -647,7 +648,7 @@ int ofmo_scf_rhf(
     F    = _F_;
     Foda = _Foda_;
     Doda = _Doda_;
-    // 重なり行列のCholesky分解
+    // Cholesky decomposition of overlap matrix
     ofmo_unpack_matrix(nao, S, U);
 
     ierr = ofmo_chodec(nao, U);
@@ -657,7 +658,7 @@ int ofmo_scf_rhf(
 	    dbg("ERROR: Failure in Cholesky decomposition of S\n");
 	return -1;
     }
-    // DIIS用にS=U'UのUを保存
+    // Save U with S = U'U for DIIS
     ofmo_diis_init( nao, S );
     // 初期設定
     //Eold = ZERO;

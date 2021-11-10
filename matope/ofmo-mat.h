@@ -1,8 +1,8 @@
 /**
  * @file ofmo-mat.h
  *
- * 量子化学計算で用いる各種行列演算、行列操作のための関数の
- * プロトタイプ宣言を行っているヘッダファイル
+ * Header file that declares various matrix operations and function 
+ * prototypes for matrix operations used in quantum chemistry calculations
  *
  * */
 #ifndef _OFMO_MAT_H_

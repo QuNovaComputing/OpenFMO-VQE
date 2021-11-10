@@ -1,6 +1,6 @@
 /**
  * @file ofmo-diis.c
- * SCF収束を加速するための関数を定義してあるファイル。
+ * A file that defines functions for accelerating SCF convergence.
  *
  * @attention
  * - この関数群からは、\c ofmo-mat.h で定義されている関数を呼び出している

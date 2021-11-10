@@ -142,17 +142,18 @@ void ofmo_reset_monomer_data_workerp() {
     atpnew = OFMO_ATPOP2;
 }
 
-/** モノマー密度行列を取得する関数（集団呼び出し）
+/** Function to get the monomer density matrix (group call)
  *
- * モノマー密度行列を取得する関数。終了時には、引数で与えられた
- * コミュニケータに属するすべてのプロセスが、密度行列データを取得する。
- * この関数内部で、最近参照したいくつかのモノマー密度行列データが
- * キャッシュされているので、キャッシュヒット時には、通信せずに
- * キャッシュされたデータをコピーしてもちいる。キャッシュミスした
- * 場合には、指定されたモノマー密度行列データを通信で
- * 取得して、もっとも古く参照したデータの代わりにキャッシュする。
+ * A function to get the monomer density matrix.
+ * At the end, all processes belonging to the communicator given in
+ * the argument get the density matrix data. Since some recently
+ * referenced monomer density matrix data is cached inside this function,
+ * the cached data is copied without communication at the time of cache
+ * hit. If a cache miss occurs, the specified monomer density matrix
+ * data is acquired by communication and cached in place of the oldest
+ * referenced data.
  *
- * @li \c MAXDENCACHE キャッシュする密度行列データの最大数
+ * @li \c MAXDENCACHE Maximum number of density matrix data to cache
  *
  * @ingroup ofmo-calc
  *

@@ -43,12 +43,12 @@
 
 #define BOHR_RADIUS 0.52917724924e0
 
-// データ塊数の最大値
+// Maximum number of data chunks
 #ifndef OFMO_MAX_DATA
 #define OFMO_MAX_DATA 16
 #endif
 
-// マスタからの依頼のID
+// ID of the request from the master
 #define OFMO_FINALIZE		0
 #define OFMO_INIT_DENS		1
 #define OFMO_SCF		2
@@ -63,34 +63,33 @@
 #define OFMO_RESET_MON_DATA	11
 #define OFMO_GET_POP_DATA	12
 
-// 計算手法
+// Calculation method
 #define OFMO_UNDEF	0
 #define OFMO_RHF	1
 #define OFMO_RIMP2	2
 #define OFMO_DFT	3
 
-// ワーカからマスタに転送するpopulationデータの種類
-#define	OFMO_BOTH_POPS	0	// AO pop. Atomic pop. の両方
-#define OFMO_AOPOP_ONLY	1	// AO pop. のみ
-#define OFMO_ATPOP_ONLY	2	// atomic pop. のみ
+// Types of population data to transfer from the worker to the master
+#define	OFMO_BOTH_POPS	0	// AO pop. Atomic pop. Both
+#define OFMO_AOPOP_ONLY	1	// AO pop. Only
+#define OFMO_ATPOP_ONLY	2	// atomic pop. Only
 
-// ES dimerの計算や4中心項の数
-// 注意点：MAXNJOB <= MAXNIFC4C/2
+// ES dimer calculation and number of 4 central terms
+// Critical Point：MAXNJOB <= MAXNIFC4C/2
 #define MAXNIFC4C	64
 #define MAXNJOB		16
 #define NLINE		4
 
-// マスター、ワーカー、メモリサーバー間の信号伝達の要素数
+// Number of elements of signal transmission between master, worker and memory server
 
-#define OFMO_I_CMD	0	// 計算の種類、処理内容
-#define OFMO_I_METHOD	1	// 計算手法
-#define OFMO_I_SCC	2	// 現在のSCC繰り返し回数
-#define OFMO_I_CONV	3	// 収束条件
-#define OFMO_I_NMON	5	// 関係するモノマー数
-				// ES dimer計算時は、計算する近似ダイマー数
-#define OFMO_I_MON1	6	// モノマー１
-#define OFMO_I_MON2	7	// モノマー２
-#define OFMO_I_MON3	8	// モノマー３
+#define OFMO_I_CMD	0	// Calculation type, processing content
+#define OFMO_I_METHOD	1	// Calculation method
+#define OFMO_I_SCC	2	// Current SCC repeat count
+#define OFMO_I_CONV	3	// Convergence condition
+#define OFMO_I_NMON	5	// Number of monomers involved
+				// When calculating ES dimer, the approximate number of dimers to be calculated
+#define OFMO_I_MON2	7	// Monomer 2
+#define OFMO_I_MON3	8	// Monomer 3
 
 #define OFMO_IMSG_SZ	(MAXNJOB*2+OFMO_I_MON1)
 #define OFMO_DMSG_SZ	6

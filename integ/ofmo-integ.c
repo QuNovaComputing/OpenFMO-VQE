@@ -272,35 +272,34 @@ static int (*calc_schwarz[]) (
     ofmo_cutoff_xx, ofmo_cutoff_xx, ofmo_cutoff_xx
 };
 
-/** Schwarzの不等式を用いるためのカットオフテーブル作成関数
+/** Cutoff table creation function for using Schwarz inequalities
  * @ingroup integ-top
  *
- * Schwarzの不等式を用いたカットオフテーブルを作成する。
- * ソート基底関数データを与えると、Schwarzの不等式を用いるための
- * カットオフテーブルが計算されて返ってくる。
+ * Create a cutoff table using Schwarz's inequality.
+ * Given the sort basis function data, a cutoff table for using
+ * Schwarz's inequalities is calculated and returned.
  *
  * @attention 
- * @li 出力用の各種配列は、呼び出し時には確保されている必要がある。
- * @li 出力用各種配列（\c csp_schwarz[] や \c csp_ics[] など）が複数
- *     スレッド間で共有されていなければ、スレッドセーフである。
+ * @li Various arrays for output need to be reserved at the time of calling.
+ * @li It is thread-safe if the various output arrays
+ * (such as \ c csp_schwarz [] and \ c csp_ics []) are not shared by multiple threads.
  *
- * @param[in] maxlqn 最大軌道量子数
- * @param[in] leading_cs[lqn] 軌道量子数 \c lqn の先頭CS番号
- * @param[in] shel_tem[ics] CS番号 \c ics のCSの縮約長
- * @param[in] shel_atm[ics] CS番号 \c ics のCSが属する原子の番号
- * @param[in] shel_add[ics] CS番号 \c ics のCSに含まれるPSの先頭PS番号
- * @param[in] atom_x[iat] 原子の番号 \c iat のx座標（au単位）
- * @param[in] atom_y[iat] 原子の番号 \c iat のy座標（au単位）
- * @param[in] atom_z[iat] 原子の番号 \c iat のz座標（au単位）
- * @param[in] prim_exp[ips] PS番号 \c ips のPSの軌道指数
- * @param[in] prim_coe[ips] PS番号 \c ips のPSの規格化定数込みの縮約係数
+ * @param[in] maxlqn Maximum orbital quantum number
+ * @param[in] leading_cs[lqn] First CS number of orbital quantum number \c lqn
+ * @param[in] shel_tem[ics] CS reduction length of CS number \c ics
+ * @param[in] shel_atm[ics] CS number \c ics CS number of the atom to which CS belongs
+ * @param[in] shel_add[ics] CS number \c ics CS contains the first PS number of PS
+ * @param[in] atom_x[iat] Atom number \c iat x coordinate (au unit)
+ * @param[in] atom_y[iat] Atom number \c iat y coordinate (au unit)
+ * @param[in] atom_z[iat] Atom number \c iat z coordinate (au unit)
+ * @param[in] prim_exp[ips] PS orbit index of PS number \c ips
+ * @param[in] prim_coe[ips] PS number \c ips PS standardization constant-included reduction factor
  *
- * @param[out] leading_cs_pair[itype] CSペアタイプ番号 \c itype の
- *     先頭CSペア番号
- * @param[out] csp_schwarz[icsp] CSペア番号 \c icsp のSchwarz積分
- * @param[out] csp_ics[icsp] CSペア番号 \c icsp の1つ目のCS番号
- * @param[out] csp_jcs[icsp] CSペア番号 \c icsp の2つめのCS番号。ただし、
- *     \f$ \tt{csp\_ics[icsp]} \ge \tt{csp\_jcs[icsp]} \f$ である。
+ * @param[out] leading_cs_pair[itype] CS pair type number First CS pair number of \c itype
+ * @param[out] csp_schwarz[icsp] Schwarz integral of CS pair number \c icsp
+ * @param[out] csp_ics[icsp] CS pair number \c icsp's first CS number
+ * @param[out] csp_jcs[icsp] CS pair number The second CS number for \c icsp.
+ * However, it is \ f $ \ tt {csp \ _ics [icsp]} \ ge \ tt {csp \ _jcs [icsp]} \ f $.
  * @param[out] csp_leading_ps_pair[icsp]  CSペア番号 \c icsp に含まれる
  *     PSペアの先頭PSペア番号
  * @param[out] psp_zeta[ipsp] PSペア番号 \c ipsp の軌道指数和
@@ -413,11 +412,11 @@ static int (*oneint_func[]) (
     ofmo_oneint_ds__, ofmo_oneint_dp__, ofmo_oneint_dd__,
 };
 
-/** ソートされた一電子積分計算関数
+/** Sorted one-electron integral calculation function
  * @ingroup integ-top
  *
- * ソート基底関数を与えると、一電子積分を計算して
- * ソートされた重なり積分、一電子ハミルトン行列を返す。
+ * Given a sorted basis set, it calculates the one-electron integral
+ * and returns the sorted overlap integral, the one-electron Hamilton matrix.
  *
  * @attention
  * @li 出力用の各種配列は、呼び出し時には確保されている必要がある
@@ -650,12 +649,12 @@ static int (*calc_twoint_direct[])(
  *
  * */
 
-/** 電子反発積分（二電子積分）計算関数（１）
+/** Electron repulsion integral (two-electron integral) calculation function（１）
  * @ingroup integ-top
  *
- * 指定されたサイズのバッファに入るだけの二電子積分を計算、保存する。
- * バッファが一杯になったら、それ以降の積分計算は行わない。また、
- * 二電子ハミルトン行列（G行列）の計算は行わない。
+ * Calculates and stores two-electron integrals that fit in a buffer of the specified size.
+ * When the buffer is full, no further integral calculations are performed.
+ * Also, the two-electron Hamilton matrix (G matrix) is not calculated.
  *
  * @attention
  * @li G行列生成関数 \c ofmo_integ_gen_gmat を呼び出す前に、一回、
@@ -1238,51 +1237,45 @@ static int (*calc_ifc4c[])(
     ofmo_ifc4c_rys_ddds, ofmo_ifc4c_rys_dddp, ofmo_ifc4c_rys_dddd,*/
 };
 
-/** ４中心クーロン相互作用項の計算を行う関数
+/** A function that calculates the 4-center Coulomb interaction term
  * @ingroup integ-top
  *
- * FMO計算に現れる、２つのモノマー間の４中心クーロン相互作用項を
- * 計算する。
- * ４中心クーロン積分を計算して、積分と与えられた密度行列を元に、
- * ４中心クーロン相互作用項を求める。
+ * Calculate the 4-center Coulomb interaction term between the two monomers
+ * that appears in the FMO calculation.
+ * The 4-center Coulomb integral is calculated to obtain the 4-center Coulomb
+ * interaction term based on the integral and the given density matrix.
  *
  * @attention
- * @li OpenMPを用いたスレッド並列化を行っている。スレッド並列時には、
- *     スレッド並列領域内でこの関数を呼び出す必要がある。
- * @li \c nworkers とワーカID \c workerid を適切に設定すれば、OpenMPと
- *     MPIとのハイブリッド並列実行が可能である。MPI並列時に、完全な
- *     クーロン項を得るためには、この関数の終了後に
- *     \c MPI_Allreduce 関数などを用いたリダクション処理を行う必要がある。
- * @li 得られるクーロン項 \c V_frg[] は、軌道量子数の大きさで
- *     ソートされたものである。元の並びのクーロン項が欲しい場合には、
- *     要素の並べ替えが必要である。
+ * @li Thread parallelization is performed using OpenMP. At the time of thread parallelism,
+ * 	   it is necessary to call this function in the thread parallel area.
+ * @li \c nworkers If you set the worker ID \c workerid appropriately, hybrid parallel
+ * 	   execution of OpenMP and MPI is possible. In order to obtain a complete Coulomb term
+ *     during MPI parallelism, it is necessary to perform reduction processing using the
+ *     \c MPI_Allreduce function after the end of this function.
+ * @li The resulting Coulomb term \c V_frg[] is sorted by the magnitude of the orbital
+ *     quantum number. If you want the Coulomb term in the original sequence, you need to
+ *     reorder the elements.
  *
- * @param[in] nworkers 計算に用いるワーカプロセス（スレッド）数
- * @param[in] workerid ワーカID。
+ * @param[in] nworkers Number of worker processes (threads) used for calculation
+ * @param[in] workerid Worker ID.
  *     \f$ 0\le \tt{workerid} < \tt{nworkers} \f$
  *
- * @param[in] maxlqn 最大軌道量子数
- * @param[in] shel_atm_frg[ics] 対象フラグメントの、
- *     CS番号 \c ics のCSが属する原子の番号
- * @param[in] shel_ini_frg[ics] 対象フラグメントの、
- *     CS番号 \c ics のCSに含まれるAOの先頭AO番号
- * @param[in] atom_x_frg[iat] 対象フラグメントの、
- *     原子の番号 \c iat のx座標（au単位）
- * @param[in] atom_y_frg[iat] 対象フラグメントの、
- *     原子の番号 \c iat のy座標（au単位）
- * @param[in] atom_z_frg[iat] 対象フラグメントの、
- *     原子の番号 \c iat のz座標（au単位）
- * @param[in] leading_cs_pair_frg[itype] 対象フラグメントの、
- *     CSペアタイプ番号 \c itype の先頭CSペア番号
- * @param[in] csp_schwarz_frg[icsp] 対象フラグメントの、
- *     CSペア番号 \c icsp のSchwarz積分
- * @param[in] csp_ics_frg[icsp] 対象フラグメントの、
- * CSペア番号 \c icsp の1つ目のCS番号
- * @param[in] csp_jcs_frg[icsp] 対象フラグメントの、
- *     CSペア番号 \c icsp の2つめのCS番号。ただし、
- *     \f$ \tt{csp\_ics[icsp]} \ge \tt{csp\_jcs[icsp]} \f$ である。
- * @param[in] csp_leading_ps_pair_frg[icsp] 対象フラグメントの、
- *     CSペア番号 \c icsp に含まれるPSペアの先頭PSペア番号
+ * @param[in] maxlqn Maximum orbital quantum number
+ * @param[in] shel_atm_frg[ics] CS number of the target fragment
+ *     The number of the atom to which \c ics of cics belongs
+ * @param[in] shel_ini_frg[ics] CS number of the target fragment
+ *     The first AO number of the AO contained in the CS of \c ics
+ * @param[in] atom_x_frg[iat] X-coordinate (au unit) of atom number \c iat of the target fragment
+ * @param[in] atom_y_frg[iat] Y-coordinate (au unit) of atom number \c iat of the target fragment
+ * @param[in] atom_z_frg[iat] Z-coordinate (au unit) of atom number \c iat of the target fragment
+ * @param[in] leading_cs_pair_frg[itype] The first CS pair number of the CS pair type number
+ *     \c itype of the target fragment
+ * @param[in] csp_schwarz_frg[icsp] Schwarz integral of CS pair number \c icsp of target fragment
+ * @param[in] csp_ics_frg[icsp] The first CS number of the CS pair number \c icsp of the target fragment
+ * @param[in] csp_jcs_frg[icsp] The second CS number of the target fragment, CS pair number
+ *     \c icsp. However, it is \ f $ \ tt {csp \ _ics [icsp]} \ ge \ tt {csp \ _jcs [icsp]} \ f $.
+ * @param[in] csp_leading_ps_pair_frg[icsp] The first PS pair number of the PS pair included
+ *     in the CS pair number \c icsp of the target fragment
  * @param[in] psp_zeta_frg[ipsp] 対象フラグメントの、
  *     PSペア番号 \c ipsp の軌道指数和
  *     \f$ \zeta = \zeta_a + \zeta_b \f$
@@ -1296,7 +1289,7 @@ static int (*calc_ifc4c[])(
  *     PSペア番号 \c ipsp の、
  *     \f$ \frac{\xi}{\zeta_a} = \frac{\zeta_b}{\zeta_a+\zeta_b} \f$
  *
- * @param[in] shel_atm_mon[ics] 相手モノマーの、
+ * @param[in] shel_atm_mon[ics] Of the partner monomer
  *     CS番号 \c ics のCSが属する原子の番号
  * @param[in] shel_ini_mon[ics] 相手モノマーの、
  *     CS番号 \c ics のCSに含まれるAOの先頭AO番号
@@ -1330,13 +1323,12 @@ static int (*calc_ifc4c[])(
  *     PSペア番号 \c ipsp の
  *     \f$ \frac{\xi}{\zeta_a} = \frac{\zeta_b}{\zeta_a+\zeta_b} \f$
  *
- * @param[in] nao_mon 相手モノマーのAO数
- * @param[in] D_mon[] 相手モノマーの密度行列（圧縮"U"形式）
+ * @param[in] nao_mon Number of AOs of partner monomer
+ * @param[in] D_mon[] Density matrix of mating monomer (compressed "U" format)
  *
- * @param[out] V_frg[] 対象フラグメントにおける
- *     相手モノマーとの間の４中心クーロン相互作用項
- *     （G行列、圧縮"U"形式）。この配列は、スレッドごとに別領域
- *     を与える必要がある。
+ * @param[out] V_frg[] 4-centric Coulomb interaction term(G matrix, compressed "U" form)
+ * with the mating monomer in the fragment of interest.
+ * This array needs to give a separate area for each thread.
  * 
  * @retval  0 正常終了（すべての積分が保存されても、バッファサイズの不足で
  *     保存されていない積分があっても、正常終了である）
@@ -1606,7 +1598,7 @@ static int (*calc_ifc3c[]) (
  * @param[in] prim_coe_mon[ips] 相手モノマーの、PS番号 \c ips のPSの
  *     規格化定数込みの縮約係数
  *
- * @param[in] ao_pop_mon[] 相手モノマーの、AO population
+ * @param[in] ao_pop_mon[] AO population of the partner monomer
  *
  * @param[out] V_frg[] 対象フラグメントにおける
  *     相手モノマーとの間の３中心クーロン相互作用項

@@ -184,7 +184,7 @@ void ofmo_expand_U2L( const int n, double A[] ) {
     }
 }
 
-/** ２つの実数ベクトルの差の最大絶対値を返す関数
+/** A function that returns the maximum absolute value of the difference between two real vectors
  *
  * ２つの実数ベクトルの差の最大絶対値を返す関数。
  * 
@@ -225,7 +225,7 @@ void ofmo_transpose_matrix(const int n, const double S[], double St[]) {
     }
 }
 
-/** 圧縮U形式の行列の対角成分を定数倍する
+/** Multiply the diagonal component of a compressed U-format matrix by a constant
  *
  * 圧縮U形式で１次元配列に格納された倍精度浮動小数対称行列の対角要素を
  * 定数倍する関数

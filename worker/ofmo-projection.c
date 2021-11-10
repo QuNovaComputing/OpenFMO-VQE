@@ -91,7 +91,7 @@ static int alloc( const int nlmo, const int nfunc ) {
  * @param[in] fsao2tuao[] ソートされたフラグメントAOの全体の非ソートAO
  * 番号
  * @param[in] Ss[] ソートされた重なり行列（圧縮U形式）
- * @param[out] Ps[] ソートされた射影演算子項（圧縮U形式）
+ * @param[out] Ps[] Sorted projection operator terms (compressed U format)
  *
  * @ingroup ofmo-calc
  * */

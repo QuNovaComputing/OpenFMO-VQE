@@ -1,12 +1,6 @@
 /**
  * @file ofmo-calc-frag.c
- * @brief フラグメント電子状態計算関係の関数を記述したファイル
- *
- * 2中心クーロン積分の計算を積分タイプごとに分割して
- * 計算するようにした。
- *
- * 4中心クーロン相互作用項を、最後の1つを除いて、worker=0でも
- * 計算させるようにした
+ * @brief A file that describes functions related to fragment electronic state calculation
  * 
  * A file that describes functions related to fragment electronic state calculation
  * The calculation of the 2-center Coulomb integral is now divided for each integral type.
@@ -238,18 +232,18 @@ static double **psp_zeta_mon    = NULL;
 static double **psp_dkps_mon    = NULL;
 static double **psp_xiza_mon    = NULL;
 
-/* スレッドごとに確保する必要のある配列 */
+/* Array that needs to be allocated for each thread */
 //static int _maxnifc4c_;
 static double **dUmaster = NULL;
 static double **dUmaster2 = NULL;
 static double **_atpop_local_ = NULL;
 
-// 全モノマーのAO population および atomic population
+// AO population and atomic population of all monomers
 static double **aopop_mon = NULL;
 static double **atpop_mon = NULL;
 
-// フラグメントのpopulationデータ
-// このデータは、ofmo-dataで領域を解放する
+// Fragment population data
+// This data frees space with ofmo-data
 static double *_daopop_ = NULL;
 static double *_datpop_ = NULL;
 
@@ -389,7 +383,7 @@ static int alloc() {
     total += t;
     psp_xiza_mon     = ofmo_alloc_dmatrix( MAXNIFC4C, maxnpspair);
     total += t;
-    /* スレッドごとに確保する必要のある配列 */
+    /* Array that needs to be allocated for each thread */
     int maxthreads;
     maxthreads = omp_get_max_threads();
     dUmaster = ofmo_alloc_dmatrix( maxthreads, fnao2 );
@@ -398,7 +392,7 @@ static int alloc() {
     _atpop_local_ = ofmo_alloc_dmatrix( maxthreads, maxnfatom );
     total += (maxthreads * maxnfatom) * sizeof(double);
 
-    /* 全モノマーのpopulation */
+    /* Population of all monomers */
     aopop_mon = ofmo_alloc_dmatrixv( nfrag, nfao );
     total += total_nfao * sizeof(double);
     atpop_mon = ofmo_alloc_dmatrixv( nfrag, nfatom );
@@ -406,20 +400,20 @@ static int alloc() {
     memset(aopop_mon[0], '\0', sizeof(double)*total_nfao );
     memset(atpop_mon[0], '\0', sizeof(double)*total_nfatom );
 
-    /* AOの順序変換用 */
+    /* For AO order conversion */
     t = sizeof(int) * nao_total;
     _aoconv_ = (int*)malloc( t ); total += t;
 
-    /* フラグメント電子状態計算におけるジョブリスト */
+    /* Job list in fragment electronic state calculation */
     t = sizeof(int) * nfrag;
     _joblist_ifc4c_ = (int*)malloc( t ); total += t;
     _joblist_ifc3c_ = (int*)malloc( t ); total += t;
 
-    /* モノマーのエネルギー（環境ポテンシャル項除く） */
+    /* Monomer energy (excluding environmental potential term) */
     t = sizeof(double) * nfrag;
     _menergy0_ = (double*)malloc( t ); total += t;
 
-    /* フラグメントのpopulationデータ */
+    /* Fragment population data */
     _daopop_ = (double*)malloc( sizeof(double) * nbody * maxnfao );
     _datpop_ = (double*)malloc( sizeof(double) * nbody * maxnfatom );
     total += ( sizeof(double) * nbody * (maxnfao + maxnfatom) );
@@ -541,39 +535,40 @@ extern size_t ofmo_twoint_get_stored_nzeri( const int mythread );
 
 static int NEW_SCC_STEP = false;
 void ofmo_set_new_scc_flag() { NEW_SCC_STEP = true; }
-/** フラグメントのRHF計算を行う関数
+/** Function that performs RHF calculation of fragments
  *
- * FMO計算における、周辺モノマーからの環境ポテンシャル項と
- * 射影演算子項を考慮したRHF電子状態計算を行う。
- * この関数内部では、主に、以下の処理を行っている。
+ * In the FMO calculation, the RHF electronic state calculation is performed
+ * in consideration of the environmental potential term from the peripheral
+ * monomer and the projection operator term.
+ * Inside this function, the following processing is mainly performed.
  *
- * - ２電子積分、４中心クーロン積分のためのカットオフテーブル計算
- * - 必要なモノマー密度行列データの取得
- * - buffered SCF法のための1回目の２電子積分計算（決められた容量の
- *   メモリに入るだけ２電子積分計算を行う）
- * - ４中心クーロンポテンシャル項の計算
- * - ３中心クーロンポテンシャル項の計算
- * - ２中心クーロンポテンシャル項の計算
- * - （通常の）１電子積分計算
- * - 射影演算子項の計算
- * - SCF関数呼び出し
+ * - Cut-off table calculation for 2-electron integral and 4-center Coulomb integral
+ * - Acquisition of required monomer density matrix data
+ * - First two-electron integral calculation for the buffered SCF method
+ *   (two-electron integral calculation is performed only in the memory of the fixed capacity)
+ * - Calculation of 4-center Coulomb potential term
+ * - Calculation of 3-center Coulomb potential term
+ * - Calculation of 2-center Coulomb potential term
+ * - (Normal) 1-electron integral calculation
+ * - Calculation of projection operator terms
+ * - SCF function call
  *
- * このうち、２中心クーロンポテンシャル部分には動的負荷分散を適用し、
- * それ以外の部分には、静的負荷分散を用いている。
+ * Of these, dynamic load balancing is applied to the 2-center Coulomb potential portion, 
+ * and static load balancing is used for the other portions.
  *
- * @param[in] comm 電子状態計算を行うworker groupのコミュニケータ
- * @param[in] nmonomer フラグメントを構成するモノマー数
- * @param[in] monomer_list[] フラグメントを構成するモノマー番号リスト
- * @param[out] D[] 得られた密度行列（圧縮U形式）
- * @param[out] C[] 得られたMO係数行列（正方行列）
- * @param[out] e[] 得られたMOエネルギー（ベクトル）
- * @param[out] aopop[] Mulliken population解析によるAO population
- * @param[out] atpop[] Mulliken population解析によるatomic population
- * @param[out] *energy 環境ポテンシャル項を含むフラグメントのエネルギー
- * @param[out] *energy0 環境ポテンシャル項を除いたフラグメントのエネルギー
- * @param[out] *ddv ダイマーSCF計算での環境ポテンシャルの変化量
- * @param[out] daopop[] ダイマーSCF計算でのAO populationの変化量
- * @param[out] datpop[] ダイマーSCF計算でのatomic populationの変化量
+ * @param[in] comm Communicator of worker group that performs electronic state calculation
+ * @param[in] nmonomer Number of monomers that make up the fragment
+ * @param[in] monomer_list[] List of monomer numbers that make up the fragment
+ * @param[out] D[] Obtained density matrix (compressed U format)
+ * @param[out] C[] Obtained MO coefficient matrix (square matrix)
+ * @param[out] e[] Obtained MO energy (vector)
+ * @param[out] aopop[] AO population by Mulliken population analysis
+ * @param[out] atpop[] Atomic population by Mulliken population analysis
+ * @param[out] *energy Energy of the fragment containing the environmental potential term
+ * @param[out] *energy0 Fragment energy excluding the environmental potential term
+ * @param[out] *ddv Amount of change in environmental potential in dimer SCF calculation
+ * @param[out] daopop[] Amount of change in AO population in dimer SCF calculation
+ * @param[out] datpop[] Amount of change in atomic population in dimer SCF calculation
  * \f[
  *   \tt{*ddv} = \rm{Tr}\,
  *   \left( {\boldmath D \unboldmath}_{IJ} -
@@ -657,13 +652,13 @@ int ofmo_calc_fragment_electronic_state(
 	}
 	called = true;
     }
-    /* MPI情報の取得 */
+    /* Acquisition of MPI information */
     int myrank, nprocs;
     int root = 0, is_root;
     MPI_Comm_rank( comm, &myrank );
     MPI_Comm_size( comm, &nprocs );
     is_root = ( myrank == root );
-    /* プロファイルIDの取得 */
+    /* Get profile ID */
     static int cid_cutoff, cid_eri, cid_4c, cid_3c, cid_2c, cid_buf;
     static int tid_init, tid_cutoff, tid_integ, tid_comm;	// 詳細
     static int tid_Init, tid_Integ, tid_SCF, tid_Total;
@@ -689,7 +684,7 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_start_proc_timer( tid_Init );
     ofmo_start_proc_timer( tid_Total );
 
-    /* フラグメントの原子データ、基底関数データの取得 */
+    /* Acquisition of atomic data and basis function data of fragments */
     int nat, ncs, nao, nps, *atomic_number, *fat2tat, ierr;
     int *flcs, *shel_tem, *shel_atm, *shel_add, *shel_ini, *fsao2tuao;
     int *fsao2fuao;
@@ -821,7 +816,7 @@ int ofmo_calc_fragment_electronic_state(
 	    if ( flag == true ) break;
 #pragma omp critical
 	    { i = mc; mc++; }
-
+        /* Cut-off table calculation for 2-electron integral and 4-center Coulomb integral */
 	    if ( i == -2 ) {
 		/* nuclear repulsion */
 		Enuc = ofmo_calc_nuclear_repulsion( nat, atomic_number,
@@ -833,18 +828,18 @@ int ofmo_calc_fragment_electronic_state(
 			lcs_pair, csp_schwarz, csp_ics, csp_jcs,
 			csp_lps_pair, psp_zeta, psp_dkps, psp_xiza );
 	    } else {
-		if ( i >= nifc4c ) break;
-		ifrag = joblist_ifc4c[i];
-		ofmo_cutoff_make_table( maxlqn, mlcs[ifrag],
-			mshel_tem[ifrag], mshel_atm[ifrag],
-			mshel_add[ifrag],
-			matom_x[ifrag], matom_y[ifrag], matom_z[ifrag],
-			mprim_exp[ifrag], mprim_coe[ifrag],
+            if ( i >= nifc4c ) break;
+            ifrag = joblist_ifc4c[i];
+            ofmo_cutoff_make_table( maxlqn, mlcs[ifrag],
+                mshel_tem[ifrag], mshel_atm[ifrag],
+                mshel_add[ifrag],
+                matom_x[ifrag], matom_y[ifrag], matom_z[ifrag],
+                mprim_exp[ifrag], mprim_coe[ifrag],
 
-			lcs_pair_mon[i], csp_schwarz_mon[i],
-			csp_ics_mon[i], csp_jcs_mon[i],
-			csp_lps_pair_mon[i], psp_zeta_mon[i],
-			psp_dkps_mon[i], psp_xiza_mon[i] );
+                lcs_pair_mon[i], csp_schwarz_mon[i],
+                csp_ics_mon[i], csp_jcs_mon[i],
+                csp_lps_pair_mon[i], psp_zeta_mon[i],
+                psp_dkps_mon[i], psp_xiza_mon[i] );
 	    }
 	}	// while
 	ofmo_acc_thread_timer( cid_cutoff, mythread );
@@ -908,6 +903,7 @@ int ofmo_calc_fragment_electronic_state(
 	// for control load-balancing
 	ofmo_integ_set_loop_offset( mythread, offset );
 	/* ERI calculation ( 1st time ) */
+    /* - First two-electron integral calculation for the buffered SCF method */
 	ofmo_integ_twoint_first(
 		nworkers, workerid, eribfsz,
 		maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
@@ -1319,12 +1315,12 @@ static double ofmo_calc_enucij(
     return enuc;
 }
 
-/** すべての近似ダイマー計算を行う関数
+/** A function that performs all approximate dimer calculations
  *
  * いくつかのダイマーをまとめて
  * 計算するようにしている。
  *
- * @param[out] *total_dimer_es_energy ESダイマーのエネルギーの和
+ * @param[out] *total_dimer_es_energy ES dimer energy sum
  *
  * @ingroup ofmo-calc
  * */

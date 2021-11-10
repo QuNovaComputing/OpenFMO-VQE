@@ -1,5 +1,5 @@
 /*
-   メモリサーバーに登録するデータ構造を決める関数群
+   Functions that determine the data structure to be registered in the memory server
    */
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,12 +16,12 @@
 
 #define MAXTOKLEN MAXSTRLEN
 
-/** ２つの整数を比較する関数 */
+/** A function that compares two integers */
 static int comp2( const void *p1, const void *p2 ) {
     return ( ((int*)p2)[0] - ((int*)p1)[0] );
 }
 
-/** 整数配列の最小値を持つ添字を返す */
+/** Returns a subscript with the minimum value of an integer array */
 static int min_loc( const int nprocs, const int sz[] ) {
     int loc, irank;
     int min;
@@ -32,17 +32,17 @@ static int min_loc( const int nprocs, const int sz[] ) {
     return loc;
 }
 
-/* nfrag個のデータをnprocsプロセスにできるだけ公平に分割する */
-/* 引数
- * nfrag (in) : データ数
- * nelem[ifrag] (in) : データ番号ifragの要素数
- * nprocs (in) : プロセス数
+/* Divide nfrag data into nprocs processes as fairly as possible */
+/* argument
+ * nfrag (in) : The number of data
+ * nelem[ifrag] (in) : Number of elements in data number ifrag
+ * nprocs (in) : Number of processes
  *
- * target[ifrag] (out) : ifrag番目のデータの格納先（ターゲットプロセス番号）
- * offset[ifrag] (out) : ifrag番目のデータのoffset
- * total_nelem[irank] (out) : irankプロセスに割り当てられた要素数
+ * target[ifrag] (out) : ifrag th data storage destination (target process number)
+ * offset[ifrag] (out) : ifrag th data offset
+ * total_nelem[irank] (out) : Number of elements assigned to the irank process
  *
- * *iwork (in) : データ操作のワーク領域（nfrag*2個の要素が必要）
+ * *iwork (in) : Data manipulation work area (nfrag * 2 elements required)
  * */
 static int divide_n_data_by_p_proc(
 	const int nfrag, const int nelem[], const int nprocs, 
@@ -66,9 +66,9 @@ static int divide_n_data_by_p_proc(
     return 0;
 }
 
-static int NDATA = 0;		// データ塊の数
+static int NDATA = 0;		// Number of data chunks
 static int NFRAG = 0;
-static int **DATA_TARGET = NULL;	// 各データのターゲットプロセス
+static int **DATA_TARGET = NULL;	// Target process for each data
 static int **DATA_NELEMS = NULL;
 static int **DATA_OFFSET = NULL;
 
@@ -140,26 +140,26 @@ int ofmo_get_data_offset( int data_id, int ifrag ) {
 int ofmo_get_nfrag() { return NFRAG; }
 int ofmo_get_ndata() { return NDATA; }
 
-/* メモリサーバーへのデータの格納方法を決める
-    2013/02/13現在、以下の５つのデータのメモリサーバーへの保存を予定
-    0. OFMO_DENS1	モノマー密度行列データ１
-    1. OFMO_DENS2	モノマー密度行列データ２
-    2. OFMO_AOPOP1	モノマーのAO population
-    3. OFMO_AOPOP2	モノマーのAO population
-    4. OFMO_ATPOP1	モノマーのatomic population
-    5. OFMO_ATPOP2	モノマーのatomic population
-    6. OFMO_DISTA	モノマー間距離
-    7. OFMO_ENERGY	モノマーエネルギー
-    8. OFMO_ENERGY0	環境ポテンシャル抜きのモノマーエネルギー
-    9. OFMO_TOTAL_AOPOP	分子全体のAO population
-   10. OFMO_TOTAL_ATPOP	分子全体のatomic population
+/* Decide how to store data on the memory server
+    As of February 13, 2013, the following 5 data are scheduled to be saved in the memory server.
+    0. OFMO_DENS1	Monomer density matrix data 1
+    1. OFMO_DENS2	Monomer density matrix data 2
+    2. OFMO_AOPOP1	Monomer AO population
+    3. OFMO_AOPOP2	Monomer AO population
+    4. OFMO_ATPOP1	Monomer atomic population
+    5. OFMO_ATPOP2	Monomer atomic population
+    6. OFMO_DISTA	Distance between monomers
+    7. OFMO_ENERGY	Monomer energy
+    8. OFMO_ENERGY0	Monomer energy without environmental potential
+    9. OFMO_TOTAL_AOPOP	AO population of the entire molecule
+   10. OFMO_TOTAL_ATPOP	Atomic population of the whole molecule
 
     注意点：
-    1. すべてのデータは倍精度実数型である
-	（他のデータ型には対応していない）
-    2. AO populationとatomic populationのデータは１つのプロセスに
-       保存されているため、全データを一度に取り出すことが容易
-    3. すべて、要素数はnfragである
+    1. All data are double precision real type
+	(Not compatible with other data types)
+    2. AO population and atomic population data are stored in one process,
+       making it easy to retrieve all data at once
+    3. All, the number of elements is nfrag
 
     */
 int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
@@ -171,14 +171,14 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     ofmo_data_get_vals("nfao nfatom natom nao",
 	    &nfao, &nfatom, &tot_natom, &tot_nao );
     alloc( ndata, nfrag );
-    // 一時配列の確保
+    // Securing a temporary array
     iwork  = (int*)malloc( sizeof(int) * nfrag * 2 );
     subtot_nelem = (int*)malloc( sizeof(int) * mserv_size );
     total_nelems = (int*)malloc( sizeof(int) * mserv_size );
     for ( irank=0; irank<mserv_size; irank++ ) total_nelems[irank] = 0;
 
     data_id=0;
-    // モノマー密度行列でーた１
+    // Monomer density matrix 1
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -191,7 +191,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     for ( irank=0; irank<mserv_size; irank++ )
 	total_nelems[irank] += subtot_nelem[irank];
     data_id++;
-    // モノマー密度行列データ２
+    // Monomer density matrix data 2
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -260,7 +260,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     }
     total_nelems[irank] += total;
     data_id++;
-    // フラグメント間距離
+    // Distance between fragments
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -270,7 +270,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     for ( irank=0; irank<mserv_size; irank++ )
 	total_nelems[irank] += subtot_nelem[irank];
     data_id++;
-    // モノマーのエネルギー（環境ポテンシャル項あり）
+    // Monomer energy (with environmental potential term)
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -284,7 +284,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     }
     total_nelems[irank] += total;
     data_id++;
-    // モノマーのエネルギー（環境ポテンシャル項なし）
+    // Monomer energy (no environmental potential term)
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -298,7 +298,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     }
     total_nelems[irank] += total;
     data_id++;
-    // 全体のAO population
+    // Overall AO population
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );
@@ -313,7 +313,7 @@ int ofmo_make_data_struct( int ndata, int nfrag, int mserv_size ) {
     }
     total_nelems[irank] += total;
     data_id++;
-    // 全体のAtomic population
+    // Overall Atomic population
     nelems = ofmo_getadd_data_nelems( data_id );
     target = ofmo_getadd_data_target( data_id );
     offset = ofmo_getadd_data_offset( data_id );

@@ -29,7 +29,7 @@ int** ofmo_alloc_imatrixv( const int nrow, const int ncols[] ) {
     return t;
 }
 
-/* 列サイズの異なる二次元実数配列を確保する */
+/* Secure two-dimensional real array with different column sizes */
 double** ofmo_alloc_dmatrixv( const int nrow, const int ncols[] ) {
     int total, i;
     double **t;

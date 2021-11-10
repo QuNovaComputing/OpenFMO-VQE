@@ -1,10 +1,10 @@
 /**
  * @file ofmo-inter-frag.c
- * フラグメント電子状態計算のクーロン相互作用の近似レベルなどを
- * 決めるモノマー間距離の計算などに関する関数群を定義している。
+ * It defines a group of functions related to the calculation of intermonomer distance,
+ * which determines the approximate level of Coulomb interaction in fragment electronic state calculation.
  *
  * TODO:
- * モノマー間距離はdouble型ではなく、float型で十分では？
+ * Is the float type sufficient for the inter-monomer distance instead of the double type?
  *
  * */
 #include <stdio.h>
@@ -154,15 +154,16 @@ static int is_in_fragment( const int ifrag,
     return false;
 }
 
-/** 環境ポテンシャル計算における近似レベルを返す関数
+/** A function that returns the approximation level in the environmental potential calculation
  *
- * FMO計算におけるフラグメント（モノマー、ダイマーなど(\f$x\f$)）
- * 電子状態計算を行う場合には、周辺モノマー(\f$I\f$)からの静電相互作用項
- * @f${}^x\mbox{\boldmath$V$}_I@f$
- * を計算する必要がある。
- * この環境ポテンシャル項は、計算量の削減を行うために、電子状態計算を
- * 行うフラグメントと環境ポテンシャル計算を行う対象モノマー間との距離に
- * 応じて、近似計算を行う。
+ * Fragment (monomer, dimer, etc. (\ f $ x \ f $)) in FMO calculation
+ * When performing electronic state calculation, the electrostatic interaction term
+ * @f $ {from the peripheral monomer (\ f $ I \ f $) } ^ x \ mbox {\ boldmath $ V $} _I @ f $
+ * needs to be calculated.
+ * In order to reduce the amount of calculation, this environmental potential term performs
+ * an approximate calculation according to the distance between the fragment for which
+ * the electronic state calculation is performed and the target monomer for which
+ * the environmental potential calculation is performed.
  * @f{eqnarray*}{
  * \left( {}^x\mbox{\boldmath$V$}_I \right)_{\mu\nu} &=&
  * \sum_{\sigma\lambda} (\mbox{\boldmath$D$}_{I})_{\sigma\lambda}
@@ -173,30 +174,29 @@ static int is_in_fragment( const int ifrag,
  *  \phi_\nu(r)
  * @f}
  * 
- * 近似なしの場合には通常の２電子積分と同じオーダーの計算量の
- * ４中心クーロン積分を計算する必要があるが、1つ目の近似（pop近似）を
- * 行うと計算量が少ない３中心クーロン積分の計算だけで済む。さらに、
- * 二つ目の近似（点電荷近似）を用いると、１電子積分の1種である２中心
- * クーロン積分だけの計算で済む。この切り替えは、フラグメントと
- * モノマー間の距離を元にして行う。
- * この関数内部で、\c nmonomer と\c monomer_list[] で指定された
- * フラグメントと周辺モノマー間の環境ポテンシャルの近似レベルリスト
- * が生成される。このリストは\c ofmo_get_approx_level 関数を用いて
- * 参照することが出来る。
- * また、この関数の引数のポインタ変数を経由して、４中心クーロン積分が
- * 必要な相手モノマー数と相手モノマー番号のリスト（\c *nifc4c,
- * \c joblist_ifc4c[] ）と、３中心クーロン積分が必要な相手モノマー数と
- * 相手モノマー番号のリスト（\c *nifc3c, \c joblist_ifc3c[] ）とを、
- * 呼び出し元に返すことが出来る。
+ * If there is no approximation, it is necessary to calculate the 4-center Coulomb integral
+ * with the same order of calculation as the normal 2-electron integral, but if the first
+ * approximation (pop approximation) is performed, the amount of calculation is small.
+ * All you have to do is calculate. Furthermore, if the second approximation
+ * (point charge approximation) is used, only the two-center Coulomb integral,
+ * which is a kind of one-electron integral, can be calculated.
+ * This switching is based on the distance between the fragment and the monomer.
+ * Inside this function, an approximate level list of the environmental potential between
+ * the fragment specified by \ c nmonomer and \ c monomer_list [] and the surrounding
+ * monomers is generated. This list can be referenced using the \ c ofmo_get_approx_level function.
+ * Also, via the pointer variable of the argument of this function,
+ * a list of the number of partner monomers and partner monomer numbers
+ * that require 4-center Coulomb integration (\ c * nifc4c, \ c joblist_ifc4c [])
+ * and 3-center Coulomb integration are required. The number of partner monomers
+ * and the list of partner monomer numbers (\ c * nifc3c, \ c joblist_ifc3c [])
+ * can be returned to the caller.
  *
- * @param[in] nmonomer フラグメントを構成するモノマー数
- * @param[in] monomer_list[] フラグメントを構成するモノマー番号のリスト
- * @param[out] *nifc4c ４中心積分が必要な近似なしの相手モノマー数
- * @param[out] joblist_ifc4c[] ４中心積分が必要な近似なしの相手モノマー
- * 番号のリスト
- * @param[out] *nifc3c ３中心積分が必要なpop近似を行う相手モノマー数
- * @param[out] joblist_ifc3c[] ３中心積分が必要なpop近似を行う相手モノマー
- * 番号のリスト
+ * @param[in] nmonomer Number of monomers that make up the fragment
+ * @param[in] monomer_list[] List of monomer numbers that make up the fragment
+ * @param[out] *nifc4c Number of non-approximate partner monomers requiring 4 central integration
+ * @param[out] joblist_ifc4c[] List of non-approximate monomer numbers that require 4-center integration
+ * @param[out] *nifc3c Number of partner monomers that perform pop approximation that requires 3-center integration
+ * @param[out] joblist_ifc3c[] List of partner monomer numbers for pop approximation requiring 3-center integration
  *
  * @ingroup ofmo-calc
  *

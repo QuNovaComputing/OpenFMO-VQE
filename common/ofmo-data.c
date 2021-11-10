@@ -1,9 +1,10 @@
 /**
  * @file ofmo-data.c
- * FMOで扱う各種データを保存して、参照、更新するための関数群
+ * Functions for saving, referencing, and updating various data
+ * handled by FMO
  *
- * FMO計算で必要となるほとんどの情報は、このファイルで定義された
- * 関数群を通してアクセスできる。
+ * Most of the information needed for FMO calculations can be
+ * accessed through the functions defined in this file.
  *
  * */
 #include <stdio.h>
@@ -158,13 +159,13 @@ static struct _val_carrier_ vc[] = {
     {"fshel_ini", P_INT, NULL, "leading AO number of fragment"},
     {"fprim_exp", P_DBLE, NULL, "orbital exponent"},
     {"fprim_coe", P_DBLE, NULL, "contraction coef. with norm. coef."},
-    /* フラグメントAO変換テーブル */
+    /* Fragment AO conversion table */
     {"fsao2fuao", P_INT, NULL, "frag. sorted AO to frag. unsorted AO"},
     {"fsao2tuao", P_INT, NULL, "frag. sorted AO to total unsorted AO"},
     {"fuao2tuao", P_INT, NULL, "frag. unsorted AO to total unsorted AO"},
     {"dold", INT, NULL, "storage ID of old monomer density matrices"},
     {"dnew", INT, NULL, "storage ID of old monomer density matrices"},
-    /* フラグメントのAO population, Atomic population（の変位）*/
+    /* Fragment AO population, Atomic population（Displacement）*/
     {"daopop", P_DBLE, NULL, "delta AO pop. of fragment"},
     {"datpop", P_DBLE, NULL, "delta atomic pop. of fragment"},
 };
@@ -289,13 +290,12 @@ int ofmo_data_show_all() {
     return 0;
 }
 
-/** この関数群で保持している値を参照するための関数
+/** Function to refer to the value held in this function group
  *
- * @param[in] format 参照したい変数名を空白区切りで列挙した文字列
- * @param[out] ... 参照する値が代入される変数のポインタたち
+ * @param[in] format A character string that lists the variable names you want to refer to, separated by spaces.
+ * @param[out] ... Variable pointers to which the referenced value is assigned
  *
- * @note \c format に書かれた文字列の順に、変数（のポインタ）を並べる
- * 必要がある
+ * @note \c format It is necessary to arrange the variables (pointers) in the order of the character strings written in
  *
  * @ingroup ofmo-input
  * */
@@ -342,7 +342,7 @@ int ofmo_data_get_vals( const char* format, ...) {
     return 0;
 }
 
-/** この関数群で保持している値を更新するための関数
+/** Function for updating the value held by this function group
  *
  * @param[in] format 更新したい変数名を空白区切りで列挙した文字列
  * @param[out] ... 更新する値が代入される変数

@@ -1031,7 +1031,7 @@ int main( int argc, char *argv[] ) {
 	    "---- Finish SCC procedure ----", (etscc1-etscc0),
 	    (etscc1-ET0) );
     fflush(stdout);
-    // === モノマーのデータ（密度行列、AO populationなど）をファイルに出力
+    // === Output monomer data (density matrix, AO population, etc.) to a file
     if ( (p=getenv("OFMO_FILE_NAME")) != NULL ) {
 	ofmo_get_and_write( comm_mservs[0], p );
     }

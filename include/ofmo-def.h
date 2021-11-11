@@ -68,6 +68,7 @@
 #define OFMO_RHF	1
 #define OFMO_RIMP2	2
 #define OFMO_DFT	3
+#define OFMO_VQE  4
 
 // Types of population data to transfer from the worker to the master
 #define	OFMO_BOTH_POPS	0	// AO pop. Atomic pop. Both
@@ -88,6 +89,7 @@
 #define OFMO_I_CONV	3	// Convergence condition
 #define OFMO_I_NMON	5	// Number of monomers involved
 				// When calculating ES dimer, the approximate number of dimers to be calculated
+#define OFMO_I_MON1	6	// モノマー１
 #define OFMO_I_MON2	7	// Monomer 2
 #define OFMO_I_MON3	8	// Monomer 3
 

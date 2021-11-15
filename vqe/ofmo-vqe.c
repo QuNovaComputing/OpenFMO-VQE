@@ -74,14 +74,21 @@ int ofmo_update_amps(){
 
 int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], double *energy){
+    const double S[], const double C[], const int nelec, double *energy){
+
     /* Generate integral file */
-    ofmo_export_integ(ifrag, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C);
+    char fpath[256];
+    sprintf(fpath, "./integ_temp/temp_int_%d.dat", ifrag);
+    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, nelec);
 
     /* Call VQE */
-    ofmo_call_vqe(ifrag, );
+    char ofpath[256];
+    sprintf(ofpath, "./result_temp/temp_res_%d.dat");
+    char *args[] = {"python", "py_script.py", fpath, ofpath};
+    exec_prog(args);
 
     /* Data acquisition */
+
 
     /* Update to the memory */
 
@@ -90,14 +97,14 @@ int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
     return 0;
 }
 
-int ofmo_export_integ(const int ifrag, const int nao, const double H[],
+int ofmo_export_integ(const* fpath, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[]){
+    const double S[], const double C[], const int nelec){
     
-    char fpath[256];
 
-    sprintf(fpath, "./integ_temp/temp_%d.dat", ifrag);
     FILE *fp = fopen(fpath, "w");
+
+    fprintf("NELEC\t%d\n", nelec);
 
     int nao2 = ( nao + 1 ) * nao / 2;
     int i,j,k,l;
@@ -141,4 +148,36 @@ int ofmo_export_integ(const int ifrag, const int nao, const double H[],
     fclose(fp);
 
     return 0;
+}
+
+static int exec_prog(const char **argv)
+{
+    pid_t   my_pid;
+    int     status, timeout /* unused ifdef WAIT_FOR_COMPLETION */;
+
+    if (0 == (my_pid = fork())) {
+            if (-1 == execve(argv[0], (char **)argv , NULL)) {
+                    perror("child process execve failed [%m]");
+                    return -1;
+            }
+    }
+
+    while (0 == waitpid(my_pid , &status , WNOHANG)) {
+            sleep(1);
+    }
+
+    printf("%s WEXITSTATUS %d WIFEXITED %d [status %d]\n",
+            argv[0], WEXITSTATUS(status), WIFEXITED(status), status);
+
+    if (1 != WIFEXITED(status) || 0 != WEXITSTATUS(status)) {
+            perror("%s failed, halt system");
+            return -1;
+    }
+
+    return 0;
+}
+
+int ofmo_parse_result(const char *ofpath, const int ifrag){
+    FILE * fp = fopen(ofpath, "r");
+    
 }

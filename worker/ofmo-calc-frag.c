@@ -1244,7 +1244,7 @@ int ofmo_calc_fragment_electronic_state(
         eri_val = ofmo_twoint_getadd_integ_val( mythread ); // In AO
         eri_ind4 = ofmo_twoint_getadd_integ_ind4( mythread ); // In AO
         non_zero_eri = ofmo_twoint_get_stored_nzeri( mythread );
-        ierr = ofmo_vqe_call(monomer_list[0], nao, H, eri_val, eri_ind4, non_zero_eri, S, C, energy);
+        ierr = ofmo_vqe_call(monomer_list[0], nao, H, eri_val, eri_ind4, non_zero_eri, S, C, nelec, energy);
     	if ( ierr != 0 ) return -1;
     }
 

@@ -1,7 +1,7 @@
 /**
  * @file ofmo-twoint.c
- * @brief ２電子積分に関係する積分計算以外の雑多な処理を行う関数群を
- * 記述したファイル
+ * @brief A file that describes a group of functions that perform miscellaneous
+ * processing other than integral calculations related to 2-electron integration.
  *
  * */
 #include <stdio.h>
@@ -20,7 +20,7 @@ static int omp_get_thread_num() { return 0; }
 static int omp_get_max_threads() { return 1; }
 #endif
 
-// バッファ法関連のメモリ
+// Memory related to the buffer method
 static int	*LAST_IJCS         = NULL;
 static int	*LAST_KLCS         = NULL;
 static int	*LAST_ERI_TYPE     = NULL;
@@ -30,14 +30,14 @@ static double	**EBUF_VAL         = NULL;
 static short int **EBUF_IND4       = NULL;
 static size_t	*EBUF_MAX_NZERI    = NULL;
 
-// direct法で用いる積分一時保存領域
+// Integral temporary storage area used in the direct method
 #define TMP_INTEG_SIZE	64	// MB
 static size_t	*ETMP_MAX_NZERI    = NULL;
 static double	**ETMP_VAL	   = NULL;
 static short    **ETMP_IND4	   = NULL;
 static size_t	*ETMP_NZERI        = NULL;
 
-// スレッド並列時のFock行列計算に関わるメモリ
+// Memory related to Fock matrix calculation when threads are parallel
 static int	*MAX_NAO       = NULL;
 static double	**G_THREADS    = NULL;
 
@@ -89,7 +89,7 @@ static void ofmo_twoint_finalize() {
     }
 }
 
-/** 2電子積分関数の初期化関数
+/** Initialization function of 2-electron integral function
  * @ingroup integ-misc
  *
  * buffered direct SCF法をMPI/OpenMP hybrid並列で実行するために必要な
@@ -160,7 +160,7 @@ int ofmo_twoint_init() {
     return 0;
 }
 
-/** バッファサイズの設定
+/** Buffer size setting
  * 
  * buffered direct SCFで計算した２電子積分を格納するための領域（バッファ）
  * を確保する関数。
@@ -195,7 +195,7 @@ size_t ofmo_twoint_set_buffer_size( const int mythread,
 size_t ofmo_twoint_get_max_nzeri( const int mythread ) {
     return EBUF_MAX_NZERI[mythread];
 }
-/** G行列計算で用いる一時領域を確保する関数
+/** Function that secures the temporary area used in G matrix calculation
  *
  * スレッド並列（hybrid並列を含む）でG行列（Fock行列の２電子積分部分）を
  * 生成する場合には、各スレッドは、独自の領域に部分G行列を計算した後、
@@ -227,7 +227,7 @@ double* ofmo_twoint_alloc_local_gmat( const int mythread,
     return G_THREADS[mythread];
 }
 
-/** 密度行列を正方行列で保存するためのバッファ確保
+/** Allocate a buffer to store the density matrix as a square matrix
  *
  * G行列作成時には対称行列である密度行列を参照するが、そのとき、圧縮形式
  * のまま参照するよりも、正方行列として参照したほうがインデックスなどの
@@ -253,7 +253,7 @@ double* ofmo_twoint_alloc_square_density( const int maxnao ) {
     return DENS_SQUARE;
 }
 
-/** バッファが一杯になって時点でのCSペア番号登録を行う関数
+/** A function that registers the CS pair number when the buffer is full
  *
  * buffered direct SCF法では、バッファが一杯になった時点で計算していた
  * ２電子積分の２つのCSペア番号を記録する必要がある。
@@ -270,7 +270,7 @@ void ofmo_twoint_set_last_ijcs( const int mythread, const int last_ijcs ) {
     LAST_IJCS[mythread] = last_ijcs;
 }
 
-/** バッファが一杯になって時点でのCSペア番号登録を行う関数
+/** A function that registers the CS pair number when the buffer is full
  *
  * buffered direct SCF法では、バッファが一杯になった時点で計算していた
  * ２電子積分の２つのCSペア番号を記録する必要がある。
@@ -287,7 +287,7 @@ void ofmo_twoint_set_last_klcs( const int mythread, const int last_klcs ) {
     LAST_KLCS[mythread] = last_klcs;
 }
 
-/** バッファが一杯になって時点で計算していた積分タイプを登録する関数
+/** A function that registers the integral type that was calculated when the buffer was full
  *
  * buffered direct SCF法では、バッファが一杯になった時点で計算していた
  * ２電子積分の積分タイプを記録する必要がある。
@@ -305,7 +305,7 @@ void ofmo_twoint_set_last_eri_type( const int mythread,
     LAST_ERI_TYPE[mythread] = last_eri_type;
 }
 
-/** バッファに保存した縮約２電子積分の数を登録する関数
+/** A function that registers the number of contracted two-electron integrals stored in the buffer
  *
  * buffered direct SCF法では、繰り返し計算のたびに行うG行列計算時に、
  * バッファに保存している２電子積分と、再計算する２電子積分を用いる。
@@ -322,15 +322,15 @@ void ofmo_twoint_set_stored_nzeri( const int mythread,
     EBUF_NON_ZERO_ERI[mythread] = ebuf_non_zero_eri;
 }
 
-/** バッファが一杯になって時点で計算していた積分タイプを得る関数
+/** A function that obtains the integral type that was calculated when the buffer was full
  *
- * buffered direct SCF法では、バッファに保存されていない
- * ２電子積分の計算開始時に、バッファが一杯になった時点で計算していた
- * ２電子積分の積分タイプの情報が必要となる。
- * この関数は、その積分タイプを返す関数である。
+ * In the buffered direct SCF method, information on the integral type of
+ * the two-electron integral calculated when the buffer is full is
+ * required at the start of the calculation of the two-electron integral not stored in the buffer.
+ * This function is a function that returns its integral type.
  *
- * @param[in] mythread スレッド番号
- * @return バッファが一杯になった時点で計算していた２電子積分の積分タイプ
+ * @param[in] mythread Thread number
+ * @return Integral type of two-electron integral that was calculated when the buffer was full
  *
  * @ingroup integ-misc
  *
@@ -339,7 +339,7 @@ int ofmo_twoint_get_last_eri_type( const int mythread ) {
     return LAST_ERI_TYPE[mythread];
 }
 
-/** バッファが一杯になって時点でのCSペア番号を得る関数
+/** A function that gets the CS pair number when the buffer is full
  *
  * buffered direct SCF法では、バッファに保存されていない
  * ２電子積分の計算開始時に、バッファが一杯になった時点で計算していた

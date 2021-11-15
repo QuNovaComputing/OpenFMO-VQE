@@ -1,8 +1,8 @@
 /**
  * @file ofmo-integ.c
- * Hartree-Fock分子軌道法、および、それに基づいたFMO法で
- * 必要となる各種分子積分を行うための最上位関数群を定義している
- * ファイル。
+ * A file that defines the top-level functions for performing
+ * various molecular integrals required by the Hartree-Fock molecular
+ * orbital method and the FMO method based on it.
  * */
 
 /**
@@ -17,7 +17,7 @@
  * */
 
 /**
- * @defgroup integ-top 分子積分の最上位クラス
+ * @defgroup integ-top Top class of molecular integral
  * @brief 積分計算を必要とする関数から呼ばれる最上位関数
  * @ingroup integ
  * */
@@ -841,12 +841,12 @@ int ofmo_integ_add_fock( const int nao, const size_t nstored_eri,
     return 0;
 }
 /*
- * バッファに保存されている2電子積分を用いてFock行列を計算する
- * ただし、正方行列を圧縮形式に折りたたまないと、正確にならない
- * 引数の密度行列DとFock行列Gは正方行列として扱う
- * スレッド並列部分で呼び出す
- * Gは初期化されていることを期待している
- * 以下の変数はスレッド毎に異なるはず
+ * Compute the Fock matrix using the two-electron integration stored in the buffer
+ * However, the density matrix D and Fock matrix G of the arguments that are not accurate
+ * unless the square matrix is ​​folded into a compressed format are the thread parallel parts
+ * that are treated as square matrices.
+ * Calling G expects to be initialized The following variables should be different
+ * for each thread.
  *  non_zero_eri
  *  ebuf_eri[]
  *  ebuf_ind4[]
@@ -878,12 +878,12 @@ static void unpack_matrix( const int n, const double SRC[], double DST[] )
     }
 }
 
-/** 電子反発積分（二電子積分）計算関数（２）
+/** Electron repulsion integral (two-electron integral) calculation function (2)
  * @ingroup integ-top
  *
- * \c ofmo_integ_twoint 関数呼び出しで計算し保存された二電子積分を
- * 用いて、二電子ハミルトン行列（G行列）を計算する。バッファに保存
- * されていない積分は、計算して、G行列に加算する。
+ * The two-electron Hamilton matrix (G matrix) is calculated using the two-electron integral
+ * calculated and saved by calling the \c ofmo_integ_twoint function.
+ * Integrals that are not stored in the buffer are calculated and added to the G matrix.
  *
  * @attention
  * @li この関数は、OpenMPを用いたスレッド並列化を行っている。
@@ -1293,8 +1293,7 @@ static int (*calc_ifc4c[])(
  *     CS番号 \c ics のCSが属する原子の番号
  * @param[in] shel_ini_mon[ics] 相手モノマーの、
  *     CS番号 \c ics のCSに含まれるAOの先頭AO番号
- * @param[in] atom_x_mon[iat] 相手モノマーの、
- *     原子の番号 \c iat のx座標（au単位）
+ * @param[in] atom_x_mon[iat] X-coordinate (au unit) of atom number \c iat of the mating monomer
  * @param[in] atom_y_mon[iat] 相手モノマーの、
  *     原子の番号 \c iat のy座標（au単位）
  * @param[in] atom_z_mon[iat] 相手モノマーの、
@@ -1403,7 +1402,7 @@ int ofmo_integ_ifc4c_sorted_partial(
 		for ( Ld=0; Ld<=Lc; Ld++ ) {
 		    Lcd = Lc*(Lc+1)/2 + Ld;
 		    //Labcd = Lab*maxlqn2 + Lcd;
-		    Labcd = Lab*6 + Lcd;
+		    Labcd = Lab*6 + Lcd; // Here 6 = {1s, 2s, 2p, 3s, 3p, 3d}
 		    calc_ifc4c[Labcd](
 			    &nworkers, &local_id,
 			    &La, &Lb, &Lc, &Ld,
@@ -1519,7 +1518,7 @@ static int (*calc_ifc3c[]) (
     ofmo_ifc3c_rys_ddss, ofmo_ifc3c_rys_ddpp, ofmo_ifc3c_rys_dddd,*/
 };
 
-/** ３中心クーロン相互作用項の計算を行う関数
+/** A function that calculates the 3-center Coulomb interaction term
  * @ingroup integ-top
  *
  * FMO計算に現れる、２つのモノマー間の３中心クーロン相互作用項を

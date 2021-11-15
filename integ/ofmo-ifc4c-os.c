@@ -82,8 +82,8 @@
  *
  * @param[in] D_mon[] 相手モノマーの密度行列（正方行列形式）
  *
- * @param[out] V_frg[] この関数で計算した４中心クーロンポテンシャルが
- * 加算された環境ポテンシャル項（圧縮U形式）
+ * @param[out] V_frg[] Environmental potential term (compressed U format)
+ * to which the 4-center Coulomb potential calculated by this function is added.
  *
  * @attention
  * 引数のV_frg[]がスレッド毎に異なる領域をさしている場合には、
@@ -255,7 +255,7 @@ extern void ofmo_twoint_core_os_dddd(
         const double vxizc[], const double DC[3], const double AC[3],
         double *DINT );
 
-/** (ss,ss)タイプの４中心クーロンポテンシャル項をまとめて計算する
+/** Calculate the (ss, ss) type 4-center Coulomb potential terms together
  * @ingroup integ-ifc4c
  * */
 int ofmo_ifc4c_os_ssss(

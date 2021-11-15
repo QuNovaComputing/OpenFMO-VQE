@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 struct _amp_carrier_ {
     int namp;
@@ -88,11 +89,7 @@ int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
     exec_prog(args);
 
     /* Data acquisition */
-
-
-    /* Update to the memory */
-
-    /* Outputs */
+    ofmo_parse_result(ofpath, ifrag, energy);
 
     return 0;
 }
@@ -177,7 +174,38 @@ static int exec_prog(const char **argv)
     return 0;
 }
 
-int ofmo_parse_result(const char *ofpath, const int ifrag){
+int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
     FILE * fp = fopen(ofpath, "r");
-    
+    double val;
+    char idx_str[100];
+    char *stop_idx_str;
+    int namp, iamp;
+
+    // Read size
+    read = getline(&line, &len, fp);
+    sscanf(line, "%d", &namp);
+    amp[ifrag]->namp = namp;
+    if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
+    if(amp[ifrag] -> fock_vec) free(amp[ifrag] -> fock_vec);
+    amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
+    amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
+
+    // Read energy
+    read = getline(&line, &len, fp);
+    sscanf(line, "%f", energy);
+
+    // Read amplitudes
+    for(iamp=0; iamp<namp; iamp++){
+        read = getline(&line, &len, fp);
+        sscanf(line, "%[0-1]\t%f\n", idx_str, &val);
+        amp[ifrag]->amp[iamp] = val;
+        amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
+    }
+
+    fclose(fp);
+    if(line) free(line);
+    return 0;
 }

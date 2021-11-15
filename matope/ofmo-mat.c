@@ -92,14 +92,15 @@ extern void dgesv( const int* N, const int* HRHS, double A[],
 	const int* LDA, int ipiv[],
 	double B[], const int* LDB, int* INFO );
 
-/** 圧縮行列(U形式)を正方行列に代入する
+/** Substitute the compressed matrix (U format) into a square matrix
  *
- * 圧縮U形式で保存された対称行列を、完全な対称行列として正方行列に
- * 代入（展開）する
+ * Substitute (expand) a symmetric matrix saved in compressed U format
+ * into a square matrix as a perfect symmetric matrix
  *
- * @param[in] n 操作対象となる対称行列のサイズ
- * @param[in] U[n*(n+1)/2] 圧縮U形式の対称行列の要素が格納された配列
- * @param[out] S[n*n] 展開後の正方行列の要素が代入される配列
+ * @param[in] n The size of the symmetric matrix to be manipulated
+ * @param[in] U[n*(n+1)/2] An array containing the elements of a
+ *    compressed U-style symmetric matrix
+ * @param[out] S[n*n] An array to which the elements of the expanded square matrix are assigned
  *
  * */
 void ofmo_unpack_matrix(const int n, const double U[], double S[]) {
@@ -113,14 +114,15 @@ void ofmo_unpack_matrix(const int n, const double U[], double S[]) {
     }
 }
 
-/**  正方行列のU部分を圧縮行列に代入する
+/**  Substitute the U part of a square matrix into a compressed matrix
  *
- * 正方行列の右上三角行列(U)を、圧縮U形式の対称行列に代入（圧縮）する。
+ * Substitute (compress) the upper right triangular matrix (U) of the square
+ * matrix into the compressed U-format symmetric matrix.
  *
- * @param[in] n 操作対象となる対称行列のサイズ
- * @param[in] S[n*n] 正方行列形式の対称行列の要素が代入された配列。
- *     対角要素を含む右上三角部分以外は参照されない。
- * @param[out] U[n*(n+1)/2] 圧縮後の対称行列要素が代入される配列
+ * @param[in] n The size of the symmetric matrix to be manipulated
+ * @param[in] S[n*n] An array to which the elements of a square matrix symmetric
+ *     matrix are assigned. Only the upper right triangular part including the diagonal element is referenced.
+ * @param[out] U[n*(n+1)/2] An array to which the compressed symmetric matrix elements are assigned
  *
  * @ingroup ofmo-mat
  * * */
@@ -135,7 +137,7 @@ void ofmo_pack_matrix(const int n, const double S[], double U[]) {
     }
 }
 
-/** 正方行列を圧縮行列（U形式）に折りたたむ
+/** Fold a square matrix into a compressed matrix (U format)
  *
  * 正方行列を圧縮行列に折りたたむ。対角成分は2倍になる。
  *
@@ -158,7 +160,7 @@ void ofmo_fold_matrix( const int n, const double S[], double U[] ) {
     }
 }
 
-/** 正方行列の右上三角行列(U)部分を左下三角部分にコピーする
+/** Copy the upper right triangular matrix (U) part of the square matrix to the lower left triangular part
  *
  * 正方行列の右上三角行列(U)部分を左下三角部分にコピーする。
  * LAPACKの行列演算関数の中には、正方行列に対する対称変換
@@ -206,7 +208,7 @@ double ofmo_max_diff( const int n, const double v1[], const double v2[] ) {
     return max_diff;
 }
 
-/** 正方行列の転置を行う
+/** Transpose a square matrix
  *
  * 正方行列の転置を行う。
  *
@@ -246,7 +248,7 @@ void ofmo_scale_diag(const int n, const double alpha, double X[]) {
     }
 }
 
-/** 実数ベクトルののコピー
+/** Copy of real vector
  *
  * 実数ベクトルのコピー
  *
@@ -260,7 +262,7 @@ void ofmo_dcopy( const int n, const double src[], double dest[] ) {
     memcpy( dest, src, sizeof(double)*n );
 }
 
-/** 実数ベクトルの各要素を定数倍する
+/** Multiply each element of a real vector by a constant
  *
  * 実数ベクトル各要素を定数倍する
  * \f$ \bold{x} \leftarrow \alpha\bold{x}\f$
@@ -277,8 +279,9 @@ void ofmo_dscale( const int n, const double alpha, double x[] ) {
   //dscal( &n, &alpha, x, &incx);
 }
 
-/** daxpyの計算
+/** daxpy calculation
  *
+ * vec(y) <- alpha * vec(x) + vec(y)
  * \f$ \bold{y} \leftarrow \alpha\bold{x} + \bold{y} \f$の計算を行う
  *
  * @param[in] n ベクトルサイズ
@@ -299,7 +302,7 @@ void ofmo_daxpy( const int n, const double alpha, const double x[],
   daxpy( &n, &alpha, x, &incx, y, &incy);
 }
 
-/** 整数配列の和をとる
+/** Take the sum of integer arrays
  *
  * 整数配列の和をとる関数
  *
@@ -311,9 +314,10 @@ int ofmo_isum( const int n, const int iv[] ) {
     return sum;
 }
 
-/** 行列積
+/** Matrix product
  *
- * 同じサイズの正方行列に対するDGEMM計算を行う
+ * Perform DGEMM calculations on square matrices of the same size
+ * C <- alpha * A * B + C
  * \f$ \bold{C} \leftarrow \alpha\bold{AB}+\beta\bold{C} \f$
  *
  * @ingroup ofmo-mat
@@ -324,9 +328,9 @@ void ofmo_dgemm( const int n, const char *transa, const char *transb,
     dgemm( transa, transb, &n, &n, &n, &alpha, A, &n, B, &n, &beta, C, &n );
 }
 
-/** 一般化固有値問題から標準固有値問題への行列の変換
+/** Matrix transformation from the generalized eigenvalue problem to the standard eigenvalue problem
  *
- * 圧縮U形式のみを対象にする
+ * Only for compressed U format
  * @ingroup ofmo-mat
  * */
 int ofmo_dsygst( const int itype, const int n, double A[],
@@ -367,15 +371,15 @@ static int alloc_work_area( const int n ) {
     return 0;
 }
 
-/** この関数群の初期化を行う
+/** Initialize this function group
  *
- * 固有値計算などで使用するワーク領域などを確保する
+ * Secure work areas used for eigenvalue calculation, etc.
  *
- * @param[in] n 扱う行列の次元数
+ * @param[in] n Number of dimensions of the matrix to handle
  *
- * @note 最初の呼び出し時に、計算対象となる行列の次元の最大値を
- * 引数としてこの関数を呼び出すと、無駄な\c free や\c malloc を
- * 呼ばずに済む
+ * @note If you call this function with the maximum dimension
+ * of the matrix to be calculated as an argument at the first call,
+ * you can avoid calling unnecessary \c free and \c malloc .
  *
  * @ingroup ofmo-mat
  * */
@@ -390,7 +394,7 @@ int ofmo_mat_init( const int n ) {
     return 0;
 }
 
-/** ２つの実数ベクトルの内積をとる
+/** Take the inner product of two real vectors
  *
  * ２つの倍精度浮動小数ベクトルの内積をとる関数。
  *
@@ -407,17 +411,17 @@ double ofmo_dot_product( const int n, const double x[], const double y[] ) {
     return ddot( &N, x, &incx, y, &incx );
 }
 
-/** Cholesky分解を行う関数
+/** Functions that perform Cholesky decomposition
  *
- * 正定値行列（正方行列形式）に対するCholesky分解を行う。
+ * Perform Cholesky decomposition on a positive-definite matrix (square matrix format).
  *
  * @attention
  * @li 内部でLapackの関数 \c DPOTRF を呼んでいる
  *
- * @param[in] n 行列サイズ
- * @param[in,out] S[] （入力時）正定値対称行列の要素
- *     （出力時）Cholesky分解された結果の行列要素。
- *     配列サイズは\f$ \tt{n}^2 \f$ 以上であること。
+ * @param[in] n Matrix size
+ * @param[in,out] S[] (At the time of input) Elements of positive-definite symmetric matrix
+ *     (At the time of output) Cholesky Matrix element of the decomposed result.
+ *     The array size must be at least n^2 (\ f $ \ tt {n} ^ 2 \ f $).
  *
  * @retval 0 正常終了（ちゃんとCholesky分解できた）
  * @retval 0以外 異常終了（途中で固有値が負になって計算が出来なくなった）
@@ -430,21 +434,23 @@ int ofmo_chodec( const int n, double S[] ) {
     return info;
 }
 
-/** 一般化対称固有値問題を解く
+/** Solve the generalized symmetric eigenvalue problem
+ * Ax = lambda Bx
+ * @f$ \bold{Ax}=\lambda\bold{Bx}@f$
+ * Solve the type generalization eigenvalue problem.
+ * The coefficient matrix @f $ \ bold {A} @f $ is a symmetric matrix,
+ * and the matrix @f $ \ bold {B} @f $ is a definite matrix.
+ * Find all eigenvalues ​​and eigenvectors.
  *
- * @f$ \bold{Ax}=\lambda\bold{Bx}@f$タイプの一般化固有値問題を解く。
- * 係数行列@f$\bold{A}@f$は対称行列、行列@f$\bold{B}@f$は正定値
- * 対称行列である。
- * すべての固有値、固有ベクトルを求める。
- *
- * @param[in] n 解くべき行列の次元数
- * @param[in] U[] 正定値対称行列@f$\bold{B}@f$をCholesky分解した結果が
- * 代入された配列（正方行列形式）。このデータは、\c ofmo_chodec を
- * 呼び出して得られたものである。
- * @param[in,out] A[] （入力時）係数行列（@f$\bold{A}@f$、対称行列）が
- * 代入された配列。
- * （出力時）固有ベクトルが代入された配列。正方行列形式。
- * @param[out] e[] 固有値が代入される配列
+ * @param[in] n Number of dimensions of the matrix to solve
+ * @param[in] U[] An array to which the result of Cholesky decomposition of
+ *    the positive-definite symmetric matrix @f $ \ bold {B} @f $ is assigned
+ *    (square matrix format).
+ *    This data was obtained by calling \c ofmo_chodec .
+ * @param[in,out] A[] (At the time of input) An array to which the coefficient matrix
+ *    (@f $ \ bold {A} @f $, symmetric matrix) is assigned.
+ *    (At the time of output) An array to which the eigenvector is assigned. Square matrix format.
+ * @param[out] e[] Array to which eigenvalues ​​are assigned
  *
  * @ingroup ofmo-mat
  * */
@@ -468,7 +474,7 @@ int ofmo_solv_GSEP( const int n, const double U[],
     return 0;
 }
 
-/** 標準固有値問題を解く
+/** Solve the standard eigenvalue problem
  *
  * @f$\bold{Ax}=\lambda\bold{x}@f$タイプの標準固有値問題を解く。
  * ただし、係数行列@f$\bold{A}@f$は対称行列である。
@@ -492,7 +498,7 @@ int ofmo_solv_SEP( const int n, double A[], double e[] ) {
     return 0;
 }
 
-/** 連立一次方程式を解く
+/** Solve simultaneous linear equations
  *
  * 連立一次方程式 \f$\bold{Ax}=\bold{b}\f$ を解く
  *

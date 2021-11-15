@@ -1,9 +1,9 @@
 /**
  * @file ofmo-scf.c
  *
- * SCF計算プログラムのサンプルコード。
- * 通信回数を減らすために、MPI_Allreduce + MPI_Bcastでの
- * 実装を行った。
+ * Sample code for the SCF calculator.
+ * In order to reduce the number of communications,
+ * we implemented with MPI_Allreduce + MPI_Bcast.
  *
  * */
 #include <stdio.h>
@@ -126,7 +126,7 @@ static void ofmo_scf_dealloc() {
     _iv_   = NULL;
 }
 
-/** SCF関数内部で利用する配列を確保する関数
+/** SCF function A function that secures an array to be used inside
  *
  * SCF function A function that allocates an array to be used inside.
  * The following sequence is secured.
@@ -137,8 +137,8 @@ static void ofmo_scf_dealloc() {
  * @arg \c _dD_ Density matrix difference from the one before the SCF step (compressed U format)
  * @arg \c _dG_ Two-electron Hamilton matrix (compressed U format) calculated based on the density matrix difference.
  *     incrementalなFock行列生成時に用いる
- * @arg \c _T_ \c MPI_Allreduce 関数などの利用時に用いる一時配列(正方行列）
- * @arg _C_ MO係数行列が代入される配列（正方行列）
+ * @arg \c _T_ \c MPI_Allreduce Temporary array (square matrix) used when using functions, etc.
+ * @arg _C_ Array to which MO coefficient matrix is ​​assigned (square matrix)
  * @arg _ev_ MOエネルギー（固有値）が代入される配列（ベクトル）
  * @arg _iv_ 固有値計算などで用いる整数ベクトル
  *
@@ -348,7 +348,7 @@ int ofmo_scf_mulliken_population(
     return 0;
 }
 
-/** 初期電子密度行列作成ルーチン
+/** Initial electron density matrix creation routine
  *
  * ソート基底関数の並びで、拡張Huckel法を用いた初期密度行列作成を行う。
  *
@@ -487,7 +487,7 @@ int ofmo_scf_init_density_ehuckel(
 	}
     }
 
-    // 一般化固有値問題求値+density作成
+    // Generalized eigenvalue problem sought value + density creation
     double *U, *EV, *C;
     EV = _ev_;
     C  = _C_;
@@ -510,7 +510,7 @@ int ofmo_scf_init_density_ehuckel(
  * @param[in] comm MPIのコミュニケータ
  * @param[in] maxlqn 最大軌道量子数
  * @param[in] ncs CS数
- * @param[in] nao AO数
+ * @param[in] nao AO数 (Fragment)
  * @param[in] leading_cs[lqn] 軌道量子数 \c lqn の先頭CS番号
  * @param[in] shel_atm[ics] CS番号 \c ics のCSが属する原子の番号
  * @param[in] shel_ini[ics] CS番号 \c ics のCSに含まれるAOの先頭AO番号
@@ -539,19 +539,20 @@ int ofmo_scf_init_density_ehuckel(
  * @param[in] atomic_number[iat] 原子の番号 \c iat の原子番号
  * @param[in] ncharge 分子の電荷
  *
- * @param[in] S[] 重なり行列（圧縮U形式）
- * @param[in] H[] 一電子ハミルトン行列（圧縮U形式）
+ * @param[in] S[] Orbital matrix (compressed U format)
+ * @param[in] H[] One-electron Hamilton matrix (compressed U format)
  *
- * @param[in] maxscfcyc 最大SCF繰り返し回数
- * @param[in] scfe エネルギーの収束条件
- * @param[in] scfd 密度行列の収束条件
+ * @param[in] maxscfcyc Maximum number of SCF repetitions
+ * @param[in] scfe Energy convergence conditions
+ * @param[in] scfd Convergence condition of density matrix
  * 
- * @param[in,out] （入力時）初期密度行列／（出力時）SCF収束時の密度行列
- *     （圧縮U形式）
- * @param[out] F[] SCF収束時のソート済みFock行列（圧縮U形式）
- * @param[out] C[] SCF収束時のソート済みMO係数行列（正方行列）
- * @param[out] moe[] SCF収束時のMOエネルギー（ベクトル）
- * @param[out] *Eelec SCF収束時の電子エネルギー（hartree）
+ * @param[in,out] (At the time of input) Initial density matrix /
+ *      (At the time of output) Density matrix at the time of SCF convergence
+ *      (Compressed U format)
+ * @param[out] F[] Sorted Fock matrix at SCF convergence (compressed U format)
+ * @param[out] C[] Sorted MO coefficient matrix at SCF convergence (square matrix)
+ * @param[out] moe[] MO energy (vector) at the time of SCF convergence
+ * @param[out] *Eelec Electron energy (hartree) at the time of SCF convergence
  *
  * @retval  0 正常終了時（SCFが収束した）
  * @retval -1 異常終了時（SCFが収束しなかった）
@@ -709,153 +710,153 @@ int ofmo_scf_rhf(
     koda = 0;
     //for (itera=1, flag_scf=false; itera<=maxscfcyc; itera++) {
     for (itera=1, flag_scf=false; itera<=maxitera; itera++) {
-	ofmo_start_proc_timer( tid_gmat );
+		ofmo_start_proc_timer( tid_gmat );
         ofmo_twoint_eps_ps4(eps_ps4);
         ofmo_twoint_eps_eri(eps_eri);
         ofmo_twoint_eps_sch(eps_sch);
 #pragma omp parallel
-	{
-	    int nworkers, workerid;
-	    int nthreads, mythread;
-	    nthreads = omp_get_num_threads();
-	    mythread = omp_get_thread_num();
-	    nworkers = nthreads * nprocs;
-	    workerid = myrank * nthreads + mythread;
-	    ofmo_start_thread_timer( cid_gmat, mythread );
-	    ofmo_integ_gen_gmat( nworkers, workerid,
-		    maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
-		    leading_cs_pair, leading_cs,
-		    csp_schwarz, csp_ics, csp_jcs, csp_leading_ps_pair,
-		    psp_zeta, psp_dkps, psp_xiza, nao, dD, dG );
-	    ofmo_acc_thread_timer( cid_gmat, mythread );
-	}
-	ofmo_acc_proc_timer( tid_gmat );
-	ofmo_start_proc_timer( tid_allred );
-	MPI_Allreduce( dG, TMP, nao2, MPI_DOUBLE, MPI_SUM, comm );
-	memcpy( dG, TMP, sizeof(double)*nao2 );
-	ofmo_acc_proc_timer( tid_allred );
-	/*// debug
-	if ( itera== 1 && nao > 80 ) {
-	    long nzeri, nzeri0;
-	    nzeri0 = ofmo_get_nonzero_eri();
-	    MPI_Reduce( &nzeri0, &nzeri, 1, MPI_LONG, MPI_SUM, 0, comm );
-	    if ( fp_prof ) {
-		fprintf( fp_prof, "nzeri= %12ld\n", nzeri );
-	    }
-	}*/
-
-	/* form total Fock matrix */
-	if ( itera == 1 )
-	    for ( int i=0; i<nao2; i++ ) F[i] = H[i] + dG[i];
-	else
-	    for ( int i=0; i<nao2; i++ ) F[i] += dG[i];
-	// Fock行列の計算、エネルギーの計算
-	Enew = ofmo_scf_rhf_energy(nao, D, H, F) + Enuc;
-
-	/* DIISをやるかどうかの判定 */
-	ofmo_start_proc_timer( tid_diis );
-	ofmo_scale_diag( nao, 2.e0, F );
-	if ( (errdiis=ofmo_diis_profiling( nao, D, F )) > 0 ) {
-	    if ( dodiis == false && fabs(Enew-Eold)<tol_diis ) {
-		dodiis = true;
-	    }
-	} else {
-	    dodiis = false;
-	}
-	double *FE = _T_;
-	if ( dodiis ) ofmo_diis_update( nao, D, F, FE, dodiis );
-	/* ODA */
-	if ( dodiis ) {
-	    koda = 0;
-	} else {
-	    if ( koda == 0 ) {
-		memcpy( Foda, F, sizeof(double)*nao2 );
-		Eoda = Enew;
-	    } else {
-		double s2, c, lambda;
-		int i;
-		ofmo_scale_diag( nao, 0.5e0, Doda );
-
-		s2 = c = 0.e0;
-		for ( i=0; i<nao2; i++ ) {
-		    s2 += Foda[i] * Doda[i];
-		    c  += (F[i]-Foda[i]) * Doda[i];
+		{
+			int nworkers, workerid;
+			int nthreads, mythread;
+			nthreads = omp_get_num_threads();
+			mythread = omp_get_thread_num();
+			nworkers = nthreads * nprocs;
+			workerid = myrank * nthreads + mythread;
+			ofmo_start_thread_timer( cid_gmat, mythread );
+			ofmo_integ_gen_gmat( nworkers, workerid,
+				maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
+				leading_cs_pair, leading_cs,
+				csp_schwarz, csp_ics, csp_jcs, csp_leading_ps_pair,
+				psp_zeta, psp_dkps, psp_xiza, nao, dD, dG );
+			ofmo_acc_thread_timer( cid_gmat, mythread );
 		}
-		c *= 2.e0;
-		ofmo_scale_diag( nao, 2.e0, Doda );
-		lambda = ( c <= -s2 ? 1.e0 : (-s2/c) );
-		lambda1 = 1.e0 - lambda;
-		Eoda += lambda*(s2*2.e0+lambda*c);
-		for ( i=0; i<nao2; i++ )
-		    Foda[i]=lambda1*Foda[i]+lambda*F[i];
-	    }
-	    koda++;
-	}
+		ofmo_acc_proc_timer( tid_gmat );
+		ofmo_start_proc_timer( tid_allred );
+		MPI_Allreduce( dG, TMP, nao2, MPI_DOUBLE, MPI_SUM, comm );
+		memcpy( dG, TMP, sizeof(double)*nao2 );
+		ofmo_acc_proc_timer( tid_allred );
+		/*// debug
+		if ( itera== 1 && nao > 80 ) {
+			long nzeri, nzeri0;
+			nzeri0 = ofmo_get_nonzero_eri();
+			MPI_Reduce( &nzeri0, &nzeri, 1, MPI_LONG, MPI_SUM, 0, comm );
+			if ( fp_prof ) {
+			fprintf( fp_prof, "nzeri= %12ld\n", nzeri );
+			}
+		}*/
 
-	double *Fd;
-	Fd = ( dodiis ? FE : Foda );
-	ofmo_acc_proc_timer( tid_diis );
+		/* form total Fock matrix */
+		if ( itera == 1 )
+			for ( int i=0; i<nao2; i++ ) F[i] = H[i] + dG[i];
+		else
+			for ( int i=0; i<nao2; i++ ) F[i] += dG[i];
+		// Fock matrix calculation, energy calculation
+		Enew = ofmo_scf_rhf_energy(nao, D, H, F) + Enuc;
 
-	ofmo_unpack_matrix(nao, Fd, C);/* solve generalized symetric
-					   eigenvalue problem */
-	ofmo_scale_diag( nao, 0.5e0, F );
+		/* Judgment of whether to do DIIS */
+		ofmo_start_proc_timer( tid_diis );
+		ofmo_scale_diag( nao, 2.e0, F );
+		if ( (errdiis=ofmo_diis_profiling( nao, D, F )) > 0 ) {
+			if ( dodiis == false && fabs(Enew-Eold)<tol_diis ) {
+			dodiis = true;
+			}
+		} else {
+			dodiis = false;
+		}
+		double *FE = _T_;
+		if ( dodiis ) ofmo_diis_update( nao, D, F, FE, dodiis );
+		/* ODA */
+		if ( dodiis ) {
+			koda = 0;
+		} else {
+			if ( koda == 0 ) {
+			memcpy( Foda, F, sizeof(double)*nao2 );
+			Eoda = Enew;
+			} else {
+			double s2, c, lambda;
+			int i;
+			ofmo_scale_diag( nao, 0.5e0, Doda );
 
-	ofmo_start_proc_timer( tid_diag );
-	ierr = ofmo_solv_GSEP( nao, U, C, moe );
-	ofmo_acc_proc_timer( tid_diag );
-	if ( ierr != 0 ) {
-	    dbg("error in solving GSEP\n");
-	    MPI_Abort( MPI_COMM_WORLD, -1 );
-	}
-	/* update density */
-	ofmo_dcopy( nao2, D, Dold ); /* store previous density matrix */
-	ofmo_scf_make_rhf_density(nao, nocc, C, D);
-	// 収束判定を行う
-	deltaE = Enew - Eold;
-	deltaD = ofmo_max_diff( nao2, D, Dold );
-	if ( fp_prof ) {
-	    fprintf(fp_prof, "%5d : %17.10f ( %17.10f ) (%10.7f)\n",
-		    itera, Enew, deltaE, deltaD);
-	}
-        if (itera>=minitera) {
-          if (convType==scc) {
-            if (deltaE<scfe && deltaD<scfd) {
-              flag_scf = true;
-            }
-          } else if (convType==scf) {
-            // from rhfuhf in GAMESS
-            int cvdens = false;
-            int cvengy = false;
-            int cvdiis = false;
-            double diistol = scfe*1.0e-2;
-            cvdens = (deltaD<scfd && fabs(deltaE)<scfe*10)
-              || (deltaD<scfd*0.2e0);
-            cvengy = (fabs(deltaE)<scfe && deltaD<scfd*2);
-            errdiis = fabs(errdiis);
-            cvdiis = (dodiis && errdiis<diistol && deltaD<scfd*2);
-            if (cvdens || cvengy || cvdiis) { flag_scf = true; };
-          } else {
-            if (fabs(deltaE)<scfe && deltaD<scfd) {
-              flag_scf = true;
-            }
-          }
-        }
+			s2 = c = 0.e0;
+			for ( i=0; i<nao2; i++ ) {
+				s2 += Foda[i] * Doda[i];
+				c  += (F[i]-Foda[i]) * Doda[i];
+			}
+			c *= 2.e0;
+			ofmo_scale_diag( nao, 2.e0, Doda );
+			lambda = ( c <= -s2 ? 1.e0 : (-s2/c) );
+			lambda1 = 1.e0 - lambda;
+			Eoda += lambda*(s2*2.e0+lambda*c);
+			for ( i=0; i<nao2; i++ )
+				Foda[i]=lambda1*Foda[i]+lambda*F[i];
+			}
+			koda++;
+		}
 
-	ofmo_start_proc_timer( tid_bcast );
-	MPI_Bcast( &flag_scf, 1, MPI_INT, 0, comm );
-	ofmo_acc_proc_timer( tid_bcast );
-	if ( flag_scf == true ) break;
+		double *Fd;
+		Fd = ( dodiis ? FE : Foda );
+		ofmo_acc_proc_timer( tid_diis );
 
-	// for incremental Fock generation
-	for ( int i=0; i<nao2; i++ ) dD[i] = D[i] - Dold[i];
-	Eold = Enew;
-	/* ODA */
-	if ( koda == 1 ) {
-	    memcpy( Doda, dD, sizeof(double)*nao2 );
-	} else if ( koda > 1 ) {
-	    for ( int i=0; i<nao2; i++ )
-		Doda[i] = dD[i] + lambda1*Doda[i];
-	}
+		ofmo_unpack_matrix(nao, Fd, C);/* solve generalized symetric
+						eigenvalue problem */
+		ofmo_scale_diag( nao, 0.5e0, F );
+
+		ofmo_start_proc_timer( tid_diag );
+		ierr = ofmo_solv_GSEP( nao, U, C, moe );
+		ofmo_acc_proc_timer( tid_diag );
+		if ( ierr != 0 ) {
+			dbg("error in solving GSEP\n");
+			MPI_Abort( MPI_COMM_WORLD, -1 );
+		}
+		/* update density */
+		ofmo_dcopy( nao2, D, Dold ); /* store previous density matrix */
+		ofmo_scf_make_rhf_density(nao, nocc, C, D);
+		// Make a convergence test
+		deltaE = Enew - Eold;
+		deltaD = ofmo_max_diff( nao2, D, Dold );
+		if ( fp_prof ) {
+			fprintf(fp_prof, "%5d : %17.10f ( %17.10f ) (%10.7f)\n",
+				itera, Enew, deltaE, deltaD);
+		}
+			if (itera>=minitera) {
+			if (convType==scc) {
+				if (deltaE<scfe && deltaD<scfd) {
+				flag_scf = true;
+				}
+			} else if (convType==scf) {
+				// from rhfuhf in GAMESS
+				int cvdens = false;
+				int cvengy = false;
+				int cvdiis = false;
+				double diistol = scfe*1.0e-2;
+				cvdens = (deltaD<scfd && fabs(deltaE)<scfe*10)
+				|| (deltaD<scfd*0.2e0);
+				cvengy = (fabs(deltaE)<scfe && deltaD<scfd*2);
+				errdiis = fabs(errdiis);
+				cvdiis = (dodiis && errdiis<diistol && deltaD<scfd*2);
+				if (cvdens || cvengy || cvdiis) { flag_scf = true; };
+			} else {
+				if (fabs(deltaE)<scfe && deltaD<scfd) {
+				flag_scf = true;
+				}
+			}
+			}
+
+		ofmo_start_proc_timer( tid_bcast );
+		MPI_Bcast( &flag_scf, 1, MPI_INT, 0, comm );
+		ofmo_acc_proc_timer( tid_bcast );
+		if ( flag_scf == true ) break;
+
+		// for incremental Fock generation
+		for ( int i=0; i<nao2; i++ ) dD[i] = D[i] - Dold[i];
+		Eold = Enew;
+		/* ODA */
+		if ( koda == 1 ) {
+			memcpy( Doda, dD, sizeof(double)*nao2 );
+		} else if ( koda > 1 ) {
+			for ( int i=0; i<nao2; i++ )
+			Doda[i] = dD[i] + lambda1*Doda[i];
+		}
     }	// end for (itera)
     MPI_Bcast( &Enew, 1, MPI_DOUBLE, 0, comm );
     *Etot = Enew;

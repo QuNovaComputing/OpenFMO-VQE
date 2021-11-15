@@ -38,6 +38,8 @@
 
 #include "ofmo-twoint.h"
 
+#include "ofmo-vqe.h"
+
 #ifdef USE_CUDA
 #include "cuda/cuda-drv.h"
 #include "cuda/cudalib.h"
@@ -1218,7 +1220,7 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_twoint_eps_ps4(eps_ps4);
     ofmo_twoint_eps_eri(eps_eri);
     ofmo_twoint_eps_sch(eps_sch);
-    if ( level == OFMO_RHF ) {
+    if ( level == OFMO_RHF || level == OFMO_VQE ) {
         ofmo_scf_set_convType((nmonomer==1)? scc: scf); // Should be in args.
 	ofmo_scf_rhf(
 		comm, maxlqn, Enuc, ncs, nao,
@@ -1231,6 +1233,19 @@ int ofmo_calc_fragment_electronic_state(
 	if ( fp_prof )
 	    fdbg( fp_prof, "ERROR: method %d is not supported\n", level );
 	return -1;
+    }
+
+    if(level == OFMO_VQE){
+        assert(nmonomer == 1);
+        double * eri_val;
+        short int * eri_ind4;
+        int non_zero_eri;
+        int mythread = omp_get_thread_num();
+        eri_val = ofmo_twoint_getadd_integ_val( mythread ); // In AO
+        eri_ind4 = ofmo_twoint_getadd_integ_ind4( mythread ); // In AO
+        non_zero_eri = ofmo_twoint_get_stored_nzeri( mythread );
+        ierr = ofmo_vqe_call(monomer_list[0], nao, H, eri_val, eri_ind4, non_zero_eri, S, C, energy);
+    	if ( ierr != 0 ) return -1;
     }
 
     /* energies */

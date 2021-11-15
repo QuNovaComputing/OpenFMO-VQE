@@ -726,6 +726,10 @@ int main( int argc, char *argv[] ) {
       if (ierr!=0) eribfsz = 0;
     }
 
+    // Load method
+    int method = OFMO_RHF;
+    ierr = ofmo_data_get_vals('method', &method);
+
     // Calculation of the number of processes (group size) for each worker
     group_size = ( nmaxprocs - (nioprocs*niogroup) - 1 ) / ngroup;
 
@@ -961,7 +965,7 @@ int main( int argc, char *argv[] ) {
     double total_energy0_prev=0.e0, dE=HUGE_VAL;
     double scc_tol;
     imsg[OFMO_I_CMD]    = OFMO_SCF;
-    imsg[OFMO_I_METHOD] = OFMO_RHF;
+    imsg[OFMO_I_METHOD] = method;
     imsg[OFMO_I_NMON]   = 1;
     ofmo_data_get_vals("maxscc sccconv", &maxscc, &sccconv );
     scc_tol = pow( 0.1e0, (double)sccconv );
@@ -1195,7 +1199,7 @@ int main( int argc, char *argv[] ) {
 	menergy0 = (double*)malloc( sizeof(double) * nfrag );
 	ofmo_master_get( comm_mservs[0], OFMO_ENERGY0, -1, menergy0 );
 	imsg[OFMO_I_CMD]  = OFMO_SCF;
-	imsg[OFMO_I_METHOD] = OFMO_RHF;
+	imsg[OFMO_I_METHOD] = method;
 	imsg[OFMO_I_SCC]  = maxscc + 100;
 	imsg[OFMO_I_CONV] = scfconv;
 	imsg[OFMO_I_NMON] = 2;

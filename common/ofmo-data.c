@@ -49,6 +49,8 @@ static struct _val_carrier_ vc[] = {
     {"nprint", INT, NULL, "output level"},
     {"itol", INT, NULL, "primitive cutoff factor ( 10^{-n} )"},
     {"icut", INT, NULL, "integrals less than 10^{-n} are ignored"},
+    {"method", INT, NULL, "calculation method, either OFMO_RHF or OFMO_VQE"},
+    {"vqescr", P_CHAR, NULL, "path to vqe script"},
     // in $basis section
     {"ngauss", INT, NULL, "# of Gaussians (N)"},
     {"diffsp", INT, NULL, "flag of SP diffuse function for heavy atom"},

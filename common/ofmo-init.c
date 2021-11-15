@@ -504,15 +504,16 @@ static int ofmo_assign_entire_molecule_basis() {
     return 0;
 }
 
-/** FMO計算の初期化ルーチン
+/** FMO calculation initialization routine
  *
  * FMO計算の初期化ルーチン。この関数呼び出しを行うことで、
- * 各フラグメントの情報がすべて代入される。
- * 現在の入力では、１種類の基底関数しか用いないことにしている
+ * Initialization routine for FMO calculation. By calling this function,
+ * all the information of each fragment is assigned.
+ * The current input uses only one type of basis function.
  *
- * @param[in] filename 入力ファイル名
- * @param[in] comm 入力データを共有するコミュニケータ。
- * 通常、\c MPI_COMM_WORLD を指定すればよい。
+ * @param[in] filename Input file name
+ * @param[in] comm A communicator that shares input data.
+ * Normally, you can specify \c MPI_COMM_WORLD.
  *
  * @ingroup ofmo-input
  * */

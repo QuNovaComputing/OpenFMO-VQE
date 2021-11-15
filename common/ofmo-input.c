@@ -29,19 +29,23 @@ static int NFRAG = 1;
  * $CONTRL部分の読み込み
  * 以下の変数を読み込む
  *
- * maxit = SCFの最大繰り返し回数
+ * maxit = Maximum number of repetitions of SCF
  * nprint = 出力レベル
  * itol   = primitiveのカットオフファクタ
  * icut   = 2電子積分のカットオフファクタ
+ * method = calculation method (RHF by default, VQE)
+ * vqescr = vqe python script file name
  * ------------------------------------------------------- */
 static int input_contrl( FILE *fp, char **token, const int ntok ) {
     //int maxit=30, nprint=0, itol=20, icut=15;
     int maxit=30, nprint=0, itol=20, icut=12;
+	int method=OFMO_RHF;
+	char *vqescr=NULL;
     // local variables
     int i, nline = 0, n, ne, errpos = -1, flag_end = false;
     if ( fp == NULL ) {
-	ofmo_data_put_vals("maxscf nprint itol icut",
-		maxit, nprint, itol, icut );
+	ofmo_data_put_vals("maxscf nprint itol icut method vqescr",
+		maxit, nprint, itol, icut, method, vqescr);
 	return 0;
     }
 
@@ -69,6 +73,22 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 		itol = atoi( elems[1] );
 	    else if ( strcmp( elems[0], "icut" ) == 0 )
 		icut = atoi( elems[1] );
+		else if ( strcmp( elems[0], "method" ) == 0){
+			if (strcmp(elems[1], "RHF") == 0){
+				method = OFMO_RHF;
+			}
+			else if (strcmp(elems[1], "VQE") == 0){
+				method = OFMO_VQE;
+			}
+			else{
+				dbg("line=%d, elem=%d : ERROR\n", nline, ++i );
+	    		break;
+			}
+		}else if ( strcmp( elems[0], "vqescr" ) == 0){
+			int s = strlen(elems[1])+1;
+			vqescr = malloc(s);
+			strncpy(vqescr, elems[1], s);
+		}
 	}
 	if ( errpos >= 0 ) {
 	    dbg("line=%d, elem=%d : ERROR\n", nline, ++i );
@@ -83,8 +103,8 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	}
     }
     if ( !flag_end ) return -1;
-    ofmo_data_put_vals("maxscf nprint itol icut",
-	    maxit, nprint, itol, icut );
+    ofmo_data_put_vals("maxscf nprint itol icut method vqescr",
+	    maxit, nprint, itol, icut, method, vqescr );
     return 0;
 }
 
@@ -993,14 +1013,13 @@ static int input_nat( FILE* fp ) {
     return nat;
 }
 
-/** GAMESS形式の入力データを読み込む関数
+/** Function to read input data in GAMESS format
  *
- * 各セクションのデータを読み込む関数を駆動している
+ * Drives a function that reads the data for each section
  *
- * @param[in] fp 入力ファイルのファイル記述子
+ * @param[in] fp File descriptor of input file
  *
- * @note この関数が呼ばれた時点で、入力ファイルが開かれている
- * 必要がある
+ * @note The input file must be open when this function is called
  *
  * @ingroup ofmo-input
  * */

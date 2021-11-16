@@ -1,7 +1,9 @@
 #xc=FX10
-xc=IMPI
+#xc=IMPI
 #xc=MVAPICH2
 #xc=INTEL
+xc=OpenMPI
+#xc=GNU
 FALANX_TOP=$(HOME)/local
 
 CPP = gcc -E
@@ -49,9 +51,9 @@ xcMPI = 0
 xcOPENMP = 1
 
 ifeq ($(xc), OpenMPI)
-    MPICC = mpicc
+    MPICC = mpicc.openmpi
     xcMPI = 1
-    xc = INTEL
+    xc = GNU
 endif
 
 ifeq ($(xc), IMPI)
@@ -99,9 +101,10 @@ ifeq ($(xc), GNU)
     FFLAGS = -O3 -ffixed-line-length-132 -ffast-math
     OPENMP = -fopenmp
     PROF = -pg
-    ACML = /home/umeda/opt/acml4.4.0/gfortran64_mp/
-    LIBS = -L$(ACML)/lib -lacml_mp -lacml_mv -lgfortran -lm
-    LIBS = $(ACML)/lib/libacml_mp.a -lgfortran -lm
+    LIBS = -lm -lgfortran -ldl -lblas -llapack
+    #ACML = /home/umeda/opt/acml4.4.0/gfortran64_mp/
+    #LIBS = -L$(ACML)/lib -lacml_mp -lacml_mv -lgfortran -lm
+    #LIBS = $(ACML)/lib/libacml_mp.a -lgfortran -lm
     xcOK = 1
 endif
 
@@ -183,7 +186,7 @@ LD = $(CC)
 #DEFS = -DOFMO_PROF -DDEBUG_MODE
 
 INCDIR = -I../basis -I../master -I.. -I../scf -I../integ -I../matope -I../mserv \
-	 -I../common -I../worker -I../include
+	 -I../common -I../worker -I../include -I../vqe
 INCDIR += ${USERINC}
 LIBS   += ${USERLIB}
 
@@ -302,7 +305,7 @@ SHELL = /bin/sh
 
 export
 
-VPATH = ./basis:./matope:./integ:./scf:./master:./worker:./mserv:./common
+VPATH = ./basis:./matope:./integ:./scf:./master:./worker:./mserv:./common:./vqe
 
 OBJS_TOP0 = common/ofmo-string.o common/ofmo-compress.o common/ofmo-input.o \
 	    common/ofmo-data.o common/ofmo-init.o common/ofmo-misc.o \
@@ -375,12 +378,14 @@ OBJS_INTEG = integ/ofmo-cutoff-core-dddd.o \
 #	integ/ofmo-ifc2c-core-f.o \
 #	integ/ofmo-oneint-core-f.o integ/ofmo-oneint-f.o
 
+OBJS_VQE = vqe/ofmo-vqe.o
+
 ifdef xcCUDA
  OBJS_CUDA = cuda/cuda.o cuda/cuda-drv.o cuda/cuda-fmt-drv.o
 endif
 
 
-target_dirs=basis matope integ scf common
+target_dirs=basis matope integ scf common vqe
 
 OBJS_FALANX	= falanx/ofmo-falanx-main.o	\
 			falanx/ofmo-monomer-data.o	\
@@ -400,7 +405,8 @@ OBJS_FALANX	= falanx/ofmo-falanx-main.o	\
 			${OBJS_MAT}		\
 			${OBJS_SCF}		\
 			${OBJS_INTEG}	\
-			${OBJS_CUDA}
+			${OBJS_CUDA}  \
+      ${OBJS_VQE}
 PROG_FALANX = ofmo-falanx
 
 OBJS_MASTER = master/ofmo-master-main.o master/ofmo-data-struct.o \
@@ -412,7 +418,7 @@ OBJS_WORKER = worker/ofmo-worker-main.o worker/ofmo-mserv-cont.o \
 	  worker/ofmo-monomer-data.o worker/ofmo-projection.o \
 	  worker/ofmo-calc-frag.o worker/ofmo-counter.o \
 	  ${OBJS_TOP0} ${OBJS_BASIS} ${OBJS_MAT} \
-	  ${OBJS_SCF} ${OBJS_INTEG} \
+	  ${OBJS_SCF} ${OBJS_INTEG} ${OBJS_VQE} \
           ${OBJS_CUDA}
 PROG_WORKER = ofmo-worker
 
@@ -424,7 +430,7 @@ PROG_MSERV = ofmo-mserv
 OBJS_RHF = rhf/skel-rhf-main.o rhf/skel-rhf-data.o rhf/skel-rhf-calc.o \
            rhf/skel-w2e.o \
            common/ofmo-string.o common/ofmo-misc.o common/ofmo-prof.o \
-           ${OBJS_BASIS} ${OBJS_MAT} ${OBJS_SCF} ${OBJS_INTEG} \
+           ${OBJS_BASIS} ${OBJS_MAT} ${OBJS_SCF} ${OBJS_INTEG} ${OBJS_VQE} \
            ${OBJS_CUDA}
 PROG_RHF = skel-rhf
 

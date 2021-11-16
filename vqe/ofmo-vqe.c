@@ -12,7 +12,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
 
 struct _amp_carrier_ {
     int namp;
@@ -70,38 +73,30 @@ int ofmo_get_oldamps( const int ifrag, int *namp, double **old_alpha, int **old_
 }
 
 int ofmo_update_amps(){
+    int ifrag;
+    for(ifrag = 0; ifrag < _nfrag; ifrag++){
+        int namp = amp[ifrag]->namp;
+        old_amp[ifrag]->namp = namp;
+        
+        if(old_amp[ifrag]->amp) free(old_amp[ifrag]->amp);
+        if(old_amp[ifrag]->fock_vec) free(old_amp[ifrag]->fock_vec);
+        old_amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
+        old_amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
 
-}
-
-int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
-    const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const int nelec, double *energy){
-
-    /* Generate integral file */
-    char fpath[256];
-    sprintf(fpath, "./integ_temp/temp_int_%d.dat", ifrag);
-    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, nelec);
-
-    /* Call VQE */
-    char ofpath[256];
-    sprintf(ofpath, "./result_temp/temp_res_%d.dat");
-    char *args[] = {"python", "py_script.py", fpath, ofpath};
-    exec_prog(args);
-
-    /* Data acquisition */
-    ofmo_parse_result(ofpath, ifrag, energy);
-
+        memcpy(old_amp[ifrag]->amp, amp[ifrag]->amp, namp * sizeof(double));
+        memcpy(old_amp[ifrag]->fock_vec, amp[ifrag]->fock_vec, namp * sizeof(int));
+    }
     return 0;
 }
 
-int ofmo_export_integ(const* fpath, const int nao, const double H[],
+int ofmo_export_integ(const char* fpath, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
     const double S[], const double C[], const int nelec){
     
 
     FILE *fp = fopen(fpath, "w");
 
-    fprintf("NELEC\t%d\n", nelec);
+    fprintf(fp, "NELEC\t%d\n", nelec);
 
     int nao2 = ( nao + 1 ) * nao / 2;
     int i,j,k,l;
@@ -150,7 +145,7 @@ int ofmo_export_integ(const* fpath, const int nao, const double H[],
 static int exec_prog(const char **argv)
 {
     pid_t   my_pid;
-    int     status, timeout /* unused ifdef WAIT_FOR_COMPLETION */;
+    int     status;
 
     if (0 == (my_pid = fork())) {
             if (-1 == execve(argv[0], (char **)argv , NULL)) {
@@ -175,8 +170,7 @@ static int exec_prog(const char **argv)
 }
 
 int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
-    char * line = NULL;
-    size_t len = 0;
+    char line[256];
     ssize_t read;
     FILE * fp = fopen(ofpath, "r");
     double val;
@@ -185,7 +179,9 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
     int namp, iamp;
 
     // Read size
-    read = getline(&line, &len, fp);
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
     sscanf(line, "%d", &namp);
     amp[ifrag]->namp = namp;
     if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
@@ -194,18 +190,47 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
     amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
 
     // Read energy
-    read = getline(&line, &len, fp);
-    sscanf(line, "%f", energy);
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%lf", energy);
 
     // Read amplitudes
     for(iamp=0; iamp<namp; iamp++){
-        read = getline(&line, &len, fp);
-        sscanf(line, "%[0-1]\t%f\n", idx_str, &val);
+        if(fgets(line, 256, fp) == NULL){
+            return -1;
+        }
+        sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
         amp[ifrag]->amp[iamp] = val;
         amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
     }
 
     fclose(fp);
-    if(line) free(line);
+    return 0;
+}
+
+
+int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
+    const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
+    const double S[], const double C[], const int nelec, double *energy){
+
+    /* Generate integral file */
+    char fpath[256];
+    sprintf(fpath, "./integ_temp/temp_int_%d.dat", ifrag);
+    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, nelec);
+
+#ifdef DEBUG
+    return 0;
+#endif
+
+    /* Call VQE */
+    char ofpath[256];
+    sprintf(ofpath, "./result_temp/temp_res_%d.dat", ifrag);
+    const char *args[64] = {"python", "py_script.py", fpath, ofpath, NULL};
+    exec_prog(args);
+
+    /* Data acquisition */
+    ofmo_parse_result(ofpath, ifrag, energy);
+
     return 0;
 }

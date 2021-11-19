@@ -91,12 +91,13 @@ int ofmo_update_amps(){
 
 int ofmo_export_integ(const char* fpath, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const int nelec){
+    const double S[], const double C[], const double Enuc, const int nelec){
     
 
     FILE *fp = fopen(fpath, "w");
 
     fprintf(fp, "NELEC\t%d\n", nelec);
+    fprintf(fp, "ENUC\t%f\n", Enuc);
 
     int nao2 = ( nao + 1 ) * nao / 2;
     int i,j,k,l;
@@ -212,12 +213,12 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
 
 int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const int nelec, double *energy){
+    const double S[], const double C[], const int nelec, const double Enuc, double *energy){
 
     /* Generate integral file */
     char fpath[256];
     sprintf(fpath, "./integ_temp/temp_int_%d.dat", ifrag);
-    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, nelec);
+    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, Enuc, nelec);
 
 #ifdef DEBUG
     return 0;
@@ -232,5 +233,42 @@ int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
     /* Data acquisition */
     ofmo_parse_result(ofpath, ifrag, energy);
 
+    return 0;
+}
+
+
+int ofmo_posthf_density( const int na, const double * A, const int * fock_vec,
+    const double C[], const int nao, const int max_nocc, double D[]){
+    int i, j, ij, ia, ifk, ifk_s;
+    int vec, noe;
+    double alpha, dt;
+    const int nsao = nao * 2;
+    double * Ct, *ci, *cj;
+
+    Ct  = (double*)malloc(sizeof(double) * nao * nao );
+
+    ofmo_transpose_matrix(nao, C, Ct);
+
+    ij = 0;
+    for (i=0, ci=Ct; i<nao; i++, ci+=nao){
+    for (j=0, cj=Ct; j<=i;  j++, cj+=nao){
+        D[ij] = 0;
+        for (ia=0; ia<na; ia++){
+            vec = fock_vec[ia];
+            alpha = A[ia];
+            dt = 0;
+            for(ifk=0; ifk<nsao; ifk+=2){
+                noe = (vec>>ifk) & 1 + (vec>>(ifk + 1)) & 1;
+                if(noe > 0){
+                    ifk_s = ifk/2;
+                    dt += ci[ifk_s] * cj[ifk_s] * ((double)noe) / 2 ;
+                }
+            }
+            D[ij] += alpha * dt;
+        }
+        ij++;
+    }
+    }
+    free(Ct);
     return 0;
 }

@@ -200,7 +200,7 @@ double skel_rhf_scf(
         data->natom, data->nocc,
         array->S, array->H,
         config->maxscfcyc, config->scfe, config->scfd,
-        array->D, array->C, array->moe, &energy );
+        array->D, array->C, NULL, array->moe, &energy );
   }
   return energy;
 }

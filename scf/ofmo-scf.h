@@ -60,5 +60,5 @@ extern int ofmo_scf_rhf(
 	// 制御用データ
 	const int maxscfcyc, const double scfe, const double scfd,
 	// 結果代入用データ
-	double D[], double C[], double moe[], double *Eelec);
+	double D[], double C[], double* mo_tei, double moe[], double *Eelec);
 #endif

@@ -283,4 +283,21 @@ extern int ofmo_integ_ifc3c_sorted_partial_g(
 	const double ao_pop_mon[],
 	// (output) Coulomb potential
 	double V[] );*/
+	
+extern int ofmo_integ_export_eri(
+	// parallelization
+	const int nworkers, const int workerid,
+	// basis set & cutoff table data
+	const int maxlqn, const int shel_atm[], const int shel_ini[],
+	const double atom_x[], const double atom_y[],
+	const double atom_z[], const int leading_cs_pair[],
+        const int leading_cs[],
+	const double csp_schwarz[],
+	const int csp_ics[], const int csp_jcs[],
+	const int csp_leading_ps_pair[],
+	const double psp_zeta[], const double psp_dkps[],
+	const double psp_xiza[],
+	// density matrix data & G-matrix (output)
+	const int nao, const double Ct[], double mo_tei[] );
+
 #endif

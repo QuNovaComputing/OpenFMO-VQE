@@ -375,7 +375,7 @@ int ofmo_twoint_get_last_klcs( const int mythread ) {
     return LAST_KLCS[mythread];
 }
 
-/** 計算した２電子積分を保存するバッファの先頭アドレスを返す関数
+/** A function that returns the start address of the buffer that stores the calculated two-electron integral
  *
  * buffered direct SCF法で用いる計算した縮約２電子積分を保存する
  * バッファ領域の先頭アドレスを返す。
@@ -390,7 +390,7 @@ double* ofmo_twoint_get_ebuf_eri( const int mythread ) {
     return EBUF_VAL[mythread];
 }
 
-/** バッファに保存される２電子積分に関係する４つのAO添字を保存する
+/** Stores the four AO subscripts related to the two-electron integral stored in the buffer
  * 領域の先頭アドレスを返す関数
  *
  * @param[in] mythread スレッド番号
@@ -402,10 +402,10 @@ short int* ofmo_twoint_get_ebuf_ind4( const int mythread ) {
     return EBUF_IND4[mythread];
 }
 
-/** バッファに保存された縮約２電子積分の数を返す関数
+/** A function that returns the number of reduced two-electron integrals stored in the buffer
  *
  * @param[in] mythread スレッド番号
- * @return バッファに保存された縮約２電子積分の数
+ * @return Number of reduced two-electron integrals stored in the buffer
  *
  * @ingroup integ-misc
  *
@@ -414,7 +414,7 @@ size_t ofmo_twoint_get_stored_nzeri( const int mythread ) {
     return EBUF_NON_ZERO_ERI[mythread];
 }
 
-/* direct法やIFC4Cで用いる積分の一時領域に関する関数 */
+/* Functions related to the temporary domain of the integral used in the direct method and IFC4C */
 void ofmo_twoint_set_stored_integ( const int mythread,
 	const size_t ninteg ) {
     ETMP_NZERI[mythread] = ninteg;

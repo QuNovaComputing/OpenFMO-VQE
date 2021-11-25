@@ -657,25 +657,26 @@ static int (*calc_twoint_direct[])(
  * Also, the two-electron Hamilton matrix (G matrix) is not calculated.
  *
  * @attention
- * @li G行列生成関数 \c ofmo_integ_gen_gmat を呼び出す前に、一回、
- *     呼び出す必要がある。この関数を呼ばずに \c ofmo_integ_gen_gmat 関数
- *     を呼び出すと、結果がおかしくなる場合がある。
- * @li FMO計算のように一回の実行で複数回のSCF計算を行う場合には、
- *     SCF計算を行う度に、一度、呼び出す必要がある。
- * @li OpenMPによるスレッド並列化が行われている。スレッド並列実行を
- *     行うためには、この関数をスレッド並列領域内で呼び出す必要がある。
- * @li 適切に\c nworkers と \c workerid を設定すれば、MPIと組み合わせた
- *     ハイブリッド並列化にも対応している。
- * @li 二電子積分を保存するためのバッファは、関数内部で確保される。また、
- *     確保したバッファは、プログラム終了時に開放される。
+ * @li It must be called once before calling the G matrix generation function
+ * 	   \c ofmo_integ_gen_gmat . Calling the \c ofmo_integ_gen_gmat function
+ *     without calling this function may result in strange results.
+ * @li When performing SCF calculation multiple times in one execution like
+ *     FMO calculation, it is necessary to call it once each time SCF calculation is performed.
+ * @li Thread parallelization is performed by OpenMP. In order to execute threads
+ *     in parallel, this function must be called in the thread parallel area.
+ * @li If you set nworkers and \c workerid appropriately, it also supports hybrid
+ *     parallelization in combination with MPI.
+ * @li A buffer for storing the two-electron integral is reserved inside the
+ *     function. In addition, the secured buffer is released at the end of the
+ *     program.
  *
- * @param[in] nworkers 計算に用いるワーカプロセス（スレッド）数
- * @param[in] workerid 各ワーカプロセス（スレッド）のID。
+ * @param[in] nworkers Number of worker processes (threads) used for calculation
+ * @param[in] workerid ID of each worker process (thread).
  *     \f$ 0\le\tt{workerid}<\tt{nworkers} \f$である。
- * @param[in] ebuf_buffer_size_mb 二電子積分の値を保存するための
- *     バッファサイズ（MB単位）。このバッファには、積分の値だけでなく
- *     ４つの添字も保存される。
- * @param[in] maxlqn 最大軌道量子数
+ * @param[in] ebuf_buffer_size_mb Buffer size (in MB) for storing the value of
+ *     the two-electron integral. This buffer stores not only the integral value
+ *     but also the four subscripts.
+ * @param[in] maxlqn Maximum orbital quantum number
  * @param[in] shel_atm[ics] CS番号 \c ics のCSが属する原子の番号
  * @param[in] shel_ini[ics] CS番号 \c ics のCSに含まれるAOの先頭AO番号
  * @param[in] atom_x[iat] 原子の番号 \c iat のx座標（au単位）
@@ -700,8 +701,8 @@ static int (*calc_twoint_direct[])(
  *     \f$ \frac{\xi}{\zeta_a} = \frac{\zeta_b}{\zeta_a+\zeta_b} \f$
  *
  * 
- * @retval  0 すべての積分がバッファに保存されて終了（in core SCF）
- * @retval  1 バッファが一杯になって終了（partially direct SCF）
+ * @retval  0 All integrals are stored in the buffer and exit（in core SCF）
+ * @retval  1 End when the buffer is full（partially direct SCF）
  *
  * */
 int ofmo_integ_twoint_first(
@@ -886,18 +887,19 @@ static void unpack_matrix( const int n, const double SRC[], double DST[] )
  * Integrals that are not stored in the buffer are calculated and added to the G matrix.
  *
  * @attention
- * @li この関数は、OpenMPを用いたスレッド並列化を行っている。
- *     スレッド並列実行をするためには、スレッド並列領域内から
- *     この関数を呼び出す必要がある。
- * @li \c nworkers とワーカID \c workerid を適切に設定すれば、OpenMPと
- *     MPIとのハイブリッド並列実行が可能である。MPI並列時に、完全な
- *     G行列を得るためには、この関数の終了後に
- *     \c MPI_Allreduce 関数などを用いたリダクション処理を行う必要がある。
- * @li \c ofmo_integ_twoint_first が事前に呼び出されている必要がある。
- *     そうでない場合には、結果がおかしくなる場合がある。
- * @li 得られるG行列は、軌道量子数の大きさで
- *     ソートされたものである。元の並びのG行列が欲しい場合には、
- *     要素の並べ替えが必要である。
+ * @li This function performs thread parallelization using OpenMP.
+ *     In order to execute threads in parallel, it is necessary to call
+ *     this function from within the thread parallel area.
+ * @li If \c nworkers and worker ID \c workerid are set appropriately, hybrid
+ *     parallel execution of OpenMP and MPI is possible. In order to obtain
+ *     a complete G matrix at the time of MPI parallel, it is necessary to
+ *     perform reduction processing using the \c MPI_Allreduce function etc.
+ *     after the end of this function.
+ * @li \c ofmo_integ_twoint_first must be called in advance.
+ * 	   Otherwise, the results may be strange.
+ * @li The obtained G matrix is ​​sorted by the magnitude of the orbital
+ *     quantum number. If you want the original G matrix, you need to sort
+ *     the elements.
  *
  * @param[in] nworkers 計算に用いるワーカプロセス（スレッド）数
  * @param[in] workerid 各ワーカプロセス（スレッド）のID。
@@ -973,7 +975,6 @@ int ofmo_integ_gen_gmat(
     // debug
     char *CS = "spdfg";
     int g_last_eri_type = ofmo_twoint_get_global_last_eri_type();
-
 #pragma omp critical
     D_SQ = ofmo_twoint_alloc_square_density( nao );
 #pragma omp single
@@ -1020,6 +1021,11 @@ int ofmo_integ_gen_gmat(
 		for ( Ld=0; Ld<=(Lc==La? Lb : Lc ); Ld++ ) {
 		    Lcd = Lc*(Lc+1)/2 + Ld;
 		    Labcd = Lab*(Lab+1)/2 + Lcd;
+						/*// debug*/
+			/*printf("#D thd=%d, (%c%c|%c%c) ijcs=%d, klcs=%d\n",
+				mythread, CS[La], CS[Lb], CS[Lc], CS[Ld],
+				last_ijcs, last_klcs );
+			fflush(stdout);*/
 		    //if ( Labcd < last_eri_type ) continue;
 		    if ( Labcd < last_eri_type ) {
                       offset+=(leading_cs_pair[Lab+1]-leading_cs_pair[Lab]);
@@ -1030,11 +1036,6 @@ int ofmo_integ_gen_gmat(
 			    ofmo_twoint_get_last_ijcs( mythread );
 			last_klcs =
 			    ofmo_twoint_get_last_klcs( mythread );
-			/*// debug
-			printf("#D thd=%d, (%c%c|%c%c) ijcs=%d, klcs=%d\n",
-				mythread, CS[La], CS[Lb], CS[Lc], CS[Ld],
-				last_ijcs, last_klcs );
-			fflush(stdout);*/
 		    } else {
 			last_ijcs = last_klcs = -1;
 		    }
@@ -1151,7 +1152,7 @@ int ofmo_integ_gen_gmat(
     }
 #endif /* USE_CUDA */
 
-    // 計算が終わったスレッドの結果を順次Gに加算する
+    // Add the result of the calculated thread to G sequentially
 #pragma omp critical
     {
 	int i, j, ij;
@@ -1802,3 +1803,178 @@ int ofmo_integ_ifc2c_sorted_partial(
     return 0;
 }
 
+static void print_eri(const double eri_val[], const short int eri_idx4[],
+  const int nzeri){
+    int ix, ix4;
+    int i,j,k,l;
+	double v;
+    for(ix=0, ix4=0; ix<nzeri; ix++, ix4+=4){
+        i = (int) eri_idx4[ix4+0];
+        j = (int) eri_idx4[ix4+1];
+        k = (int) eri_idx4[ix4+2];
+        l = (int) eri_idx4[ix4+3];
+		v = eri_val[ix];
+		if(i == j){
+			v *= 2;
+		}
+		if(k == l){
+			v *= 2;
+		}
+		if((i == k && j == l) ||
+		   (i == l && j == k)){
+			v *= 2;
+		}
+        printf("%d %d %d %d %.7f\n", i, j, k, l, v);
+    }
+}
+
+int ofmo_integ_export_eri(
+	// parallelization
+	const int nworkers, const int workerid,
+	// basis set & cutoff table data
+	const int maxlqn, const int shel_atm[], const int shel_ini[],
+	const double atom_x[], const double atom_y[],
+	const double atom_z[], const int leading_cs_pair[],
+        const int leading_cs[],
+	const double csp_schwarz[],
+	const int csp_ics[], const int csp_jcs[],
+	const int csp_leading_ps_pair[],
+	const double psp_zeta[], const double psp_dkps[],
+	const double psp_xiza[],
+	// density matrix data & G-matrix (output)
+	const int nao, const double Ct[], double mo_tei[] ) {
+
+	int nao2;
+    double *D_SQ=NULL, *Gtmp;
+	int mythread=0;
+    int La, Lb, Lc, Ld, Lab, Lcd, Labcd;
+	int ix, ix4;
+	int iao,jao,kao,lao;
+	int imo,jmo,kmo,lmo,mo_idx;
+	int imo4, jmo3, kmo2;
+	int ic, jc, kc, lc;
+    int last_eri_type, last_ijcs, last_klcs;
+    int nnao, nao_2, nao_3, nao_4;
+    long nzeri, max_nzeri;
+    short *etmp_ind4;
+    double *etmp_val;
+    int local_id;
+	int ret;
+    size_t offset;
+
+	double eval;
+
+	nao2 = nao*(nao+1)/2;
+	nao_2 = nao * nao;
+	nao_3 = nao_2 * nao;
+	nao_4 = nao_3 * nao;
+	
+	mythread = omp_get_thread_num();
+	Gtmp = ofmo_twoint_alloc_local_gmat( mythread, nao );
+	nnao = nao*nao;
+    memset( Gtmp, '\0', sizeof(double)*nnao );
+	etmp_ind4 = ofmo_twoint_getadd_integ_ind4( mythread );
+    etmp_val  = ofmo_twoint_getadd_integ_val( mythread );
+    max_nzeri = (long)ofmo_twoint_get_max_stored_integ( mythread );
+    offset = 0;
+
+	/* TODO : Parallelize here.
+	 * short-term goal : use enough nzeris.
+	 * long-term goal  : duplicate calc_twoint_directs that doesn't erase buffer.
+	 */
+	ret = 0;
+#pragma omp critical
+{
+    for ( La=0; La<=maxlqn; La++ ) {
+	for ( Lb=0; Lb<=La; Lb++ ) {
+	    Lab = La*(La+1)/2 + Lb;
+	    for ( Lc=0; Lc<=La; Lc++ ) {
+		for ( Ld=0; Ld<=(Lc==La? Lb : Lc ); Ld++ ) {
+			if(ret == OFMO_EBUF_FULL){
+				// printf("ERROR : Not enough buffer\n");
+				break;
+			}
+		    ofmo_twoint_set_stored_integ( mythread, 0 );
+			last_eri_type = -1;
+			nzeri = 0;
+		    Lcd = Lc*(Lc+1)/2 + Ld;
+		    Labcd = Lab*(Lab+1)/2 + Lcd;
+						/*// debug*/
+			/*printf("#D thd=%d, (%c%c|%c%c) ijcs=%d, klcs=%d\n",
+				mythread, CS[La], CS[Lb], CS[Lc], CS[Ld],
+				last_ijcs, last_klcs );
+			fflush(stdout);*/
+		    //if ( Labcd < last_eri_type ) continue;
+		    /*if ( Labcd < last_eri_type ) {
+                      offset+=(leading_cs_pair[Lab+1]-leading_cs_pair[Lab]);
+                      continue;
+                    }
+		    if ( Labcd == last_eri_type ) {
+			last_ijcs =
+			    ofmo_twoint_get_last_ijcs( mythread );
+			last_klcs =
+			    ofmo_twoint_get_last_klcs( mythread );
+		    } else {
+			last_ijcs = last_klcs = -1;
+		    }
+			*/
+			last_ijcs = last_klcs = -1;
+		    local_id =
+			(int)((offset+(size_t)workerid)%(size_t)nworkers);
+                    start_w2e();
+		    ret = calc_twoint_direct[Labcd](
+				&nworkers, &local_id,
+				//&nworkers, &workerid,
+				&La, &Lb, &Lc, &Ld,
+				shel_atm, shel_ini,
+				atom_x, atom_y, atom_z,
+				leading_cs_pair,
+				csp_schwarz, csp_ics, csp_jcs,
+				csp_leading_ps_pair,
+				psp_zeta, psp_dkps, psp_xiza,
+				&max_nzeri, &nzeri,
+				etmp_val, etmp_ind4,
+				&last_ijcs, &last_klcs,
+				&nao, D_SQ, Gtmp );
+                    set_w2e(Labcd);
+		    // added for load-balancing
+		    offset+=(leading_cs_pair[Lab+1]-leading_cs_pair[Lab]);
+			if(ret == OFMO_EBUF_FULL){
+				// printf("ERROR : Not enough buffer\n");
+				break;
+			}
+			else{
+				for(ix=0, ix4=0; ix<nzeri; ix++, ix4+=4){
+					eval = etmp_val[ix];
+					iao = etmp_ind4[ix4+0];
+					jao = etmp_ind4[ix4+1];
+					kao = etmp_ind4[ix4+2];
+					lao = etmp_ind4[ix4+3];
+					if(iao == jao) eval *= 2;
+					if(kao == lao) eval *= 2;
+					if((iao == kao && jao == lao) ||
+					   (iao == lao && jao == kao)) eval *= 2;
+					printf("AO : %d %d %d %d | %f\n", iao, jao, kao, lao, eval);
+					fflush(stdout);
+					for(imo=0, imo4=0, ic=iao; imo<nao;   imo++, imo4+=nao_3, ic+=nao){
+					for(jmo=0, jmo3=0, jc=jao; jmo<imo+1; jmo++, jmo3+=nao_2, jc+=nao){
+					for(kmo=0, kmo2=0, kc=kao; kmo<imo+1; kmo++, kmo2+=nao,   kc+=nao){
+					for(lmo=0, 		   lc=lao; lmo<kmo+1; lmo++, 			  lc+=nao){
+						/* mo_idx = imo * nao * nao * nao
+								+jmo * nao * nao
+								+kmo * nao
+								+lmo; */
+						mo_idx = imo4 + jmo3 + kmo2 + lmo;
+						mo_tei[mo_idx] += eval * Ct[ic] * Ct[jc] * Ct[lc] * Ct[kc];
+					}}}}
+				}
+				//print_eri(etmp_val, etmp_ind4, nzeri);
+			}
+		}// Ld
+	    }    // Lc
+	}        // Lb
+    }	         // La
+} // OMP CRITICAL
+	if(ret != 0) return -1;
+	return 0;
+}

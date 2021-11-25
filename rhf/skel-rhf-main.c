@@ -28,6 +28,20 @@
 #define DEFAULT_BUFFER_SIZE 0
 #define DEFAULT_MAX_SCF_CYCLE 30;
 
+/*
+static void skel_rhf_show_eri(const double eri_val[], const short int eri_idx4[],
+  const int nzeri){
+    int ix, ix4;
+    int i,j,k,l;
+    for(ix=0, ix4=0; ix<nzeri; ix++, ix4+=4){
+        i = (int) eri_idx4[ix4+0];
+        j = (int) eri_idx4[ix4+1];
+        k = (int) eri_idx4[ix4+2];
+        l = (int) eri_idx4[ix4+3];
+        printf("%d %d %d %d %.7f\n", i, j, k, l, eri_val[ix]);
+    }
+}*/
+
 // ----------------
 
 static void skel_rhf_show_help(const char *myname)

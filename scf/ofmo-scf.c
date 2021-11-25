@@ -551,11 +551,12 @@ int ofmo_scf_init_density_ehuckel(
  *      (Compressed U format)
  * @param[out] F[] Sorted Fock matrix at SCF convergence (compressed U format)
  * @param[out] C[] Sorted MO coefficient matrix at SCF convergence (square matrix)
+ * @param[out] mo_tei[] Outputs MO ERI, should be allocated before. (size = nao**4)
  * @param[out] moe[] MO energy (vector) at the time of SCF convergence
  * @param[out] *Eelec Electron energy (hartree) at the time of SCF convergence
  *
  * @retval  0 正常終了時（SCFが収束した）
- * @retval -1 異常終了時（SCFが収束しなかった）
+ * @retval -1 At the time of abnormal termination (SCF did not converge, or  Buffer error)
  *
  * @ingroup ofmo-rhf
  * */
@@ -581,7 +582,7 @@ int ofmo_scf_rhf(
 	// Control data
 	const int maxscfcyc, const double scfe, const double scfd,
 	// Result substitution data
-	double D[], double C[], double moe[], double *Etot) {
+	double D[], double C[], double* mo_tei, double moe[], double *Etot) {
     int nao2;
     double *U, *Dold, *dG, *dD, *TMP, *F;
     double Eold, Enew, deltaD = 1.e100, deltaE;
@@ -861,8 +862,6 @@ int ofmo_scf_rhf(
     MPI_Bcast( &Enew, 1, MPI_DOUBLE, 0, comm );
     *Etot = Enew;
 
-    ofmo_twoint_free_Dcs();
-
 #ifdef USE_CUDA
     {
       int ret = 0;
@@ -875,6 +874,76 @@ int ofmo_scf_rhf(
     ofmo_twoint_eps_ps4(eps0_ps4);
     ofmo_twoint_eps_eri(eps0_eri);
     ofmo_twoint_eps_sch(eps0_sch);
+
+	if(1){//mo_tei != NULL){
+		const int nao_2 = nao * nao;
+		const int nao_3 = nao_2 * nao;
+		const int nao_4 = nao_3 * nao;
+		mo_tei = (double*) malloc(sizeof(double) * nao_4);
+		memset(mo_tei, '\0', sizeof(double) * nao_4);
+
+		double *Ct = malloc(sizeof(double) * nao_2);
+		ofmo_transpose_matrix(nao, C, Ct);
+		ierr = 0;
+#pragma omp parallel
+		{
+			int nworkers, workerid;
+			int nthreads, mythread;
+			int err;
+			nthreads = omp_get_num_threads();
+			mythread = omp_get_thread_num();
+			nworkers = nthreads * nprocs;
+			workerid = myrank * nthreads + mythread;
+			
+			//ofmo_start_thread_timer( cid_gmat, mythread );
+			err = ofmo_integ_export_eri(nworkers, workerid,
+				maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
+				leading_cs_pair, leading_cs,
+				csp_schwarz, csp_ics, csp_jcs, csp_leading_ps_pair,
+				psp_zeta, psp_dkps, psp_xiza, nao, Ct, mo_tei);
+#pragma omp critical
+			ierr += err;
+			//ofmo_acc_thread_timer( cid_gmat, mythread );
+		}
+		if(ierr != 0) return -1;
+
+		// DEBUG
+		int imo, imo4, jmo, jmo3, kmo, kmo2, lmo, mo_idx;
+		printf("=============================\n");
+		for(imo=0, imo4=0; imo<nao;   imo++, imo4+=nao_3){
+		for(jmo=0, jmo3=0; jmo<imo+1; jmo++, jmo3+=nao_2){
+		for(kmo=0, kmo2=0; kmo<imo+1; kmo++, kmo2+=nao){
+		for(lmo=0; lmo<kmo+1; lmo++){
+			/* mo_idx = imo * nao * nao * nao
+					+jmo * nao * nao
+					+kmo * nao
+					+lmo; */
+			mo_idx = imo4 + jmo3 + kmo2 + lmo;
+			printf("MO : %d %d %d %d | %f\n", imo, jmo, kmo, lmo, mo_tei[mo_idx]);
+		}}}}
+		fflush(stdout);
+
+		for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<nao; jmo++){
+				printf("%f\t", C[imo*nao + jmo]);
+			}
+			printf("\n");
+		}
+		for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<nao; jmo++){
+				printf("%f\t", Ct[imo*nao + jmo]);
+			}
+			printf("\n");
+		}
+		for(imo=0; imo<nao2; imo++){
+			printf("%f\n", S[imo]);
+		}
+		// END DEBUG
+
+		free(mo_tei);
+		free(Ct);
+		ofmo_twoint_free_Dcs();
+	} // IF
 
     // 最終処理
     if (flag_scf == true) {

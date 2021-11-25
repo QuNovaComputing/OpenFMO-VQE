@@ -101,7 +101,7 @@ int ofmo_export_integ(const char* fpath, const int nao, const double H[],
 
     int nao2 = ( nao + 1 ) * nao / 2;
     int i,j,k,l;
-    fprintf(fp, "OEI\n");
+    fprintf(fp, "\nOEI\n");
     int ij=0;
     for(i=0; i<nao; i++){
         for(j=0; j<i; j++, ij++){
@@ -122,7 +122,7 @@ int ofmo_export_integ(const char* fpath, const int nao, const double H[],
     fprintf(fp, "\nMOCOEFF\n");
     ij=0;
     for(i=0; i<nao; i++){
-        for(j=0; j<nao; j++){
+        for(j=0; j<nao; j++, ij++){
             fprintf(fp, "%f\t", C[ij]);
         }
         fprintf(fp, "\n");
@@ -135,8 +135,10 @@ int ofmo_export_integ(const char* fpath, const int nao, const double H[],
         j = (int) ao_eri_idx4[ix4+1];
         k = (int) ao_eri_idx4[ix4+2];
         l = (int) ao_eri_idx4[ix4+3];
-        fprintf(fp, "%d\t%d\t%d\t%d\t%f\n", i, j, k, l, ao_eri_val[ix]);
+        fprintf(fp, "%d %d %d %d %.7f\n", i, j, k, l, ao_eri_val[ix]);
+        fsync(fp->_fileno);
     }
+    printf("%s -> %d eris\n", fpath, nstored_eri);
 
     fclose(fp);
 
@@ -211,13 +213,13 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
 }
 
 
-int ofmo_vqe_call( const int ifrag, const int nao, const double H[],
+int ofmo_vqe_call( const int mythread, const int ifrag, const int nao, const double H[],
     const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
     const double S[], const double C[], const int nelec, const double Enuc, double *energy){
 
     /* Generate integral file */
     char fpath[256];
-    sprintf(fpath, "./integ_temp/temp_int_%d.dat", ifrag);
+    sprintf(fpath, "./integ_temp/temp_int_%d_%d.dat", ifrag, mythread);
     ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, Enuc, nelec);
 
 #ifdef DEBUG

@@ -74,14 +74,14 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	    else if ( strcmp( elems[0], "icut" ) == 0 )
 		icut = atoi( elems[1] );
 		else if ( strcmp( elems[0], "method" ) == 0){
-			if (strcmp(elems[1], "RHF") == 0){
+			if (strcmp(elems[1], "rhf") == 0){
 				method = OFMO_RHF;
 			}
-			else if (strcmp(elems[1], "VQE") == 0){
+			else if (strcmp(elems[1], "vqe") == 0){
 				method = OFMO_VQE;
 			}
 			else{
-				dbg("line=%d, elem=%d : ERROR\n", nline, ++i );
+				dbg("line=%d, elem=%d : %s not valid\n", nline, ++i, elems[1] );
 	    		break;
 			}
 		}else if ( strcmp( elems[0], "vqescr" ) == 0){

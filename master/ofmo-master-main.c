@@ -184,7 +184,7 @@ static int ofmo_create_mserv(
     return 0;
 }
 
-// 同期でメモリサーバーにジョブを渡す
+// Pass jobs to memory server in sync
 static int ofmo_call_mserv( MPI_Comm comm_mserv,
 	int imsg_sz, int imsg[] ) {
     int mserv_sz, irank, tag_ret=OFMO_TAG_RET, mserv_root=0;
@@ -457,10 +457,10 @@ void show_help(const char *myname, const int verbose)
 #endif
 }
 
-/** マスターのメインプログラム
+/** Master's main program
 
-  １プロセスで起動することを前提としている
-  （複数プロセス起動しても、rank=0のプロセス以外は何もしない）
+  It is assumed that it will be started in one process
+  (Even if multiple processes are started, nothing is done except for the process with rank = 0)
    */
 #ifdef FJ_MAIN
 int MAIN__( int argc, char *argv[] ) {
@@ -728,11 +728,13 @@ int main( int argc, char *argv[] ) {
 
     // Load method
     int method = OFMO_RHF;
-    ierr = ofmo_data_get_vals('method', &method);
+    ierr = ofmo_data_get_vals("method", &method);
 
     // Calculation of the number of processes (group size) for each worker
     group_size = ( nmaxprocs - (nioprocs*niogroup) - 1 ) / ngroup;
-
+    
+    // ofmo_data_show_all();
+    
     printf("ngroup       = %d\n", ngroup );
     printf("nioprocs     = %d\n", nioprocs );
     printf("niogroup     = %d\n", niogroup );

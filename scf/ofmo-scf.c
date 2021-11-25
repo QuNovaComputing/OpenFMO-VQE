@@ -875,11 +875,10 @@ int ofmo_scf_rhf(
     ofmo_twoint_eps_eri(eps0_eri);
     ofmo_twoint_eps_sch(eps0_sch);
 
-	if(1){//mo_tei != NULL){
+	if(mo_tei != NULL){
 		const int nao_2 = nao * nao;
 		const int nao_3 = nao_2 * nao;
 		const int nao_4 = nao_3 * nao;
-		mo_tei = (double*) malloc(sizeof(double) * nao_4);
 		memset(mo_tei, '\0', sizeof(double) * nao_4);
 
 		double *Ct = malloc(sizeof(double) * nao_2);
@@ -906,8 +905,9 @@ int ofmo_scf_rhf(
 			//ofmo_acc_thread_timer( cid_gmat, mythread );
 		}
 		if(ierr != 0) return -1;
-
+#if 0
 		// DEBUG
+		// mo_tei = (double*) malloc(sizeof(double) * nao_4);
 		int imo, imo4, jmo, jmo3, kmo, kmo2, lmo, mo_idx;
 		printf("=============================\n");
 		for(imo=0, imo4=0; imo<nao;   imo++, imo4+=nao_3){
@@ -938,13 +938,13 @@ int ofmo_scf_rhf(
 		for(imo=0; imo<nao2; imo++){
 			printf("%f\n", S[imo]);
 		}
+		// free(mo_tei);
 		// END DEBUG
-
-		free(mo_tei);
+#endif
 		free(Ct);
-		ofmo_twoint_free_Dcs();
 	} // IF
 
+	ofmo_twoint_free_Dcs();
     // 最終処理
     if (flag_scf == true) {
 	//if (myrank == 0) printf("==== Allready SCF ====\n");

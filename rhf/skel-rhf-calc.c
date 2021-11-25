@@ -187,6 +187,12 @@ double skel_rhf_scf(
   ofmo_twoint_eps_ps4(config->eps_ps4);
   ofmo_twoint_eps_eri(config->eps_eri);
   ofmo_twoint_eps_sch(config->eps_sch);
+  
+  // If you want MO ERI
+  const int nao = data->nao;
+  const int nao_4 = nao * nao * nao * nao;
+  double * mo_tei = (double * )malloc(sizeof(double) * nao_4);
+
   if (!config->dryrun) {
     ofmo_scf_rhf( config->comm,
         data->maxlqn, Enuc, data->ncs, data->nao,
@@ -200,8 +206,27 @@ double skel_rhf_scf(
         data->natom, data->nocc,
         array->S, array->H,
         config->maxscfcyc, config->scfe, config->scfd,
-        array->D, array->C, NULL, array->moe, &energy );
+        array->D, array->C, mo_tei, array->moe, &energy );
   }
+  const int nao_2 = nao * nao;
+  const int nao_3 = nao_2 * nao;
+  int imo, imo4, jmo, jmo3, kmo, kmo2, lmo, mo_idx;
+  int count_mo = 0;
+  printf("===MO ERI output===\n");
+  for(imo=0, imo4=0; imo<nao;   imo++, imo4+=nao_3){
+  for(jmo=0, jmo3=0; jmo<imo+1; jmo++, jmo3+=nao_2){
+  for(kmo=0, kmo2=0; kmo<imo+1; kmo++, kmo2+=nao){
+  for(lmo=0; lmo<kmo+1; lmo++, count_mo++){
+      /* mo_idx = imo * nao * nao * nao
+              +jmo * nao * nao
+              +kmo * nao
+              +lmo; */
+      mo_idx = imo4 + jmo3 + kmo2 + lmo;
+      printf("%2d %2d %2d %2d | %.7f\n", imo, jmo, kmo, lmo, mo_tei[mo_idx]);
+  }}}}
+  fflush(stdout);
+  printf("===END MO ERI output===\n");
+  free(mo_tei);
   return energy;
 }
 

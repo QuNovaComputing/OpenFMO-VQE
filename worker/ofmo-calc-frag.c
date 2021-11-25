@@ -1221,6 +1221,13 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_twoint_eps_ps4(eps_ps4);
     ofmo_twoint_eps_eri(eps_eri);
     ofmo_twoint_eps_sch(eps_sch);
+
+    double * mo_tei = NULL;
+    if ( level == OFMO_VQE ){
+        const int nao_4 = nao * nao * nao * nao;
+        mo_tei = (double *)malloc(sizeof(double) * nao_4);
+    }
+
     if ( level == OFMO_RHF || level == OFMO_VQE ) {
         ofmo_scf_set_convType((nmonomer==1)? scc: scf); // Should be in args.
 	ofmo_scf_rhf(
@@ -1229,7 +1236,7 @@ int ofmo_calc_fragment_electronic_state(
 		lcs_pair, csp_schwarz, csp_ics, csp_jcs,
 		csp_lps_pair, psp_zeta, psp_dkps, psp_xiza,
 		nat, nocc, S, H, maxscf, scfe, scfd,
-		D, C, NULL, ev, energy );
+		D, C, mo_tei, ev, energy );
     } else {
 	if ( fp_prof )
 	    fdbg( fp_prof, "ERROR: method %d is not supported\n", level );
@@ -1241,17 +1248,13 @@ int ofmo_calc_fragment_electronic_state(
             printf("ERROR : Nmonomer is not 1\n");
         }
         assert(nmonomer == 1);
-        double * eri_val;
-        short int * eri_ind4;
-        int non_zero_eri;
         int mythread = omp_get_thread_num();
-        eri_val = ofmo_twoint_get_ebuf_eri( mythread ); // In AO
-        eri_ind4 = ofmo_twoint_get_ebuf_ind4( mythread ); // In AO
-        non_zero_eri = ofmo_twoint_get_stored_nzeri( mythread );
-        ierr = ofmo_vqe_call(myrank, monomer_list[0], nao, H, eri_val, eri_ind4, non_zero_eri, S, C, nelec, Enuc, energy);
+        ierr = ofmo_vqe_call(myrank, monomer_list[0], nao, H, mo_tei, S, C, nelec, Enuc, energy);
     	if ( ierr != 0 ) return -1;
     }
-    ofmo_twoint_free_Dcs();
+    if(mo_tei){
+        free(mo_tei);
+    }
 
     /* energies */
     double dv;

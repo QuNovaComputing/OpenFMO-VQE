@@ -1954,8 +1954,8 @@ int ofmo_integ_export_eri(
 					if(kao == lao) eval *= 2;
 					if((iao == kao && jao == lao) ||
 					   (iao == lao && jao == kao)) eval *= 2;
-					printf("AO : %d %d %d %d | %f\n", iao, jao, kao, lao, eval);
-					fflush(stdout);
+					// printf("AO : %d %d %d %d | %f\n", iao, jao, kao, lao, eval);
+					// fflush(stdout);
 					for(imo=0, imo4=0, ic=iao; imo<nao;   imo++, imo4+=nao_3, ic+=nao){
 					for(jmo=0, jmo3=0, jc=jao; jmo<imo+1; jmo++, jmo3+=nao_2, jc+=nao){
 					for(kmo=0, kmo2=0, kc=kao; kmo<imo+1; kmo++, kmo2+=nao,   kc+=nao){

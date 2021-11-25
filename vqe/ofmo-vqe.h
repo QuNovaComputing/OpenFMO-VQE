@@ -15,8 +15,7 @@ extern int ofmo_amp_alloc( const int nfrag );
 extern int ofmo_amp_dealloc();
 
 extern int ofmo_vqe_call( const int mythread, const int ifrag, const int nao, const double H[],
-    const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const int nelec, const double Enuc, double *energy);
+    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, double *energy);
 
 extern int ofmo_get_amps( const int ifrag, int *namp, double **alpha, int **fock_vec);
 

@@ -30,7 +30,7 @@ def parse_input_file(inp_file):
             "oei": None,
             "s": None,
             "c": None,
-            "eri": None,
+            "mo_eri": None,
             "enuc": None,
         }
         while True:
@@ -84,7 +84,7 @@ def lst_eri_to_mat(nbasis, lst_eri):
         mat_eri[l][k][j][i] = v
 
     return mat_eri
-
+'''
 def generate_mo_eri(nbasis, coeff, aoeri):
     mat_eri = lst_eri_to_mat(nbasis, aoeri)
     mo_eri = list()
@@ -97,6 +97,7 @@ def generate_mo_eri(nbasis, coeff, aoeri):
                         c*= mat_eri[a][b][c][d]
                         mo_eri.append(((i,j,k,l), c))
     return mo_eri
+'''
 
 # symmetric orthogonalization
 def trans_sym(S):
@@ -120,7 +121,7 @@ def ao_to_orth_mo(ao_contents):
     ao_oei = ao_contents['oei']
     ao_ovlp = ao_contents['s']
     coeff = ao_contents['c']
-    ao_eri = ao_contents['eri']
+    mo_eri = ao_contents['mo_eri']
     enuc = ao_contents['enuc']
 
     mo_oei = np.zeros((nbasis, nbasis), dtype=float)
@@ -132,10 +133,10 @@ def ao_to_orth_mo(ao_contents):
     for i, j in product(range(nbasis), repeat=2):
         mo_overlap[i][j] = sum([ao_ovlp[_i][_j]*coeff[i][_i]*coeff[j][_j]
         for _i, _j in product(range(nbasis), repeat=2)])
-    mo_eri = generate_mo_eri(nbasis, coeff, ao_eri)
+    # mo_eri = generate_mo_eri(nbasis, coeff, ao_eri)
     
-    # Need orthogonalization
-    
+    # TODO:Need orthogonalization
+
 
     ret = {
         "n_electron": nelec,
@@ -148,6 +149,7 @@ def ao_to_orth_mo(ao_contents):
 
 def call_vqe(mo_contents):
     vqe_obj = QCC()
+    # TODO:Finish this
 
 def get_amp_from_sv(
     final_state:Union[np.ndarray, List[complex]],
@@ -190,3 +192,4 @@ if __name__ == "__main__":
     ofpath = sys.argv[2]
     ao_contents = parse_input_file(ifpath)
     mo_contents = ao_to_orth_mo(ao_contents)
+    #TODO: Finish here

@@ -90,8 +90,7 @@ int ofmo_update_amps(){
 }
 
 int ofmo_export_integ(const char* fpath, const int nao, const double H[],
-    const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const double Enuc, const int nelec){
+    const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec){
     
 
     FILE *fp = fopen(fpath, "w");
@@ -129,16 +128,23 @@ int ofmo_export_integ(const char* fpath, const int nao, const double H[],
     }
 
     fprintf(fp, "\nERI\n");
-    int ix, ix4;
-    for(ix=0, ix4=0; ix<nstored_eri; ix++, ix4+=4){
-        i = (int) ao_eri_idx4[ix4+0];
-        j = (int) ao_eri_idx4[ix4+1];
-        k = (int) ao_eri_idx4[ix4+2];
-        l = (int) ao_eri_idx4[ix4+3];
-        fprintf(fp, "%d %d %d %d %.7f\n", i, j, k, l, ao_eri_val[ix]);
-        fsync(fp->_fileno);
-    }
-    printf("%s -> %d eris\n", fpath, nstored_eri);
+    const int nao_2 = nao * nao;
+    const int nao_3 = nao_2 * nao;
+    int imo, imo4, jmo, jmo3, kmo, kmo2, lmo, mo_idx;
+    int count_mo = 0;
+    for(imo=0, imo4=0; imo<nao;   imo++, imo4+=nao_3){
+    for(jmo=0, jmo3=0; jmo<imo+1; jmo++, jmo3+=nao_2){
+    for(kmo=0, kmo2=0; kmo<imo+1; kmo++, kmo2+=nao){
+    for(lmo=0; lmo<kmo+1; lmo++, count_mo++){
+        /* mo_idx = imo * nao * nao * nao
+                +jmo * nao * nao
+                +kmo * nao
+                +lmo; */
+        mo_idx = imo4 + jmo3 + kmo2 + lmo;
+        fprintf(fp, "%d %d %d %d %.7f\n", imo, jmo, kmo, lmo, mo_tei[mo_idx]);
+    }}}}
+    fflush(stdout);
+    printf("%s -> %d eris\n", fpath, count_mo);
 
     fclose(fp);
 
@@ -214,13 +220,12 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
 
 
 int ofmo_vqe_call( const int mythread, const int ifrag, const int nao, const double H[],
-    const double ao_eri_val[], const short int ao_eri_idx4[], const size_t nstored_eri,
-    const double S[], const double C[], const int nelec, const double Enuc, double *energy){
+    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, double *energy){
 
     /* Generate integral file */
     char fpath[256];
     sprintf(fpath, "./integ_temp/temp_int_%d_%d.dat", ifrag, mythread);
-    ofmo_export_integ(fpath, nao, H, ao_eri_val, ao_eri_idx4, nstored_eri, S, C, Enuc, nelec);
+    ofmo_export_integ(fpath, nao, H, mo_tei, S, C, Enuc, nelec);
 
 #ifdef DEBUG
     return 0;

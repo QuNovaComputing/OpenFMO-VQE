@@ -1861,6 +1861,12 @@ int ofmo_integ_export_eri(
     int local_id;
 	int ret;
     size_t offset;
+	int neq_ij, neq_lk, neq_ij_kl;
+	double Ct_ii, Ct_jj, Ct_kk, Ct_ll;
+	double Ct_ij, Ct_ji, Ct_kl, Ct_lk;
+	double Ct_ik, Ct_jl, Ct_ki, Ct_lj;
+	double Ct_il, Ct_jk, Ct_kj, Ct_li, mult_c;
+	
 
 	double eval;
 
@@ -1950,22 +1956,60 @@ int ofmo_integ_export_eri(
 					jao = etmp_ind4[ix4+1];
 					kao = etmp_ind4[ix4+2];
 					lao = etmp_ind4[ix4+3];
-					if(iao == jao) eval *= 2;
-					if(kao == lao) eval *= 2;
-					if((iao == kao && jao == lao) ||
-					   (iao == lao && jao == kao)) eval *= 2;
-					// printf("AO : %d %d %d %d | %f\n", iao, jao, kao, lao, eval);
+					neq_ij = (iao != jao);
+					neq_lk = (lao != kao);
+					neq_ij_kl = (iao != kao || jao != lao) && (jao != kao || iao != lao);
+
+					if(!neq_ij) eval *= 2;
+					if(!neq_lk) eval *= 2;
+					if(!neq_ij_kl) eval *= 2;
+#ifdef OFMO_SKELETON
+					printf("AO : %d %d %d %d | %f\n", iao, jao, kao, lao, eval);
+#endif
 					// fflush(stdout);
-					for(imo=0, imo4=0, ic=iao; imo<nao;   imo++, imo4+=nao_3, ic+=nao){
-					for(jmo=0, jmo3=0, jc=jao; jmo<imo+1; jmo++, jmo3+=nao_2, jc+=nao){
-					for(kmo=0, kmo2=0, kc=kao; kmo<imo+1; kmo++, kmo2+=nao,   kc+=nao){
-					for(lmo=0, 		   lc=lao; lmo<kmo+1; lmo++, 			  lc+=nao){
+					for(imo=0, imo4=0, ic=0; imo<nao;   imo++, imo4+=nao_3, ic+=nao){
+					for(jmo=0, jmo3=0, jc=0; jmo<imo+1; jmo++, jmo3+=nao_2, jc+=nao){
+					for(kmo=0, kmo2=0, kc=0; kmo<imo+1; kmo++, kmo2+=nao,   kc+=nao){
+					for(lmo=0, 		   lc=0; lmo<kmo+1; lmo++, 			    lc+=nao){
 						/* mo_idx = imo * nao * nao * nao
 								+jmo * nao * nao
 								+kmo * nao
 								+lmo; */
+						Ct_ii = Ct[iao + ic];
+						Ct_jj = Ct[jao + jc];
+						Ct_kk = Ct[kao + kc];
+						Ct_ll = Ct[lao + lc];
+						Ct_ij = Ct[jao + ic];
+						Ct_ji = Ct[iao + jc];
+						Ct_kl = Ct[lao + kc];
+						Ct_lk = Ct[kao + lc];
+
+						mult_c 			  			 = Ct_ii * Ct_jj * Ct_kk * Ct_ll;
+						if(neq_ij) mult_c 			+= Ct_ij * Ct_ji * Ct_kk * Ct_ll;
+						if(neq_lk) mult_c 			+= Ct_ii * Ct_jj * Ct_kl * Ct_lk;
+						if(neq_ij && neq_lk) mult_c += Ct_ij * Ct_ji * Ct_kl * Ct_lk;
+						if(neq_ij_kl){
+							Ct_ik = Ct[kao + ic];
+							Ct_jl = Ct[lao + jc];
+							Ct_ki = Ct[iao + kc];
+							Ct_lj = Ct[jao + lc];
+							Ct_il = Ct[lao + ic];
+							Ct_jk = Ct[kao + jc];
+							Ct_kj = Ct[jao + kc];
+							Ct_li = Ct[iao + lc];
+							mult_c 			  			+= Ct_ik * Ct_jl * Ct_ki * Ct_lj;
+							if(neq_ij) mult_c 			+= Ct_ik * Ct_jl * Ct_kj * Ct_li;
+							if(neq_lk) mult_c 			+= Ct_il * Ct_jk * Ct_ki * Ct_lj;
+							if(neq_ij && neq_lk) mult_c += Ct_il * Ct_jk * Ct_kj * Ct_li;
+						}
 						mo_idx = imo4 + jmo3 + kmo2 + lmo;
-						mo_tei[mo_idx] += eval * Ct[ic] * Ct[jc] * Ct[lc] * Ct[kc];
+						mo_tei[mo_idx] += eval * mult_c;
+						/* Debug
+						if (imo == 0 && jmo == 0 && kmo == 0 && lmo ==0){
+							printf("%f %f %f %f\n", Ct_ii, Ct_ij, Ct_ik, Ct_il);
+							printf("mo[0]= %f (+ %f * %f )\n", mo_tei[0], eval, mult_c);
+						}*/
+
 					}}}}
 				}
 				//print_eri(etmp_val, etmp_ind4, nzeri);

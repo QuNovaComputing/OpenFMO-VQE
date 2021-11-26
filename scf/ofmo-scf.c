@@ -881,8 +881,6 @@ int ofmo_scf_rhf(
 		const int nao_4 = nao_3 * nao;
 		memset(mo_tei, '\0', sizeof(double) * nao_4);
 
-		double *Ct = malloc(sizeof(double) * nao_2);
-		ofmo_transpose_matrix(nao, C, Ct);
 		ierr = 0;
 #pragma omp parallel
 		{
@@ -899,12 +897,38 @@ int ofmo_scf_rhf(
 				maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
 				leading_cs_pair, leading_cs,
 				csp_schwarz, csp_ics, csp_jcs, csp_leading_ps_pair,
-				psp_zeta, psp_dkps, psp_xiza, nao, Ct, mo_tei);
+				psp_zeta, psp_dkps, psp_xiza, nao, C, mo_tei);
 #pragma omp critical
 			ierr += err;
 			//ofmo_acc_thread_timer( cid_gmat, mythread );
 		}
 		if(ierr != 0) return -1;
+#ifdef OFMO_SKELETON
+		int imo, jmo, ij;
+		printf("===C mat===\n");
+		for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<nao; jmo++){
+				printf("%f\t", C[imo*nao + jmo]);
+			}
+			printf("\n");
+		}
+		printf("===S mat===\n");
+		ij = 0;
+		for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<=imo; jmo++, ij++){
+				printf("%f\t", S[ij]);
+			}
+			printf("\n");
+		}
+		printf("===H mat===\n");
+		ij = 0;
+		for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<=imo; jmo++, ij++){
+				printf("%f\t", H[ij]);
+			}
+			printf("\n");
+		}
+#endif
 #if 0
 		// DEBUG
 		// mo_tei = (double*) malloc(sizeof(double) * nao_4);
@@ -923,25 +947,10 @@ int ofmo_scf_rhf(
 		}}}}
 		fflush(stdout);
 
-		for(imo=0; imo<nao; imo++){
-			for(jmo=0; jmo<nao; jmo++){
-				printf("%f\t", C[imo*nao + jmo]);
-			}
-			printf("\n");
-		}
-		for(imo=0; imo<nao; imo++){
-			for(jmo=0; jmo<nao; jmo++){
-				printf("%f\t", Ct[imo*nao + jmo]);
-			}
-			printf("\n");
-		}
-		for(imo=0; imo<nao2; imo++){
-			printf("%f\n", S[imo]);
-		}
+
 		// free(mo_tei);
 		// END DEBUG
 #endif
-		free(Ct);
 	} // IF
 
 	ofmo_twoint_free_Dcs();

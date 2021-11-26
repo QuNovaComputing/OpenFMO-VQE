@@ -222,7 +222,9 @@ double skel_rhf_scf(
               +kmo * nao
               +lmo; */
       mo_idx = imo4 + jmo3 + kmo2 + lmo;
-      printf("%2d %2d %2d %2d | %.7f\n", imo, jmo, kmo, lmo, mo_tei[mo_idx]);
+      double val = mo_tei[mo_idx];
+      if((val>0? val: -1.0*val ) > 1e-7)
+        printf("%2d %2d %2d %2d | %.7f\n", imo, jmo, kmo, lmo, val);
   }}}}
   fflush(stdout);
   printf("===END MO ERI output===\n");

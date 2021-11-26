@@ -36,6 +36,7 @@
 #define dsymm dsymm_
 #define dtrsv dtrsv_
 #define dtrsm dtrsm_
+#define dgesvd dgesvd_
 
 #define dpotrf dpotrf_
 #define ilaenv ilaenv_
@@ -513,5 +514,15 @@ int ofmo_solv_leq( const int n, double A[], double b[] ) {
     int info, m=1;
     ofmo_mat_init( n );
     dgesv( &n, &m, A, &n, IPIV, b, &n, &info );
+    return info;
+}
+
+int ofmo_svd( const int n, double A[], double S[], double U[], double VT[]){
+    int info, lwork;
+    int ret_n=n, ret_m=n, ret_lda=n, ret_ldu=n, ldvt=n;
+    ofmo_mat_init( n );
+    lwork = LWORK;
+    dgesvd("All", "All", &ret_n, &ret_m, A, &ret_lda, S, U, &ret_ldu, VT,
+           &ldvt, WORK, &lwork, &info);
     return info;
 }

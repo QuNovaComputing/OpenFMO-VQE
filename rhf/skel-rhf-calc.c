@@ -61,7 +61,9 @@ void skel_rhf_fin_array( skel_rhf_array_t* array )
 {
   Free(array->D);
   Free(array->S);
-  Free(array->H);
+  printf("We have a memory leak here.\n");
+  fflush(stdout);
+  //Free(array->H);
   Free(array->C);
   Free(array->moe);
   Free(array->aopop);

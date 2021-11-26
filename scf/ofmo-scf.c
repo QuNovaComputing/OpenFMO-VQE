@@ -928,6 +928,16 @@ int ofmo_scf_rhf(
 			}
 			printf("\n");
 		}
+		double * X = (double *)malloc(sizeof(double)*nao*nao);
+		ofmo_symm_orth(nao, S, C, X);
+		printf("===X mat===\n");
+			for(imo=0; imo<nao; imo++){
+			for(jmo=0; jmo<nao; jmo++){
+				printf("%f\t", X[imo*nao + jmo]);
+			}
+			printf("\n");
+		}
+		free(X);
 #endif
 #if 0
 		// DEBUG
@@ -963,4 +973,124 @@ int ofmo_scf_rhf(
 	    fprintf(fp_prof, "==== SCF not converged ====\n");
 	return -1;
     }
+}
+
+int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]){
+	double * uS = (double*) malloc (sizeof(double) * nao * nao);
+	double * Sd = (double*) malloc (sizeof(double) * nao);
+	double * VT = (double*) malloc (sizeof(double) * nao * nao);
+	double * U  = (double*) malloc (sizeof(double) * nao * nao);
+	double * Tmp = (double*) malloc (sizeof(double) * nao * nao);
+	int i,j,ij=0;
+	int ierr;
+	for(i=0; i<nao; i++){
+		for(j=0; j<=i; j++, ij++){
+			uS[i*nao + j]=S[ij];
+			if(i!=j) uS[j*nao + i]=S[ij];
+		}
+	}
+
+	printf("S\n");
+	for(i=0; i<nao; i++){
+		for(j=0; j<nao; j++){
+			printf("%f\t", uS[i*nao + j]);
+		}
+		printf("\n");
+	}
+
+	memset(Tmp, '\0', sizeof(double) * nao * nao);
+	ofmo_dgemm(nao, "T", "N", 1.0, C, uS, 0.0, Tmp);
+	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, C, 0.0, uS);
+
+	printf("MO S\n");
+	for(i=0; i<nao; i++){
+		for(j=0; j<nao; j++){
+// TODO: Make return if it is identity.
+			printf("%f\t", uS[i*nao + j]);
+		}
+		printf("\n");
+	}
+
+	ierr = ofmo_svd(nao, uS, Sd, U, VT);
+	if(ierr!=0){
+		printf("ERROR:svd\n");
+		free(uS);
+		free(Sd);
+		free(VT);
+		free(U);
+		free(Tmp);
+		return -1;
+	}
+	memset(Tmp, '\0', sizeof(double) * nao * nao);
+	for(i=0; i<nao; i++) Tmp[i+nao*i] = pow(Sd[i], -0.5);
+
+	printf("S after svd\n");
+	for(i=0; i<nao; i++){
+		for(j=0; j<nao; j++){
+			printf("%f\t", uS[i*nao + j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+	printf("Sd\n");
+	for(i=0; i<nao; i++){
+		printf("%f | \t", Sd[i]);
+		for(j=0; j<nao; j++){
+			printf("%f\t", Tmp[i*nao + j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+	printf("U\n");
+	for(i=0; i<nao; i++){
+		for(j=0; j<nao; j++){
+			printf("%f\t", U[i*nao + j]);
+		}
+		printf("\n");
+	}
+
+
+	printf("\n");
+	printf("VT\n");
+	for(i=0; i<nao; i++){
+		for(j=0; j<nao; j++){
+			printf("%f\t", VT[i*nao + j]);
+		}
+		printf("\n");
+	}
+
+
+	ofmo_dgemm(nao, "N", "N", 1.0, U, Tmp, 0.0, X);
+	memcpy(Tmp, X, sizeof(double)*nao*nao);
+	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, VT, 0.0, X);
+	
+	free(uS);
+	free(Sd);
+	free(VT);
+	free(U);
+	free(Tmp);
+
+	return ierr;
+}
+
+void ofmo_ao2mo_H(const int nao, const double H_AO[], const double C[], double H_MO[]){
+	
+	double * Tmp = (double*) malloc (sizeof(double) * nao * nao);
+
+	memset(Tmp, '\0', sizeof(double) * nao * nao);
+	memset(H_MO, '\0', sizeof(double) * nao * nao);
+	ofmo_dgemm(nao, "T", "N", 1.0, C, H_AO, 0.0, Tmp);
+	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, C, 0.0, H_MO);
+	free(Tmp);
+}
+
+void ofmo_orth_C(const int nao, const double X[], double C[]){
+	double * Tmp = (double*) malloc (sizeof(double) * nao * nao);
+
+	memset(Tmp, '\0', sizeof(double) * nao * nao);
+	ofmo_dgemm(nao, "N", "N", 1.0, X, C, 0.0, Tmp);
+	memcpy(C, Tmp, sizeof(double)*nao*nao);
+	free(Tmp);
+	
 }

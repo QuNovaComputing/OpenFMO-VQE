@@ -45,5 +45,6 @@ extern int ofmo_solv_GSEP( const int n, const double U[],
 extern int ofmo_solv_SEP( const int n, double A[], double e[] );
 
 extern int ofmo_solv_leq( const int n, double A[], double b[] );
+extern int ofmo_svd( const int n, double A[], double S[], double U[], double VT[]);
 
 #endif

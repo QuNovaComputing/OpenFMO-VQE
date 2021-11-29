@@ -61,4 +61,10 @@ extern int ofmo_scf_rhf(
 	const int maxscfcyc, const double scfe, const double scfd,
 	// 結果代入用データ
 	double D[], double C[], double* mo_tei, double moe[], double *Eelec);
+
+// Optional post processings.
+extern int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]);
+extern void ofmo_ao2mo_H(const int nao, const double H_AO[], const double C[], double H_MO[]);
+extern void ofmo_orth_C(const int nao, const double X[], double C[]);
+
 #endif

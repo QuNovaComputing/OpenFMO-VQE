@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
+#include <assert.h>
 
 struct _amp_carrier_ {
     int namp;
@@ -90,20 +90,29 @@ int ofmo_update_amps(){
 }
 
 int ofmo_export_integ(const char* fpath, const int nao, const double H[],
-    const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec){
+    const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
+    const double ev[], const double energy){
     
 
     FILE *fp = fopen(fpath, "w");
 
     fprintf(fp, "NELEC\t%d\n", nelec);
     fprintf(fp, "ENUC\t%f\n", Enuc);
+    fprintf(fp, "NBASIS\t%d\n", nao);
+    fprintf(fp, "HF_ENERGY\t%f\n", energy);
 
     int nao2 = ( nao + 1 ) * nao / 2;
     int i,j,k,l;
+
+    fprintf(fp, "ENERGIES\n");
+    for(i=0; i<nao; i++){
+        fprintf(fp, "%f\n", ev[i]);
+    }
+
     fprintf(fp, "\nOEI\n");
     int ij=0;
     for(i=0; i<nao; i++){
-        for(j=0; j<i; j++, ij++){
+        for(j=0; j<=i; j++, ij++){
             fprintf(fp, "%f\t", H[ij]);
         }
         fprintf(fp, "\n");
@@ -112,7 +121,7 @@ int ofmo_export_integ(const char* fpath, const int nao, const double H[],
     fprintf(fp, "\nOVERLAP\n");
     ij=0;
     for(i=0; i<nao; i++){
-        for(j=0; j<i; j++, ij++){
+        for(j=0; j<=i; j++, ij++){
             fprintf(fp, "%f\t", S[ij]);
         }
         fprintf(fp, "\n");
@@ -178,7 +187,7 @@ static int exec_prog(const char **argv)
     return 0;
 }
 
-int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
+int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_list[], double *energy){
     char line[256];
     ssize_t read;
     FILE * fp = fopen(ofpath, "r");
@@ -187,31 +196,37 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
     char *stop_idx_str;
     int namp, iamp;
 
-    // Read size
-    if(fgets(line, 256, fp) == NULL){
-        return -1;
-    }
-    sscanf(line, "%d", &namp);
-    amp[ifrag]->namp = namp;
-    if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
-    if(amp[ifrag] -> fock_vec) free(amp[ifrag] -> fock_vec);
-    amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
-    amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
-
     // Read energy
     if(fgets(line, 256, fp) == NULL){
         return -1;
     }
     sscanf(line, "%lf", energy);
 
-    // Read amplitudes
-    for(iamp=0; iamp<namp; iamp++){
+    if (nmonomer==1){
+        // Read size
         if(fgets(line, 256, fp) == NULL){
             return -1;
         }
-        sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
-        amp[ifrag]->amp[iamp] = val;
-        amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
+        sscanf(line, "%d", &namp);
+
+        // init amps
+        int ifrag = monomer_list[0];
+        amp[ifrag]->namp = namp;
+        if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
+        if(amp[ifrag] -> fock_vec) free(amp[ifrag] -> fock_vec);
+        amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
+        amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
+    
+       // Read amplitudes
+        for(iamp=0; iamp<namp; iamp++){
+            if(fgets(line, 256, fp) == NULL){
+                return -1;
+            }
+            sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
+                int ifrag = monomer_list[0];
+                amp[ifrag]->amp[iamp] = val;
+                amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
+            }
     }
 
     fclose(fp);
@@ -219,26 +234,36 @@ int ofmo_parse_result(const char *ofpath, const int ifrag, double *energy){
 }
 
 
-int ofmo_vqe_call( const int mythread, const int ifrag, const int nao, const double H[],
-    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, double *energy){
+int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
+    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, double *energy,
+    const int iscc, const double ev[]){
 
     /* Generate integral file */
     char fpath[256];
-    sprintf(fpath, "./integ_temp/temp_int_%d_%d.dat", ifrag, mythread);
-    ofmo_export_integ(fpath, nao, H, mo_tei, S, C, Enuc, nelec);
+    char ofpath[256];
+    if(nmonomer == 1){
+        sprintf(fpath, "./integ_temp/temp_int_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
+        sprintf(ofpath, "./result_temp/temp_res_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
+    }
+    else if(nmonomer == 2){
+        sprintf(fpath, "./integ_temp/temp_int_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
+        sprintf(ofpath, "./result_temp/temp_res_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
+    }
+    else{
+        printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
+        fflush(stdout);
+        assert(0);
+    }
+    ofmo_export_integ(fpath, nao, H, mo_tei, S, C, Enuc, nelec, ev, *energy);
 
-#ifdef DEBUG
     return 0;
-#endif
 
     /* Call VQE */
-    char ofpath[256];
-    sprintf(ofpath, "./result_temp/temp_res_%d.dat", ifrag);
     const char *args[64] = {"python", "py_script.py", fpath, ofpath, NULL};
     exec_prog(args);
 
     /* Data acquisition */
-    ofmo_parse_result(ofpath, ifrag, energy);
+    ofmo_parse_result(ofpath, nmonomer, monomer_list, energy);
 
     return 0;
 }

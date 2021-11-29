@@ -80,10 +80,10 @@ static int alloc( const int nlmo, const int nfunc ) {
     return 0;
 }
 
-/** 射影演算子項を作成する関数
+/** Projection operator A function that creates a term
  *
- * モノマーの結合を切っている部分に適用する射影演算子項を
- * 計算する関数
+ * A function that calculates the projection operator term applied to the part
+ * where the bond of the monomer is broken.
  *
  * @param[in] nmonomer フラグメントを構成するモノマー数
  * @param[in] monomer_list[] フラグメントを構成するモノマー番号のリスト

@@ -4,45 +4,56 @@ import numpy as np
 from numpy.linalg import svd
 import sys
 
+from gwonsquantum.chemistry.molecule import electronic_structure
 from gwonsquantum.polynomial.transform.bravyi_kitaev import beta_matrix
-from gwonsquantum.chemistry.vqe import QCC
+from gwonsquantum.chemistry.vqe.coupled_cluster_vqe.qcc import QCC
+from gwonsquantum.chemistry.vqe.coupled_cluster_vqe.uccsd import UCCSD
+from gwonsquantum.chemistry.molecule import ElectronicStructure
+
+DEBUG = False
 
 def parse_input_file(inp_file):
-    def input_matrix(line, key, result, cnt):
-        _nbasis = len(line.split())
-        if result['nbasis'] == 0 :
-            result['nbasis'] = _nbasis
-        else :
-            assert _nbasis == result['nbasis']
+    def input_matrix(line, key, result, cnt, triangle=False):
         if result[key] is None:
-            result[key] = np.zeros((_nbasis, _nbasis), dtype=float)
-
+            result[key] = np.zeros((result['nbasis'], result['nbasis']), dtype=float)
         for i, v in enumerate(line.split()):
+            if DEBUG:
+                print(i, cnt, v)
             result[key] [cnt][i] = float(v)
+            if triangle:
+                result[key] [i][cnt] = float(v)
 
-
-    with open(inp_file, 'r'):
+    with open(inp_file, 'r') as of:
         linecnt = 0
         mode = 0
         result = {
-            "nelec": 0,
+            "n_electrons": 0,
             "nbasis": 0,
             "oei": None,
             "s": None,
             "c": None,
-            "mo_eri": None,
-            "enuc": None,
+            "lst_tei": None,
+            "tei": None,
+            "constant": None,
+            "mo_energies": None,
         }
         while True:
-            line = inp_file.readline()
+            line = of.readline()
             if not line:
                 break
+            if len(line)<=1:
+                continue
             if line.startswith('NELEC'):
-                result['nelec'] = int(line.split()[1])
+                result['n_electrons'] = int(line.split()[1])
             elif line.startswith("ENUC"):
-                result['enuc'] = float(line.split()[1])
+                result['constant'] = float(line.split()[1])
+            elif line.startswith("NBASIS"):
+                result['nbasis'] = int(line.split()[1])
             elif line.startswith('OEI'):
                 mode = 1
+                linecnt = 0
+            elif line.startswith("ENERGIES"):
+                mode = 5
                 linecnt = 0
             elif line.startswith('OVERLAP'):
                 mode = 2
@@ -55,101 +66,116 @@ def parse_input_file(inp_file):
                 linecnt = 0
                 result['eri'] = list()
             elif mode == 1:
-                input_matrix(line, 'oei', result, linecnt)
+                input_matrix(line, 'oei', result, linecnt, triangle=True)
+                linecnt += 1
             elif mode == 2:
-                input_matrix(line, 's', result, linecnt)
+                input_matrix(line, 's', result, linecnt, triangle=True)
+                linecnt += 1
             elif mode == 3:
                 input_matrix(line, 'c', result, linecnt)
+                linecnt += 1
             elif mode == 4:
                 spt = line.split()
                 assert len(spt) == 5
+                if result['lst_tei'] is None :
+                    result['lst_tei'] = list()
                 i,j,k,l = int(spt[0]), int(spt[1]), int(spt[2]), int(spt[3])
-                result['eri'].append(((i, j, k, l), float(spt[4])))
+                result['lst_tei'].append(((i, j, k, l), float(spt[4])))
+            elif mode == 5:
+                spt = line.split()
+                if result['mo_energies'] is None:
+                    result['mo_energies'] = list()
+                result['mo_energies'].append(float(spt[0]))
+    if DEBUG:
+        print(result['mo_energies'])
+        print(result['oei'])
+        print(result['lst_tei'][0])
+        print(result['constant'])
+        print(result['n_electrons'])
     return result
 
 def lst_eri_to_mat(nbasis, lst_eri):
-    mat_eri = [[[[0.0 for _ in range(nbasis)]
-                      for _ in range(nbasis)]
-                      for _ in range(nbasis)]
-                      for _ in range(nbasis)]
+    def _check_or_store(mat_eri, _i, _j, _k, _l, val):
+        if abs(mat_eri[_i][_j][_k][_l]) > 1e-7:
+            assert abs(mat_eri[_i][_j][_k][_l] - val) < 1e-7
+        else:
+            mat_eri[_i][_j][_k][_l] = val
+
+    mat_eri = np.zeros((nbasis, nbasis, nbasis, nbasis))
+    # mat_eri[i][j][l][k] = <ij|kl> = (ik|jl)
+
+    # (ij|kl) = <ik|jl>   = mat_eri[i][k][l][j]
+    # (ji|kl) = <jk|il>   = mat_eri[j][k][l][i]
+    # (ij|lk) = <il|jk>   = mat_eri[i][l][k][j]
+    # (ji|lk) = <jl|ik>   = mat_eri[j][l][k][i]
+
+    # (kl|ij) = <ki|lj>   = mat_eri[k][i][j][l]
+    # (lk|ij) = <li|kj>   = mat_eri[l][i][j][k]
+    # (kl|ji) = <kj|li>   = mat_eri[k][j][i][l]
+    # (lk|ji) = <lj|ki>   = mat_eri[l][j][i][k]
+
     for (i,j,k,l), v in lst_eri:
-        mat_eri[i][j][k][l] = v
-        mat_eri[i][j][l][k] = v
-        mat_eri[j][i][k][l] = v
-        mat_eri[j][i][l][k] = v
+        _check_or_store(mat_eri, i, k, l, j, v)
+        _check_or_store(mat_eri, j, k, l, i, v)
+        _check_or_store(mat_eri, i, l, k, j, v)
+        _check_or_store(mat_eri, j, l, k, i, v)
         
-        mat_eri[k][l][i][j] = v
-        mat_eri[k][l][j][i] = v
-        mat_eri[l][k][i][j] = v
-        mat_eri[l][k][j][i] = v
+        _check_or_store(mat_eri, k, i, j, l, v)
+        _check_or_store(mat_eri, l, i, j, k, v)
+        _check_or_store(mat_eri, k, j, i, l, v)
+        _check_or_store(mat_eri, l, j, i, k, v)
 
     return mat_eri
-'''
-def generate_mo_eri(nbasis, coeff, aoeri):
-    mat_eri = lst_eri_to_mat(nbasis, aoeri)
-    mo_eri = list()
-    for i in range(nbasis):
-        for j in range(i+1):
-            for k in range(i+1):
-                for l in range(k+1):
-                    for a,b,c,d in product(range(nbasis), repeat=4):
-                        c = coeff[i][a]*coeff[j][b]*coeff[k][c]*coeff[l][d]
-                        c*= mat_eri[a][b][c][d]
-                        mo_eri.append(((i,j,k,l), c))
-    return mo_eri
-'''
-
-# symmetric orthogonalization
-def trans_sym(S):
-    U, D, U_dag = svd(S)
-    D_inv_sqrt = np.sqrt(np.reciprocal(D))
-    D_inv_sqrt_mat = np.diag(D_inv_sqrt)
-    X = np.dot(np.dot(U, D_inv_sqrt_mat), U_dag)
-    return X
-
-# canonical orthogonalization
-def trans_can(S):
-    U, D, U_dag = svd(S)
-    D_inv_sqrt = np.sqrt(np.reciprocal(D))
-    D_inv_sqrt_mat = np.diag(D_inv_sqrt)
-    X = np.dot(U, D_inv_sqrt_mat)
-    return X
-
-def ao_to_orth_mo(ao_contents):
-    nelec = ao_contents['nelec']
-    nbasis = ao_contents['nbasis']
-    ao_oei = ao_contents['oei']
-    ao_ovlp = ao_contents['s']
-    coeff = ao_contents['c']
-    mo_eri = ao_contents['mo_eri']
-    enuc = ao_contents['enuc']
-
-    mo_oei = np.zeros((nbasis, nbasis), dtype=float)
-    mo_overlap = np.zeros((nbasis, nbasis), dtype=float)
-    # Assumming MO_i = sum C_ii' AO_i'
-    for i, j in product(range(nbasis), repeat=2):
-        mo_oei[i][j] = sum([ao_oei[_i][_j]*coeff[i][_i]*coeff[j][_j]
-        for _i, _j in product(range(nbasis), repeat=2)])
-    for i, j in product(range(nbasis), repeat=2):
-        mo_overlap[i][j] = sum([ao_ovlp[_i][_j]*coeff[i][_i]*coeff[j][_j]
-        for _i, _j in product(range(nbasis), repeat=2)])
-    # mo_eri = generate_mo_eri(nbasis, coeff, ao_eri)
-    
-    # TODO:Need orthogonalization
-
-
-    ret = {
-        "n_electron": nelec,
-        "nbasis": nbasis,
-        "oei": mo_oei,
-        "tei": mo_eri,
-        "enuc": enuc
-    }
-    return ret
 
 def call_vqe(mo_contents):
-    vqe_obj = QCC()
-    # TODO:Finish this
+    es: ElectronicStructure ={
+        "n_electrons": mo_contents['n_electrons'],
+        "oei": mo_contents['oei'],
+        "tei": mo_contents['tei'],
+        "constant": mo_contents['constant']
+    }
+    n_basis = mo_contents['nbasis']
+    n_spin_basis = 2 * n_basis
+    n_electron = mo_contents['n_electrons']
+    homo_idx = 2
+    lumo_idx = 2
+    frozen = [x for x in range(max(n_electron//2 - homo_idx, 0))]
+    active = [x for x in range(max(n_electron//2 - homo_idx, 0), min(n_electron//2 + lumo_idx, n_basis))]
+    n_frozen = len(frozen)
+    n_active = len(active)
+    n_virtual = n_basis - n_frozen - n_active
+
+    vqe_obj = QCC(electronic_structure=es,
+    #vqe_obj = UCCSD(electronic_structure=es,
+                  mapping="JW",
+                  frozen_indices=frozen,
+                  active_indices=active,
+                  hamiltonian_optimization=False,
+                  num_entanglers=5
+                  )
+    opt_ret = vqe_obj.run_optimization(
+        backend="statevector_simulator",
+        qiskit_kwargs={"optimization_level": 3},
+        trot_implementation="star",
+        trot_opt_level=2
+    )
+    energy = opt_ret['min_val']
+    xopt = opt_ret['xopt']
+    #xopt = [0.0 for _ in range(5)]
+    _energy, sv = vqe_obj.single_experiment(
+        xopt,
+        backend="statevector_simulator",
+        qiskit_kwargs={"optimization_level": 3},
+        trot_implementation="star",
+        trot_opt_level=2,
+        return_sv = True
+    )
+    amp_idx, amps = get_amp_from_sv(sv, "JW")
+    for i, a in enumerate(amp_idx):
+        amp_idx[i] = "1"*2*n_frozen + a + "0"*2*n_virtual
+    return amp_idx, amps, energy 
+
+#TODO: Consider electron number breaking.
 
 def get_amp_from_sv(
     final_state:Union[np.ndarray, List[complex]],
@@ -158,6 +184,7 @@ def get_amp_from_sv(
 
     num_qubits = int(np.log2(len(final_state)))
     truncation = 10
+    eps = 1e-6
     amps = list()
 
     for i, c in enumerate(final_state):
@@ -169,8 +196,9 @@ def get_amp_from_sv(
             vec = [vec[i//2] for i in range(len(vec) * 2)]
         elif mapping != "JW":
             raise ValueError
-        vec_str = "".join([str(i) for i in vec[::-1]])  #MSB first
-        amps.append((vec_str, abs(c)**2))
+        vec_str = "".join([str(i) for i in vec])  #LSB first
+        c = abs(c)**2
+        if c > eps: amps.append([vec_str, c])
 
     amps = sorted(amps, key=lambda x: x[1], reverse=True)[:truncation]
 
@@ -179,17 +207,26 @@ def get_amp_from_sv(
     for i in range(len(amps)):
         amps[i][1] = amps[i][1] / a_sum
 
-    return [x[0] for x in amps], [x[1] for x in amps]
+    return ([x[0] for x in amps], [x[1] for x in amps])
 
 #### Need to set 
 
 # hamiltonian_optmization = False
 # backend = statevector_simulator
 
+def output_file(out_path, ai, a, e):
+    with open(out_path, "w") as of:
+        of.write(f"{e}\n")
+        of.write(f"{len(ai)}\n")
+        for i, c in zip(ai, a):
+            of.write(f"{i}\t{c}\n")
+
 
 if __name__ == "__main__":
     ifpath = sys.argv[1]
     ofpath = sys.argv[2]
-    ao_contents = parse_input_file(ifpath)
-    mo_contents = ao_to_orth_mo(ao_contents)
-    #TODO: Finish here
+    contents = parse_input_file(ifpath)
+    #mo_contents = ao_to_orth_mo(ao_contents)
+    contents['tei'] = lst_eri_to_mat(contents['nbasis'], contents['lst_tei'])
+    amp_idx, amps, energy = call_vqe(contents)
+    output_file(ofpath, amp_idx, amps, energy)

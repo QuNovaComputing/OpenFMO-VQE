@@ -579,6 +579,7 @@ void ofmo_set_new_scc_flag() { NEW_SCC_STEP = true; }
  *   {\boldmath U \unboldmath}_{IJ}
  *
  * \f]
+ * @param[in] iscc Num SCC iteration
  *
  * @ingroup ofmo-calc
  * */
@@ -587,7 +588,7 @@ int ofmo_calc_fragment_electronic_state(
 	double tolscf,
 	double *energy, double *energy0, double *ddv,
 	int *fnao, double daopop[], int sao2tao[],
-	int *fnat, double datpop[], int fatom2tatom[] ) {
+	int *fnat, double datpop[], int fatom2tatom[], const int iscc ) {
     static int nfrag, maxnfatom, maxnfcs, maxnfao, maxnfps, maxscf;
     static int total_nfao, total_nfatom;
     static int maxlqn, **mlcs;
@@ -1244,17 +1245,21 @@ int ofmo_calc_fragment_electronic_state(
     }
 
     if(level == OFMO_VQE){
-        if(nmonomer != 1){
-            printf("ERROR : Nmonomer is not 1\n");
+        double * X = (double *)malloc(sizeof(double)*nao*nao); //Orth mat
+        double * H_MO = (double *)malloc(sizeof(double)*nao2); // MO H
+        int orth_ret = ofmo_symm_orth(nao, S, C, X);
+        if(orth_ret == 0){
+            ofmo_orth_C(nao, X, C);
+        }else if(orth_ret < 0){
+            printf("ERROR orth.\n");
+            return -1;
         }
-        assert(nmonomer == 1);
+        ofmo_ao2mo_H(nao, H, C, H_MO);
         int mythread = omp_get_thread_num();
-        ierr = ofmo_vqe_call(myrank, monomer_list[0], nao, H, mo_tei, S, C, nelec, Enuc, energy);
+        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, energy, iscc, ev);
     	if ( ierr != 0 ) return -1;
     }
-    if(mo_tei){
-        free(mo_tei);
-    }
+    if(mo_tei) free(mo_tei);
 
     /* energies */
     double dv;

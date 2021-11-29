@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <assert.h>
 
 #include "ofmo-def.h"
 #include "ofmo-mat.h"
@@ -928,8 +929,13 @@ int ofmo_scf_rhf(
 			}
 			printf("\n");
 		}
+
 		double * X = (double *)malloc(sizeof(double)*nao*nao);
-		ofmo_symm_orth(nao, S, C, X);
+		int orth_ret = ofmo_symm_orth(nao, S, C, X);
+		if(orth_ret == 0){
+			ofmo_orth_C(nao, X, C);
+		}
+
 		printf("===X mat===\n");
 			for(imo=0; imo<nao; imo++){
 			for(jmo=0; jmo<nao; jmo++){
@@ -937,6 +943,18 @@ int ofmo_scf_rhf(
 			}
 			printf("\n");
 		}
+
+		printf("===H MO===\n");
+		double * H_MO = (double *)malloc(sizeof(double)*nao*nao);
+		ofmo_ao2mo_H(nao, H, C, H_MO);
+			for(imo=0, ij=0; imo<nao; imo++){
+			for(jmo=0; jmo<=imo; jmo++, ij++){
+				printf("%f\t", H_MO[ij]);
+			}
+			printf("\n");
+		}
+
+		free(H_MO);
 		free(X);
 #endif
 #if 0
@@ -975,6 +993,9 @@ int ofmo_scf_rhf(
     }
 }
 
+// Return 0 : normal exit with X != I
+// 		  1 : normal exit with X == I
+//		 -1 : Error
 int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]){
 	double * uS = (double*) malloc (sizeof(double) * nao * nao);
 	double * Sd = (double*) malloc (sizeof(double) * nao);
@@ -990,25 +1011,35 @@ int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]
 		}
 	}
 
-	printf("S\n");
-	for(i=0; i<nao; i++){
-		for(j=0; j<nao; j++){
-			printf("%f\t", uS[i*nao + j]);
-		}
-		printf("\n");
-	}
-
 	memset(Tmp, '\0', sizeof(double) * nao * nao);
 	ofmo_dgemm(nao, "T", "N", 1.0, C, uS, 0.0, Tmp);
 	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, C, 0.0, uS);
 
-	printf("MO S\n");
+	int skip = 1;
 	for(i=0; i<nao; i++){
+		if(!skip) break;
 		for(j=0; j<nao; j++){
-// TODO: Make return if it is identity.
-			printf("%f\t", uS[i*nao + j]);
+			double abs_elem = uS[i*nao + j];
+			abs_elem = abs_elem > 0? abs_elem : -1.0 * abs_elem;
+			double abs_elem_1 = uS[i*nao + j] - 1;
+			abs_elem_1 = abs_elem_1 > 0? abs_elem_1 : -1.0 * abs_elem_1;
+			if(i != j && abs_elem > 1e-7)skip = 0;
+			if(i == j && abs_elem_1 > 1e-7 )skip = 0;
+			if(!skip) break;
 		}
-		printf("\n");
+	}
+	if(skip){
+		free(uS);
+		free(Sd);
+		free(VT);
+		free(U);
+		free(Tmp);
+		for(i=0; i<nao; i++){
+			for(j=0; j<nao; j++){
+				X[i*nao + j] = i==j? 1.0 : 0.0;
+			}
+		}
+		return 1;
 	}
 
 	ierr = ofmo_svd(nao, uS, Sd, U, VT);
@@ -1023,43 +1054,6 @@ int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]
 	}
 	memset(Tmp, '\0', sizeof(double) * nao * nao);
 	for(i=0; i<nao; i++) Tmp[i+nao*i] = pow(Sd[i], -0.5);
-
-	printf("S after svd\n");
-	for(i=0; i<nao; i++){
-		for(j=0; j<nao; j++){
-			printf("%f\t", uS[i*nao + j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-	printf("Sd\n");
-	for(i=0; i<nao; i++){
-		printf("%f | \t", Sd[i]);
-		for(j=0; j<nao; j++){
-			printf("%f\t", Tmp[i*nao + j]);
-		}
-		printf("\n");
-	}
-
-	printf("\n");
-	printf("U\n");
-	for(i=0; i<nao; i++){
-		for(j=0; j<nao; j++){
-			printf("%f\t", U[i*nao + j]);
-		}
-		printf("\n");
-	}
-
-
-	printf("\n");
-	printf("VT\n");
-	for(i=0; i<nao; i++){
-		for(j=0; j<nao; j++){
-			printf("%f\t", VT[i*nao + j]);
-		}
-		printf("\n");
-	}
-
 
 	ofmo_dgemm(nao, "N", "N", 1.0, U, Tmp, 0.0, X);
 	memcpy(Tmp, X, sizeof(double)*nao*nao);
@@ -1077,12 +1071,41 @@ int ofmo_symm_orth(const int nao, const double S[], const double C[], double X[]
 void ofmo_ao2mo_H(const int nao, const double H_AO[], const double C[], double H_MO[]){
 	
 	double * Tmp = (double*) malloc (sizeof(double) * nao * nao);
+	double * Tmp2 = (double*) malloc (sizeof(double) * nao * nao);
+	double * uH  = (double*) malloc (sizeof(double) * nao * nao);
+	const int nao2 = nao * (nao+1) / 2;
+
+	int i,j,ij;
+	for(i=0, ij=0; i<nao; i++){
+		for(j=0; j<=i; j++, ij++){
+			if(i==j) uH[i*nao + j]=2*H_AO[ij];
+			if(i!=j){
+				uH[i*nao + j]=H_AO[ij];
+				uH[j*nao + i]=H_AO[ij];
+			}
+		}
+	}
 
 	memset(Tmp, '\0', sizeof(double) * nao * nao);
-	memset(H_MO, '\0', sizeof(double) * nao * nao);
-	ofmo_dgemm(nao, "T", "N", 1.0, C, H_AO, 0.0, Tmp);
-	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, C, 0.0, H_MO);
+	memset(Tmp2, '\0', sizeof(double) * nao * nao);
+
+	ofmo_dgemm(nao, "T", "N", 1.0, C, uH, 0.0, Tmp);
+	ofmo_dgemm(nao, "N", "N", 1.0, Tmp, C, 0.0, Tmp2);
+
+	memset(H_MO, '\0', sizeof(double) * nao2);
+	for(i=0, ij=0; i<nao; i++){
+		for(j=0; j<=i; j++, ij++){
+			if(i!=j){
+				double diag_err = Tmp2[i*nao + j] - Tmp2[j*nao + i];
+				assert((diag_err>0 ? diag_err : -1.0*diag_err) < 1e-7);
+			}
+			H_MO[ij]=Tmp2[i*nao + j];
+		}
+	}
+
 	free(Tmp);
+	free(Tmp2);
+	free(uH);
 }
 
 void ofmo_orth_C(const int nao, const double X[], double C[]){

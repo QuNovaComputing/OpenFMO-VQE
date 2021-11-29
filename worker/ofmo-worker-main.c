@@ -43,7 +43,7 @@ extern int ofmo_calc_fragment_electronic_state(
 	double tolscf,
 	double *energy, double *energy0, double *ddv,
 	int *fnao, double daopop[], int fsau2tuao[],
-	int *fnat, double datpop[], int fatom2tatom[] );
+	int *fnat, double datpop[], int fatom2tatom[], const int iscc );
 extern void ofmo_set_new_scc_flag();
 extern int ofmo_monomer_init_density( const int *imsg, MPI_Comm comm );
 extern int ofmo_calc_es_dimer( MPI_Comm comm, int njob, int joblist[],
@@ -226,7 +226,7 @@ int main( int argc, char *argv[] ) {
     //         OFMO_RHF       = RHF
     //         OFMO_RIMP2     = RIMP2
     //         OFMO_DFT       = DFT
-    //     2: SCC繰り返し回数
+    //     2: SCC repeat count
     //     3: 収束条件
     //     4: 予約1
     //     5: 関係するモノマー数
@@ -334,7 +334,7 @@ int main( int argc, char *argv[] ) {
 			imsg[OFMO_I_METHOD], tolscf,
 			&energy, &energy0, &ddv,
 			&fnao, daopop, fsao2tuao,
-			&fnat, datpop, fatom2tatom );
+			&fnat, datpop, fatom2tatom, iscc);
 	    }
 	    if ( is_root ) {
 		dmsg[OFMO_D_ENERGY]  = energy;

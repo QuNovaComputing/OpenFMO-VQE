@@ -166,7 +166,7 @@ static int exec_prog(const char **argv)
     int     status;
 
     if (0 == (my_pid = fork())) {
-            if (-1 == execve(argv[0], (char **)argv , NULL)) {
+            if (-1 == execvp(argv[0], (char **)argv)) {
                     perror("child process execve failed [%m]");
                     return -1;
             }
@@ -176,8 +176,8 @@ static int exec_prog(const char **argv)
             sleep(1);
     }
 
-    printf("%s WEXITSTATUS %d WIFEXITED %d [status %d]\n",
-            argv[0], WEXITSTATUS(status), WIFEXITED(status), status);
+    //printf("%s WEXITSTATUS %d WIFEXITED %d [status %d]\n",
+    //        argv[0], WEXITSTATUS(status), WIFEXITED(status), status);
 
     if (1 != WIFEXITED(status) || 0 != WEXITSTATUS(status)) {
             perror("%s failed, halt system");
@@ -192,7 +192,7 @@ int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_
     ssize_t read;
     FILE * fp = fopen(ofpath, "r");
     double val;
-    char idx_str[100];
+    char idx_str[256];
     char *stop_idx_str;
     int namp, iamp;
 
@@ -200,7 +200,9 @@ int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_
     if(fgets(line, 256, fp) == NULL){
         return -1;
     }
-    sscanf(line, "%lf", energy);
+    sscanf(line, "%lf\n", &val);
+    
+    //printf("%s : energy=%lf, %s\n", ofpath, val, line);
 
     if (nmonomer==1){
         // Read size
@@ -208,24 +210,25 @@ int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_
             return -1;
         }
         sscanf(line, "%d", &namp);
-
         // init amps
-        int ifrag = monomer_list[0];
+        /*int ifrag = monomer_list[0];
         amp[ifrag]->namp = namp;
         if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
         if(amp[ifrag] -> fock_vec) free(amp[ifrag] -> fock_vec);
         amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
         amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
-    
+        */
        // Read amplitudes
         for(iamp=0; iamp<namp; iamp++){
             if(fgets(line, 256, fp) == NULL){
                 return -1;
             }
-            sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
+            // sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
                 int ifrag = monomer_list[0];
-                amp[ifrag]->amp[iamp] = val;
-                amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
+                //printf("%s : %s, %f\n", ofpath, idx_str, val);
+
+                //amp[ifrag]->amp[iamp] = val;
+                //amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
             }
     }
 
@@ -234,45 +237,152 @@ int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_
 }
 
 
-int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
-    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, double *energy,
-    const int iscc, const double ev[]){
-
-    /* Generate integral file */
-    char fpath[256];
-    char ofpath[256];
+int ofmo_vqe_ofpath( const int nmonomer, const int monomer_list[], const int iscc, const int mythread, char* ofpath){
+    if(mythread != 0){
+        printf("thread is not 0.\n");
+        return -1;
+    }
     if(nmonomer == 1){
-        sprintf(fpath, "./integ_temp/temp_int_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
         sprintf(ofpath, "./result_temp/temp_res_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
     }
     else if(nmonomer == 2){
-        sprintf(fpath, "./integ_temp/temp_int_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
         sprintf(ofpath, "./result_temp/temp_res_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
     }
     else{
         printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
         fflush(stdout);
-        assert(0);
+        return -1;
     }
-    ofmo_export_integ(fpath, nao, H, mo_tei, S, C, Enuc, nelec, ev, *energy);
+    return 0;
+}
 
+int ofmo_vqe_ifpath( const int nmonomer, const int monomer_list[], const int iscc, const int mythread, char* fpath){
+    if(mythread != 0){
+        printf("thread is not 0.\n");
+        return -1;
+    }
+    if(nmonomer == 1){
+        sprintf(fpath, "./integ_temp/temp_int_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
+    }
+    else if(nmonomer == 2){
+        sprintf(fpath, "./integ_temp/temp_int_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
+    }
+    else{
+        printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
+        fflush(stdout);
+        return -1;
+    }
+    return 0;
+}
+
+int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int iscc, double * energy ){
+    char ofpath[256];
+    const int mythread = 0;
+    int ierr;
+    FILE * fp;
+    double val;
+    char line[256];
+
+    ierr = ofmo_vqe_ofpath(nmonomer, monomer_list, iscc, mythread, ofpath);
+    if(ierr < 0){
+        return -1;
+    }
+    fp = fopen(ofpath, "r");
+    // Read energy
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%lf\n", &val);
+
+    *energy = val;
+
+    fclose(fp);
+    return 0;
+}
+
+int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int * namps, double ** amp, char *** fock){
+
+    char ofpath[256];
+    const int mythread = 0;
+    int ierr, monomer_list[1]={ifrag};
+    int ival, iamp;
+    FILE * fp;
+    double val;
+    char line[256], idx_str[256];
+    
+    ierr = ofmo_vqe_ofpath(1, monomer_list, iscc, mythread, ofpath);
+    if(ierr < 0){
+        return -1;
+    }
+    fp = fopen(ofpath, "r");
+    // Read energy
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%lf\n", &val);
+
+    // Read size
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%d", &ival);
+
+    // Allocate
+    *namps = ival;
+    *amp = (double *) malloc (sizeof(double) * (*namps));
+    *fock = (char **) malloc (sizeof(char*) * (*namps));
+
+    // Read amplitudes
+    for(iamp=0; iamp<*namps; iamp++){
+        if(fgets(line, 256, fp) == NULL){
+            return -1;
+        }
+        sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
+        (*fock)[iamp] = (char *) malloc (sizeof(char) * (nso + 1));
+        memcpy((*fock)[iamp], idx_str, sizeof(char) * (nso + 1));
+        (*amp)[iamp] = val;
+    }
+
+    fclose(fp);
     return 0;
 
-    /* Call VQE */
-    const char *args[64] = {"python", "py_script.py", fpath, ofpath, NULL};
-    exec_prog(args);
+}
 
-    /* Data acquisition */
-    ofmo_parse_result(ofpath, nmonomer, monomer_list, energy);
+int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
+    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, const double energy,
+    const int iscc, const double ev[]){
+
+    /* Generate integral file */
+    char fpath[256];
+    char ofpath[256];
+    int ierr;
+    ierr = ofmo_vqe_ifpath(nmonomer, monomer_list, iscc, mythread, fpath);
+    if(ierr < 0){
+        return -1;
+    }
+    ierr = ofmo_vqe_ofpath(nmonomer, monomer_list, iscc, mythread, ofpath);
+    if(ierr < 0){
+        return -1;
+    }
+
+    ofmo_export_integ(fpath, nao, H, mo_tei, S, C, Enuc, nelec, ev, energy);
+
+    /* Call VQE */
+    const char *args[64] = {"python", "./vqe/py_script.py", fpath, ofpath, NULL};
+    ierr = exec_prog(args);
+    if(ierr < 0){
+        return -1;
+    }
 
     return 0;
 }
 
 
-int ofmo_posthf_density( const int na, const double * A, const int * fock_vec,
-    const double C[], const int nao, const int max_nocc, double D[]){
+int ofmo_vqe_posthf_density( const int na, const double * A, char ** fock_vec,
+    const double C[], const int nao, double D[]){
     int i, j, ij, ia, ifk, ifk_s;
-    int vec, noe;
+    int noe;
+    char * vec;
     double alpha, dt;
     const int nsao = nao * 2;
     double * Ct, *ci, *cj;
@@ -284,13 +394,13 @@ int ofmo_posthf_density( const int na, const double * A, const int * fock_vec,
     ij = 0;
     for (i=0, ci=Ct; i<nao; i++, ci+=nao){
     for (j=0, cj=Ct; j<=i;  j++, cj+=nao){
-        D[ij] = 0;
+        D[ij] = 0.0;
         for (ia=0; ia<na; ia++){
             vec = fock_vec[ia];
             alpha = A[ia];
             dt = 0;
             for(ifk=0; ifk<nsao; ifk+=2){
-                noe = (vec>>ifk) & 1 + (vec>>(ifk + 1)) & 1;
+                noe = ((vec[ifk] == '1') & 1) + ((vec[ifk + 1] == '1') & 1);
                 if(noe > 0){
                     ifk_s = ifk/2;
                     dt += ci[ifk_s] * cj[ifk_s] * ((double)noe) / 2 ;

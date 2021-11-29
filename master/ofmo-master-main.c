@@ -451,6 +451,8 @@ void show_help(const char *myname, const int verbose)
   fprintf(stderr,"  -B #: buffer size / proc (MB, default: %d)\n", 512);
   fprintf(stderr,"  -v: verbose\n");
   fprintf(stderr,"  -h: show this help\n");
+  fprintf(stderr,"  -q: use VQE (-np will be ignored)\n");
+
 #ifdef USE_CUDA
   fprintf(stderr," Options for GPGPU:\n");
   fprintf(stderr,"  -d #: # devices (default:1)\n");
@@ -475,6 +477,7 @@ int main( int argc, char *argv[] ) {
     char bindir[MAXSTRLEN];
     char dens[MAXSTRLEN];
     int ngroup=-1, nioprocs=-1, niogroup=-1, ierr, nmaxprocs=-1;
+    int run_vqe = 0;
     int ngroupA, nioprocsA, niogroupA, iopos, master;
     int group_size;
     int imsg[OFMO_IMSG_SZ], imsg_sz=OFMO_IMSG_SZ, dmsg_sz=OFMO_DMSG_SZ;
@@ -548,6 +551,7 @@ int main( int argc, char *argv[] ) {
         {"ndev",      1, 0, 'd'},
         {"help",      0, 0, 'h'},
         {"verbose",   0, 0, 'v'},
+        {"vqe",       0, 0, 'q'},
         {0, 0, 0, 0}
       };
 
@@ -571,7 +575,7 @@ int main( int argc, char *argv[] ) {
       bindir[0]='\0';
       local_input_dir[0]='\0';
 
-      while ((c=getopt_long_only(argc, argv, "B:d:n:hv", long_options, &option_index))!=-1) {
+      while ((c=getopt_long_only(argc, argv, "B:d:n:hvq", long_options, &option_index))!=-1) {
         switch(c) {
           case 0:
             ngroup = strtol(optarg, &endptr, 10);
@@ -629,6 +633,10 @@ int main( int argc, char *argv[] ) {
             break;
           case 'v':
             verbose = 1;
+            break;
+          case 'q':
+            printf("Will Run VQE\n");
+            run_vqe = 1;
             break;
           case 'h':
           default:
@@ -731,6 +739,9 @@ int main( int argc, char *argv[] ) {
     ierr = ofmo_data_get_vals("method", &method);
 
     // Calculation of the number of processes (group size) for each worker
+    if(run_vqe == 1){
+        nmaxprocs = ngroup + (nioprocs*niogroup) + 1;
+    }
     group_size = ( nmaxprocs - (nioprocs*niogroup) - 1 ) / ngroup;
     
     // ofmo_data_show_all();

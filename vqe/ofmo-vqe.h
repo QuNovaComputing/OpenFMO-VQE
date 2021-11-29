@@ -10,19 +10,14 @@
 
 #include <stdlib.h>
 
-extern int ofmo_amp_alloc( const int nfrag );
-
-extern int ofmo_amp_dealloc();
-
 extern int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
     const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc,
-    double *energy, const int iscc, const double ev[]);
+    const double energy, const int iscc, const double ev[]);
 
-extern int ofmo_get_amps( const int ifrag, int *namp, double **alpha, int **fock_vec);
+extern int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int * namps, double ** amp, char *** fock);
 
-extern int ofmo_get_oldamps( const int ifrag, int *namp, double **old_alpha, int **old_fock_vec);
+extern int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int iscc, double * energy );
 
-extern int ofmo_update_amps();
-
-
+extern int ofmo_vqe_posthf_density( const int na, const double * A, char ** fock_vec,
+    const double C[], const int nao, double D[]);
 #endif

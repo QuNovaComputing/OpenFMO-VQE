@@ -1256,8 +1256,52 @@ int ofmo_calc_fragment_electronic_state(
         }
         ofmo_ao2mo_H(nao, H, C, H_MO);
         int mythread = omp_get_thread_num();
-        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, energy, iscc, ev);
+        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev);
     	if ( ierr != 0 ) return -1;
+        ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy);
+        if ( ierr != 0 ) return -1;
+        if(nmonomer == 1){
+            printf("it=%d\tmon=[%d]\tenergy=%f\n", iscc, monomer_list[0], *energy);
+        }else if(nmonomer == 2){
+            printf("it=%d\tmon=[%d, %d]\tenergy=%f\n", iscc, monomer_list[0], monomer_list[1], *energy);
+        }
+
+        if(nmonomer == 1){
+            double * amps;
+            char ** fock;
+            int namps, i, j, ij;
+
+            //double * hf_D = (double *) malloc (sizeof(double) * nao2);
+            //memcpy(hf_D, D, sizeof(double) * nao2);
+
+            ierr = ofmo_vqe_get_amplitudes(monomer_list[0], iscc, 2*nao, &namps, &amps, &fock);
+            if (ierr != 0) return -1;
+            ofmo_vqe_posthf_density(namps, amps, fock, C, nao, D);
+            free(amps);
+            for(i=0; i<namps; i++){
+                free(fock[i]);
+            }
+            free(fock);
+/*
+            printf("===== D _ HF =====\n");
+            for(i=0, ij=0; i<nao; i++){
+                for(j=0; j<=i; j++, ij++){
+                    printf("%f\t", hf_D[ij]);
+                }
+                printf("\n");
+            }
+            free(hf_D);
+
+            printf("===== D =====\n");
+            for(i=0, ij=0; i<nao; i++){
+                for(j=0; j<=i; j++, ij++){
+                    printf("%f\t", D[ij]);
+                }
+                printf("\n");
+            }
+*/
+
+        }
     }
     if(mo_tei) free(mo_tei);
 
@@ -1481,7 +1525,7 @@ int ofmo_calc_es_dimer( MPI_Comm comm, int njob, int joblist[],
 	fflush( fp_prof );
     }
 
-    // 初期化
+    // Initialization
     for ( int ii=0; ii<njob; ii++ )
 	dE[ii] = UiDj[ii] = UjDi[ii] = enucij[ii] = 0.e0;
     *energy0 = 0.e0;
@@ -1534,7 +1578,7 @@ int ofmo_calc_es_dimer( MPI_Comm comm, int njob, int joblist[],
 	workerid = ofmo_mt_get_workerid( mythread );
 	vnworkers = nworkers - 1;
 	vworkerid = workerid - 1;
-	// マスタースレッドでは、モノマー密度行列データの取得
+	// Acquisition of monomer density matrix data in master thread
 	if ( mythread == 0 ) {
 	    for ( ijob=0; ijob<njob; ijob++ ) {
 		ifrag = joblist[ijob*2+0];

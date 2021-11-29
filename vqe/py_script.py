@@ -225,8 +225,11 @@ def output_file(out_path, ai, a, e):
 if __name__ == "__main__":
     ifpath = sys.argv[1]
     ofpath = sys.argv[2]
+    print(f"pyscript : VQE for {ifpath} spawned.")
+    assert len(sys.argv) == 3
     contents = parse_input_file(ifpath)
     #mo_contents = ao_to_orth_mo(ao_contents)
     contents['tei'] = lst_eri_to_mat(contents['nbasis'], contents['lst_tei'])
     amp_idx, amps, energy = call_vqe(contents)
     output_file(ofpath, amp_idx, amps, energy)
+    print(f"pyscript : output {ofpath} Generated.")

@@ -142,13 +142,13 @@ def call_vqe(mo_contents):
     n_electron = mo_contents['n_electrons']
     nmonomers = mo_contents['n_monomers']
     if nmonomers == 1:
+        homo_idx = 1
+        lumo_idx = 1
+        n_entang = 5
+    elif nmonomers == 2:
         homo_idx = 2
         lumo_idx = 2
         n_entang = 5
-    elif nmonomers == 2:
-        homo_idx = 4
-        lumo_idx = 4
-        n_entang = 10
     else:
         raise ValueError()
     frozen = [x for x in range(max(n_electron//2 - homo_idx, 0))]

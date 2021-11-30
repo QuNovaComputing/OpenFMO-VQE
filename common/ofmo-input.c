@@ -40,12 +40,15 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
     //int maxit=30, nprint=0, itol=20, icut=15;
     int maxit=30, nprint=0, itol=20, icut=12;
 	int method=OFMO_RHF;
-	char *vqescr=NULL;
+	char *vqescr=(char*)malloc( sizeof(char) * MAXSTRLEN );
+	char *desc=(char*)malloc( sizeof(char) * MAXSTRLEN );
+	vqescr[0] = '\0';
+	desc[0] = '\0';
     // local variables
     int i, nline = 0, n, ne, errpos = -1, flag_end = false;
     if ( fp == NULL ) {
-	ofmo_data_put_vals("maxscf nprint itol icut method vqescr",
-		maxit, nprint, itol, icut, method, vqescr);
+	ofmo_data_put_vals("maxscf nprint itol icut method vqescr desc",
+		maxit, nprint, itol, icut, method, vqescr, desc);
 	return 0;
     }
 
@@ -84,11 +87,11 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 				dbg("line=%d, elem=%d : %s not valid\n", nline, ++i, elems[1] );
 	    		break;
 			}
-		}else if ( strcmp( elems[0], "vqescr" ) == 0){
-			int s = strlen(elems[1])+1;
-			vqescr = malloc(s);
-			strncpy(vqescr, elems[1], s);
 		}
+		else if ( strcmp( elems[0], "vqescr" ) == 0)
+			strcpy(vqescr, elems[1]);
+		else if ( strcmp( elems[0], "desc") == 0 )
+			strcpy(desc, elems[1]);
 	}
 	if ( errpos >= 0 ) {
 	    dbg("line=%d, elem=%d : ERROR\n", nline, ++i );
@@ -103,8 +106,8 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	}
     }
     if ( !flag_end ) return -1;
-    ofmo_data_put_vals("maxscf nprint itol icut method vqescr",
-	    maxit, nprint, itol, icut, method, vqescr );
+    ofmo_data_put_vals("maxscf nprint itol icut method vqescr desc",
+	    maxit, nprint, itol, icut, method, vqescr, desc );
     return 0;
 }
 

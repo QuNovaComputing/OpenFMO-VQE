@@ -1248,6 +1248,9 @@ int ofmo_calc_fragment_electronic_state(
         double * X = (double *)malloc(sizeof(double)*nao*nao); //Orth mat
         double * H_MO = (double *)malloc(sizeof(double)*nao2); // MO H
         int orth_ret = ofmo_symm_orth(nao, S, C, X);
+        char * desc;
+        ofmo_data_get_vals("desc", &desc);
+
         if(orth_ret == 0){
             ofmo_orth_C(nao, X, C);
         }else if(orth_ret < 0){
@@ -1256,9 +1259,10 @@ int ofmo_calc_fragment_electronic_state(
         }
         ofmo_ao2mo_H(nao, H, C, H_MO);
         int mythread = omp_get_thread_num();
-        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev);
+        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev, desc );
     	if ( ierr != 0 ) return -1;
-        ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy);
+
+        ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy, desc);
         if ( ierr != 0 ) return -1;
         if(nmonomer == 1){
             printf("it=%d\tmon=[%d]\tenergy=%f\n", iscc, monomer_list[0], *energy);
@@ -1274,7 +1278,7 @@ int ofmo_calc_fragment_electronic_state(
             //double * hf_D = (double *) malloc (sizeof(double) * nao2);
             //memcpy(hf_D, D, sizeof(double) * nao2);
 
-            ierr = ofmo_vqe_get_amplitudes(monomer_list[0], iscc, 2*nao, &namps, &amps, &fock);
+            ierr = ofmo_vqe_get_amplitudes(monomer_list[0], iscc, 2*nao, &namps, &amps, &fock, desc);
             if (ierr != 0) return -1;
             ofmo_vqe_posthf_density(namps, amps, fock, C, nao, D);
             free(amps);

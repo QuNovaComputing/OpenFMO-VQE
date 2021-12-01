@@ -32,5 +32,5 @@ sto-3g 5 5
  $fmoprp
 modorb=3
  $end
-$contrl method=vqe vqescr=./vqe/py_script_1.py desc=alanyne_12 $end
+$contrl method=vqe vqescr=./vqe/py_script_1.py desc=alanyne_2_5_4_5 $end
 

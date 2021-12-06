@@ -101,6 +101,13 @@ static struct _val_carrier_ vc[] = {
     // in $fmoprp
     {"sccconv",  INT, NULL, "SCC convergence criteria"},
     {"maxscc",  INT, NULL, "maximum number of SCC cycle"},
+    // in $vqeprp
+    {"monhomo", INT, NULL, "Monomer HOMO - x"},
+    {"monlumo", INT, NULL, "Monomer LUMO + x"},
+    {"monent", INT, NULL, "entanglers for monomer vqe"},
+    {"dimhomo", INT, NULL, "Dimer HOMO - x"},
+    {"dimlumo", INT, NULL, "Dimer LUMO + x"},
+    {"diment", INT, NULL, "entanglers for dimer vqe"},
     /* ================ data derived from input data =============== */
     {"nfatom", P_INT, NULL, "# of atoms in each monomer"},
     {"nfbond", P_INT, NULL, "# of BDA in each monomer"},

@@ -91,8 +91,7 @@ int ofmo_update_amps(){
 
 int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, const double H[],
     const double U[], const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
-    const double ev[], const double energy){
-    
+    const double ev[], const double energy, const int homo, const int lumo, const int ent ){    
 
     FILE *fp = fopen(fpath, "w");
 
@@ -100,6 +99,9 @@ int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, cons
     fprintf(fp, "NELEC\t%d\n", nelec);
     fprintf(fp, "ENUC\t%f\n", Enuc);
     fprintf(fp, "NBASIS\t%d\n", nao);
+    fprintf(fp, "HOMO\t%d\n", homo);
+    fprintf(fp, "LUMO\t%d\n", lumo);
+    fprintf(fp, "ENT\t%d\n", ent);
     fprintf(fp, "HF_ENERGY\t%f\n", energy);
 
     int nao2 = ( nao + 1 ) * nao / 2;
@@ -381,7 +383,7 @@ int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int
 
 int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
     const double U[], const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, const double energy,
-    const int iscc, const double ev[], char *desc){
+    const int iscc, const double ev[], char *desc, const int homo, const int lumo, const int ent, const int diment ){
 
     char * vqescr = NULL;
     ofmo_data_get_vals("vqescr", &vqescr);
@@ -400,7 +402,8 @@ int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_lis
     if(ierr < 0){
         return -1;
     }
-    ofmo_export_integ(nmonomer, fpath, nao, H, U, mo_tei, S, C, Enuc, nelec, ev, energy);
+    ofmo_export_integ(nmonomer, fpath, nao, H, U, mo_tei, S, C, Enuc, nelec, ev, energy,
+            homo, lumo, ent );
 
     /* Call VQE */
     const char *args[64] = {"python", vqescr, fpath, ofpath, NULL};

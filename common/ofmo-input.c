@@ -1016,6 +1016,64 @@ static int input_nat( FILE* fp ) {
     return nat;
 }
 
+static int input_vqeprp( FILE *fp, char **token, const int ntok ){
+	int monhomo = -1, monlumo = -1, dimhomo = -1, dimlumo = -1;
+	int monent = -1, diment = -1;
+
+	int i, nline = 0, n, ne, errpos = -1, flag_end = false;
+	if ( fp == NULL ) {
+	ofmo_data_put_vals("monhomo monlumo dimhomo dimlumo monent diment",
+		monhomo, monlumo, dimhomo, dimlumo, monent, diment);
+	return 0;
+    }
+
+	ofmo_strcpy_2d( token, local, ntok, MAXSTRLEN );
+	n = ntok;
+	while( errpos < 0 && !flag_end ){
+	nline++;
+	errpos = -1;
+	for ( i=0; i<n; i++ ){
+		if ( strcmp( local[i], "$vqeprp" ) == 0 ) continue;
+		if ( strcmp( local[i], "$end" ) == 0 ) {
+			flag_end = true;
+			break;
+		}
+		ne = ofmo_split( local[i], "=", elems, MAXTOKEN, MAXSTRLEN );
+		if ( ne<2 ){
+			errpos = i;
+			break;
+		}
+		if ( strcmp( elems[0], "monhomo" ) == 0)
+			monhomo = atoi( elems[1] );
+		if ( strcmp( elems[0], "monlumo" ) == 0)
+			monlumo = atoi( elems[1] );
+		if ( strcmp( elems[0], "dimhomo" ) == 0)
+			dimhomo = atoi( elems[1] );
+		if ( strcmp( elems[0], "dimlumo" ) == 0)
+			dimlumo = atoi( elems[1] );
+		if ( strcmp( elems[0], "monent" ) == 0)
+			monent = atoi( elems[1] );
+		if ( strcmp( elems[0], "diment" ) == 0)
+			diment = atoi( elems[1] );
+	}
+	if ( errpos >= 0 ){
+		dbg("line=%d, elem=%d : ERROR\n", nline, ++i );
+	    break;
+	}
+	if ( flag_end ) break;
+	n=ofmo_read_line(fp, MAXSTRLEN, MAXTOKEN, MAXSTRLEN, line, local);
+	if ( n < 0 ) {
+	    dbg("Unexpected EOF\n");
+	    break;
+	}
+	}
+	if ( !flag_end ) return -1;
+	ofmo_data_put_vals("monhomo monlumo dimhomo dimlumo monent diment",
+		monhomo, monlumo, dimhomo, dimlumo, monent, diment);
+    return 0;
+
+}
+
 /** Function to read input data in GAMESS format
  *
  * Drives a function that reads the data for each section
@@ -1111,7 +1169,10 @@ int ofmo_read_gamess_input( const char *filename ) {
 		ierr=input_data( fp, token, ntok );
 		//printf("== 12 ==\n");
 		data = true;
-	    } else {
+	    } else if ( strcmp( &token[0][1], "vqeprp" ) == 0 ) {
+		ierr=input_vqeprp( fp, token, ntok);
+		data = true;
+		} else {
 		printf("Illegal section name (%s)\n", &token[0][1] );
 		ierr = -2;
 	    }

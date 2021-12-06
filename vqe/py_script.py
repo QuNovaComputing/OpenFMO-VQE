@@ -42,6 +42,9 @@ def parse_input_file(inp_file):
             "constant": None,
             "mo_energies": None,
             "env_oei" : None,
+            "homo" : None,
+            "lumo" : None,
+            "ent" : None,
         }
         while True:
             line = of.readline()
@@ -57,6 +60,12 @@ def parse_input_file(inp_file):
                 result['constant'] = float(line.split()[1])
             elif line.startswith("NBASIS"):
                 result['nbasis'] = int(line.split()[1])
+            elif line.startswith("HOMO"):
+                result["homo"] = int(line.split()[1])
+            elif line.startswith("LUMO"):
+                result["lumo"] = int(line.split()[1])
+            elif line.startswith("ENT"):
+                result["ent"] = int(line.split()[1])
             elif line.startswith('OEI'):
                 mode = 1
                 linecnt = 0
@@ -153,6 +162,7 @@ def call_vqe(mo_contents):
     n_electron = mo_contents['n_electrons']
     nmonomers = mo_contents['n_monomers']
     env_oei = mo_contents['env_oei']
+    '''
     if nmonomers == 1:
         homo_idx = 2
         lumo_idx = 2
@@ -163,8 +173,14 @@ def call_vqe(mo_contents):
         n_entang = 5
     else:
         raise ValueError()
-    frozen = [x for x in range(max(n_electron//2 - homo_idx, 0))]
-    active = [x for x in range(max(n_electron//2 - homo_idx, 0), min(n_electron//2 + lumo_idx, n_basis))]
+    '''
+    n_entang = mo_contents['ent']
+    homo_idx = mo_contents['homo']
+    lumo_idx = mo_contents['lumo']
+    frz_idx = max(n_electron//2 - homo_idx, 0) if homo_idx > 0 else 0
+    vir_idx = min(n_electron//2 + lumo_idx, n_basis) if lumo_idx > 0 else n_basis
+    frozen = [x for x in range(frz_idx)]
+    active = [x for x in range(frz_idx, vir_idx)]
     n_frozen = len(frozen)
     n_active = len(active)
     n_virtual = n_basis - n_frozen - n_active

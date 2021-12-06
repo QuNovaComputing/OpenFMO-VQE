@@ -12,7 +12,7 @@
 
 extern int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
     const double U[], const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc,
-    const double energy, const int iscc, const double ev[], char * desc);
+    const double energy, const int iscc, const double ev[], char * desc, const int homo, const int lumo, const int ent);
 
 extern int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int * namps, double ** amp, char *** fock, char * desc);
 

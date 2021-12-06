@@ -1244,9 +1244,11 @@ int ofmo_calc_fragment_electronic_state(
 	return -1;
     }
 
+    double _dv;
     if(level == OFMO_VQE){
         double * X = (double *)malloc(sizeof(double)*nao*nao); //Orth mat
         double * H_MO = (double *)malloc(sizeof(double)*nao2); // MO H
+        double * U_MO = (double *)malloc(sizeof(double)*nao2); // MO basis U (environmental potential)
         int orth_ret = ofmo_symm_orth(nao, S, C, X);
         char * desc;
         ofmo_data_get_vals("desc", &desc);
@@ -1257,12 +1259,13 @@ int ofmo_calc_fragment_electronic_state(
             printf("ERROR orth.\n");
             return -1;
         }
-        ofmo_ao2mo_H(nao, H, C, H_MO);
+        ofmo_ao2mo_H(nao, H, C, H_MO); // Diagonal components mult by 2.
+        ofmo_ao2mo_H(nao, U, C, U_MO); // Diagonal components mult by 2.
         int mythread = omp_get_thread_num();
-        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev, desc );
+        ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, U_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev, desc );
     	if ( ierr != 0 ) return -1;
 
-        ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy, desc);
+        ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy, &_dv, desc);
         if ( ierr != 0 ) return -1;
         if(nmonomer == 1){
             printf("it=%d\tmon=[%d]\tenergy=%f\n", iscc, monomer_list[0], *energy);
@@ -1311,7 +1314,12 @@ int ofmo_calc_fragment_electronic_state(
 
     /* energies */
     double dv;
-    dv = 4.0e0*ofmo_dot_product( nao2, D, U );
+    if(level == OFMO_RHF) dv = 4.0e0*ofmo_dot_product( nao2, D, U );
+    else if(level == OFMO_VQE) dv = _dv;
+    else{
+        printf("ERROR : invalid method\n");
+        fflush(stdout);
+    }
     *energy0 = *energy - dv;
 
     /* Mulliken population */

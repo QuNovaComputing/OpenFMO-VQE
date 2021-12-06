@@ -90,7 +90,7 @@ int ofmo_update_amps(){
 }
 
 int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, const double H[],
-    const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
+    const double U[], const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
     const double ev[], const double energy){
     
 
@@ -115,6 +115,15 @@ int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, cons
     for(i=0; i<nao; i++){
         for(j=0; j<=i; j++, ij++){
             fprintf(fp, "%f\t", H[ij]);
+        }
+        fprintf(fp, "\n");
+    }
+
+    fprintf(fp, "\nENV_OEI\n");
+    ij=0;
+    for(i=0; i<nao; i++){
+        for(j=0; j<=i; j++, ij++){
+            fprintf(fp, "%f\t", U[ij]);
         }
         fprintf(fp, "\n");
     }
@@ -282,7 +291,7 @@ int ofmo_vqe_ifpath( const int nmonomer, const int monomer_list[], const int isc
     return 0;
 }
 
-int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int iscc, double * energy, char * desc ){
+int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int iscc, double * energy, double * dv, char * desc ){
     char ofpath[256];
     const int mythread = 0;
     int ierr;
@@ -302,6 +311,15 @@ int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int
     sscanf(line, "%lf\n", &val);
 
     *energy = val;
+
+
+    // Read dv
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%lf\n", &val);
+
+    *dv = val;
 
     fclose(fp);
     return 0;
@@ -323,6 +341,12 @@ int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int
     }
     fp = fopen(ofpath, "r");
     // Read energy
+    if(fgets(line, 256, fp) == NULL){
+        return -1;
+    }
+    sscanf(line, "%lf\n", &val);
+
+    // Read dv
     if(fgets(line, 256, fp) == NULL){
         return -1;
     }
@@ -356,7 +380,7 @@ int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int
 }
 
 int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_list[], const int nao, const double H[],
-    const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, const double energy,
+    const double U[], const double mo_tei[], const double S[], const double C[], const int nelec, const double Enuc, const double energy,
     const int iscc, const double ev[], char *desc){
 
     char * vqescr = NULL;
@@ -376,7 +400,7 @@ int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_lis
     if(ierr < 0){
         return -1;
     }
-    ofmo_export_integ(nmonomer, fpath, nao, H, mo_tei, S, C, Enuc, nelec, ev, energy);
+    ofmo_export_integ(nmonomer, fpath, nao, H, U, mo_tei, S, C, Enuc, nelec, ev, energy);
 
     /* Call VQE */
     const char *args[64] = {"python", vqescr, fpath, ofpath, NULL};

@@ -5,16 +5,12 @@ from numpy.linalg import svd
 import sys
 
 from gwonsquantum.chemistry.molecule import electronic_structure
-from gwonsquantum.polynomial.transform.bravyi_kitaev import beta_matrix, bravyi_kitaev
-from gwonsquantum.polynomial.transform.jordan_wigner import jordan_wigner
+from gwonsquantum.polynomial.transform.bravyi_kitaev import beta_matrix
 from gwonsquantum.chemistry.vqe.coupled_cluster_vqe.qcc import QCC
 from gwonsquantum.chemistry.vqe.coupled_cluster_vqe.uccsd import UCCSD
 from gwonsquantum.chemistry.molecule import ElectronicStructure
-from gwonsquantum.chemistry.molecule.electronic_structure import get_hamiltonian_from_ei
-from gwonsquantum.qiskitextension.pauli_measurement import measurement_statevector
 
 DEBUG = False
-mapping = "JW"
 
 def parse_input_file(inp_file):
     def input_matrix(line, key, result, cnt, triangle=False):
@@ -41,7 +37,6 @@ def parse_input_file(inp_file):
             "tei": None,
             "constant": None,
             "mo_energies": None,
-            "env_oei" : None,
         }
         while True:
             line = of.readline()
@@ -59,9 +54,6 @@ def parse_input_file(inp_file):
                 result['nbasis'] = int(line.split()[1])
             elif line.startswith('OEI'):
                 mode = 1
-                linecnt = 0
-            elif line.startswith("ENV_OEI"):
-                mode = 6
                 linecnt = 0
             elif line.startswith("ENERGIES"):
                 mode = 5
@@ -97,9 +89,6 @@ def parse_input_file(inp_file):
                 if result['mo_energies'] is None:
                     result['mo_energies'] = list()
                 result['mo_energies'].append(float(spt[0]))
-            elif mode == 6:
-                input_matrix(line, 'env_oei', result, linecnt, triangle=True)
-                linecnt += 1
     if DEBUG:
         print(result['mo_energies'])
         print(result['oei'])
@@ -152,7 +141,6 @@ def call_vqe(mo_contents):
     n_spin_basis = 2 * n_basis
     n_electron = mo_contents['n_electrons']
     nmonomers = mo_contents['n_monomers']
-    env_oei = mo_contents['env_oei']
     if nmonomers == 1:
         homo_idx = 2
         lumo_idx = 2
@@ -171,7 +159,7 @@ def call_vqe(mo_contents):
 
     vqe_obj = QCC(electronic_structure=es,
     #vqe_obj = UCCSD(electronic_structure=es,
-                  mapping=mapping,
+                  mapping="JW",
                   frozen_indices=frozen,
                   active_indices=active,
                   hamiltonian_optimization=False,
@@ -194,30 +182,10 @@ def call_vqe(mo_contents):
         trot_opt_level=2,
         return_sv = True
     )
-
-    es_env: ElectronicStructure = {
-        "n_electrons": mo_contents['n_electrons'],
-        "oei": env_oei,
-        "tei": np.zeros((n_basis, n_basis, n_basis, n_basis), dtype=float),
-        "constant": 0.0
-    }
-    env_fham, n_orb = get_hamiltonian_from_ei(es_env, frozen, active)
-    assert n_orb == 2*n_active
-    if mapping == "JW":
-        env_pham = jordan_wigner(env_fham, 2*n_active)
-    elif mapping == "BK":
-        env_pham = bravyi_kitaev(env_fham, 2*n_active)
-    else:
-        raise NotImplementedError
-
-    dv = measurement_statevector(sv, env_pham.co_flipping_set_group) + env_pham.constant()
-    assert abs(dv.imag) < 1e-7
-    dv = float(dv.real)
-
-    amp_idx, amps = get_amp_from_sv(sv, mapping)
+    amp_idx, amps = get_amp_from_sv(sv, "JW")
     for i, a in enumerate(amp_idx):
         amp_idx[i] = "1"*2*n_frozen + a + "0"*2*n_virtual
-    return amp_idx, amps, energy, dv
+    return amp_idx, amps, energy 
 
 #TODO: Consider electron number breaking.
 
@@ -258,10 +226,9 @@ def get_amp_from_sv(
 # hamiltonian_optmization = False
 # backend = statevector_simulator
 
-def output_file(out_path, ai, a, e, dv):
+def output_file(out_path, ai, a, e):
     with open(out_path, "w") as of:
         of.write(f"{e}\n")
-        of.write(f"{dv}\n")
         of.write(f"{len(ai)}\n")
         for i, c in zip(ai, a):
             of.write(f"{i}\t{c}\n")
@@ -275,6 +242,6 @@ if __name__ == "__main__":
     contents = parse_input_file(ifpath)
     #mo_contents = ao_to_orth_mo(ao_contents)
     contents['tei'] = lst_eri_to_mat(contents['nbasis'], contents['lst_tei'])
-    amp_idx, amps, energy, dv = call_vqe(contents)
-    output_file(ofpath, amp_idx, amps, energy, dv)
+    amp_idx, amps, energy = call_vqe(contents)
+    output_file(ofpath, amp_idx, amps, energy)
     print(f"pyscript : output {ofpath} Generated.")

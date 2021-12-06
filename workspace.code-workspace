@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "OpenFMO",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stdlib.h": "c",
+			"ofmo-falanx-main.h": "c",
+			"stdio.h": "c",
+			"skel-w2e.h": "c"
+		}
+	}
+}

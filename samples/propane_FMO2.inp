@@ -30,4 +30,5 @@ sto-3g 5 5
  $fmoprp
 modorb=3
  $end
-$contrl method=vqe vqescr=./vqe/py_script_2.py desc=propane_2_5_4_10 $end
+$contrl method=vqe vqescr=./vqe/py_script.py desc=propane_2_5_4_5_cal $end
+$vqeprp monhomo=2 monlumo=2 dimhomo=4 dimlumo=4 monent=5 diment=5 $end

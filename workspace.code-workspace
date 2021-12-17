@@ -10,7 +10,8 @@
 			"stdlib.h": "c",
 			"ofmo-falanx-main.h": "c",
 			"stdio.h": "c",
-			"skel-w2e.h": "c"
+			"skel-w2e.h": "c",
+			"assert.h": "c"
 		}
 	}
 }

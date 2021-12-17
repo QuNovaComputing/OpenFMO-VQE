@@ -774,6 +774,8 @@ int ofmo_calc_fragment_electronic_state(
     int mc = -2;	/* global counter in local process */
 #ifndef PARA_SUB
 #pragma omp parallel
+#pragma omp critical // FIXME after finding the bug
+{
 #else
     int nnewjob;
     int *newjoblist;
@@ -791,6 +793,14 @@ int ofmo_calc_fragment_electronic_state(
 	nthreads = omp_get_num_threads();
 	ofmo_start_thread_timer( cid_cutoff, mythread );
 
+    /*
+    // not known bug
+    int loop_idx = 0;
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d/%d loop start\n", monomer_list[0], iscc, mythread);
+        fflush(stdout);
+    }
+    */
 	while (1) {
 #pragma omp master
 	    {
@@ -805,24 +815,49 @@ int ofmo_calc_fragment_electronic_state(
 			    root, comm );
 		    NEW_SCC_STEP = false;
 		}
+        /*
+        if(monomer_list[0] == 1){// not known bug
+            printf("%d/%d init_density_loop0_%d\n", monomer_list[0], iscc, loop_idx);
+            fflush(stdout);
+        }
+        */
 		ofmo_construct_init_density( comm, nmonomer, monomer_list,
 			nao, fsao2tuao,
 			nao_total, msao2tuao, nfao,
 			D );
+        /*
+        if(monomer_list[0] == 1){// not known bug
+            printf("%d/%d init_density_loop1_%d\n", monomer_list[0], iscc, loop_idx);
+            fflush(stdout);
+        }
+        */
 		if ( nmonomer > 1 ) memcpy( D0, D, sizeof(double) * nao2 );
 		/* read density matrices to be used ifc4c calculations */
 		for ( i=0; i<nifc4c; i++ ) {
 		    ifrag = joblist_ifc4c[i];
 		    ofmo_get_monomer_density( comm, ifrag, Dmons[i] );
 		}
+        /*
+        if(monomer_list[0] == 1){// not known bug
+            printf("%d/%d init_density_loop2_%d\n", monomer_list[0], iscc, loop_idx);
+            fflush(stdout);
+        }
+        */
 		flag = ( nthreads == 1 ? false : true );
 	    }	// pragma omp master
 	    if ( flag == true ) break;
-#pragma omp critical
+//#pragma omp critical
 	    { i = mc; mc++; }
         /* Cut-off table calculation for 2-electron integral and 4-center Coulomb integral */
 	    if ( i == -2 ) {
 		/* nuclear repulsion */
+        /*
+        if(monomer_list[0] == 1){// not known bug
+            printf("%d/%d init_density_loop3_%d\n", monomer_list[0], iscc, loop_idx);
+            loop_idx += 1;
+            fflush(stdout);
+        }
+        */
 		Enuc = ofmo_calc_nuclear_repulsion( nat, atomic_number,
 			atom_x, atom_y, atom_z );
 	    } else if ( i == -1 ) {
@@ -845,15 +880,57 @@ int ofmo_calc_fragment_electronic_state(
                 csp_lps_pair_mon[i], psp_zeta_mon[i],
                 psp_dkps_mon[i], psp_xiza_mon[i] );
 	    }
+    //
 	}	// while
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d/%d loop break\n", monomer_list[0], iscc, mythread);
+        fflush(stdout);
+    }
+    */
 	ofmo_acc_thread_timer( cid_cutoff, mythread );
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d/%d thread timer\n", monomer_list[0], iscc, mythread);
+        fflush(stdout);
+    }
+    */
+    }   // pragma omp critical (FIXME after find the bug)
     }	// pragma omp parallel
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d timer0\n", monomer_list[0], iscc);
+        fflush(stdout);
+    }
+    */
     ofmo_acc_proc_timer( tid_cutoff );
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d timer1\n", monomer_list[0], iscc);
+        fflush(stdout);
+    }
+    */
     ofmo_acc_proc_timer( tid_Init );
-
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d timer2\n", monomer_list[0], iscc);
+        fflush(stdout);
+    }
+    */
     ofmo_start_proc_timer( tid_integ );
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d timer3\n", monomer_list[0], iscc);
+        fflush(stdout);
+    }
+    */
     ofmo_start_proc_timer( tid_Integ );
-
+    /*
+    if(monomer_list[0] == 1){// not known bug
+        printf("%d/%d timer done\n", monomer_list[0], iscc);
+        fflush(stdout);
+    }
+    */
     double scfd=tolscf, scfe;
     if      ( scfd <= 1.e-4 ) scfe = scfd * 1.e-2;
     else if ( scfd <= 1.e-3 ) scfe = scfd * 1.e-1;
@@ -879,6 +956,8 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_twoint_eps_ps4(eps_ps4*EPS_FAC_IFC4C);
     ofmo_twoint_eps_sch(eps_sch*EPS_FAC_IFC4C);
     ofmo_twoint_eps_eri(eps_eri*EPS_FAC_IFC4C);
+    //printf("%d/%d init_density\n", monomer_list[0], iscc);
+    //fflush(stdout);
 
 #pragma omp parallel
     {
@@ -908,6 +987,10 @@ int ofmo_calc_fragment_electronic_state(
 	ofmo_integ_set_loop_offset( mythread, offset );
 	/* ERI calculation ( 1st time ) */
     /* - First two-electron integral calculation for the buffered SCF method */
+
+    //printf("%d/%d eri_first\n", monomer_list[0], iscc);
+    //fflush(stdout);
+
 	ofmo_integ_twoint_first(
 		nworkers, workerid, eribfsz,
 		maxlqn, shel_atm, shel_ini, atom_x, atom_y, atom_z,
@@ -927,6 +1010,9 @@ int ofmo_calc_fragment_electronic_state(
 	    else                rate = 100.1e0;
 	    ofmo_set_thread_timer( cid_buf, mythread, rate );
 	}
+
+    //printf("%d/%d pot_env_start\n", monomer_list[0], iscc);
+    //fflush(stdout);
 
 	/* environmental potential */
 	/* 4-centered inter-fragment Coulomb term */
@@ -1114,6 +1200,9 @@ int ofmo_calc_fragment_electronic_state(
 
 	ofmo_acc_thread_timer( cid_4c, mythread );
 
+    //printf("%d/%d pot_env3_start\n", monomer_list[0], iscc);
+    //fflush(stdout);
+
 	/* 3-centered inter-fragment Coulomb term */
 	ofmo_start_thread_timer( cid_3c, mythread );
     //if(fp_prof) {fprintf(fp_prof,"calc_fragment ifc3c\n");fflush(fp_prof);}
@@ -1137,6 +1226,8 @@ int ofmo_calc_fragment_electronic_state(
 	// debug
 	//for ( int ii=0; ii<nao2; ii++ ) dU[ii] = 0.e0;
 
+    //printf("%d/%d pot_env2_start\n", monomer_list[0], iscc);
+    //fflush(stdout);
 	/* 2-centered inter-fragment Coulomb term */
 	ofmo_start_thread_timer( cid_2c, mythread );
     //if(fp_prof) {fprintf(fp_prof,"calc_fragment ifc2c\n");fflush(fp_prof);}
@@ -1179,6 +1270,9 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_acc_proc_timer( tid_integ );
     
     ofmo_start_proc_timer( tid_integ );
+
+    //printf("%d/%d pot_env_done\n", monomer_list[0], iscc);
+    //fflush(stdout);
 
     //if(fp_prof) {fprintf(fp_prof,"calc_fragment reduction\n");fflush(fp_prof);}
     /* reduction */
@@ -1270,11 +1364,23 @@ int ofmo_calc_fragment_electronic_state(
         else if(nmonomer == 2)
             ierr = ofmo_vqe_call(myrank, nmonomer, monomer_list, nao, H_MO, U_MO, mo_tei, S, C, nelec, Enuc, *energy, iscc, ev, desc,
                 dimhomo, dimlumo, diment );
-
-    	if ( ierr != 0 ) return -1;
-
+    	if ( ierr != 0 ){
+            if(nmonomer == 1)
+                printf("%d/%d Err in VQE call.\n", monomer_list[0], iscc);
+            else
+                printf("%d-%d/%d Err in VQE call.\n", monomer_list[0], monomer_list[1], iscc);
+            fflush(stdout);
+            return -1;
+        }
         ierr = ofmo_vqe_get_energy(nmonomer, monomer_list, iscc, energy, &_dv, desc);
-        if ( ierr != 0 ) return -1;
+    	if ( ierr != 0 ){
+            if(nmonomer == 1)
+                printf("%d/%d Err in Energy acq.\n", monomer_list[0], iscc);
+            else
+                printf("%d-%d/%d Err Energy acq.\n", monomer_list[0], monomer_list[1], iscc);
+            fflush(stdout);
+            return -1;
+        }
         if(nmonomer == 1){
             printf("it=%d\tmon=[%d]\tenergy=%f\n", iscc, monomer_list[0], *energy);
         }else if(nmonomer == 2){

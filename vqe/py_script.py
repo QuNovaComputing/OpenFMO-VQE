@@ -2,7 +2,7 @@ from itertools import product
 from typing import List, Tuple, Union, final
 import numpy as np
 from numpy.linalg import svd
-import sys
+import sys, os
 
 from gwonsquantum.chemistry.molecule import electronic_structure
 from gwonsquantum.polynomial.transform.bravyi_kitaev import beta_matrix, bravyi_kitaev
@@ -357,6 +357,12 @@ def get_corr_from_sv(
 # backend = statevector_simulator
 
 def output_file(out_path, ai, a, e, dv, corr_mat:np.ndarray):
+    try:
+        tmp_f = open(out_path, "w")
+        tmp_f.close()
+    except FileNotFoundError:
+        dir_path = '/'.join(out_path.split('/')[:-1])
+        os.mkdir(dir_path)
     with open(out_path, "w") as of:
         of.write(f"{e}\n")
         of.write(f"{dv}\n")

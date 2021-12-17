@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <assert.h>
@@ -20,7 +22,18 @@
 
 int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, const double H[],
     const double U[], const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
-    const double ev[], const double energy, const int homo, const int lumo, const int ent ){    
+    const double ev[], const double energy, const int homo, const int lumo, const int ent, const char *desc ){    
+
+    char dir_path[1024];
+    sprintf(dir_path, "./integ_temp/%s/", desc);
+    struct stat st = {0};
+
+#pragma omp critical
+{
+    if (stat(dir_path, &st) == -1){
+        mkdir(dir_path, 0700);
+    }
+}
 
     FILE *fp = fopen(fpath, "w");
 
@@ -134,20 +147,17 @@ int ofmo_vqe_ofpath( const int nmonomer, const int monomer_list[], const int isc
         printf("thread is not 0.\n");
         return -1;
     }
-    if(desc == NULL){
-        desc = "\0";
-    }
-    if(nmonomer == 1){
-        sprintf(ofpath, "./result_temp/res_%s_mono_%d_%d_%d.dat", desc, monomer_list[0], iscc, mythread);
-    }
-    else if(nmonomer == 2){
-        sprintf(ofpath, "./result_temp/res_%s_dim_%d-%d_%d_%d.dat", desc, monomer_list[0], monomer_list[1], iscc, mythread);
-    }
+    char * nm_str;
+    if(nmonomer == 1) nm_str="mono";
+    else if(nmonomer ==2) nm_str="dim";
     else{
         printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
         fflush(stdout);
         return -1;
     }
+    if(desc == NULL) sprintf(ofpath, "./result_temp/res_%s_%d_%d_%d.dat", nm_str, monomer_list[0], iscc, mythread);
+    else             sprintf(ofpath, "./result_temp/%s/res_%s_%s_%d_%d_%d.dat", desc, desc, nm_str, monomer_list[0], iscc, mythread);
+
     return 0;
 }
 
@@ -156,20 +166,16 @@ int ofmo_vqe_ifpath( const int nmonomer, const int monomer_list[], const int isc
         printf("thread is not 0.\n");
         return -1;
     }
-    if(desc == NULL){
-        desc = "\0";
-    }
-    if(nmonomer == 1){
-        sprintf(fpath, "./integ_temp/int_%s_mono_%d_%d_%d.dat", desc, monomer_list[0], iscc, mythread);
-    }
-    else if(nmonomer == 2){
-        sprintf(fpath, "./integ_temp/int_%s_dim_%d-%d_%d_%d.dat", desc, monomer_list[0], monomer_list[1], iscc, mythread);
-    }
+    char * nm_str;
+    if(nmonomer == 1) nm_str="mono";
+    else if(nmonomer ==2) nm_str="dim";
     else{
         printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
         fflush(stdout);
         return -1;
     }
+    if(desc == NULL) sprintf(fpath, "./integ_temp/int_%s_%d_%d_%d.dat", nm_str, monomer_list[0], iscc, mythread);
+    else             sprintf(fpath, "./integ_temp/%s/int_%s_%s_%d_%d_%d.dat", desc, desc, nm_str, monomer_list[0], iscc, mythread);
     return 0;
 }
 
@@ -291,15 +297,11 @@ int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_lis
     char ofpath[256];
     int ierr;
     ierr = ofmo_vqe_ifpath(nmonomer, monomer_list, iscc, mythread, fpath, desc);
-    if(ierr < 0){
-        return -1;
-    }
+    if(ierr < 0) return -1;
     ierr = ofmo_vqe_ofpath(nmonomer, monomer_list, iscc, mythread, ofpath, desc);
-    if(ierr < 0){
-        return -1;
-    }
+    if(ierr < 0) return -1;
     ofmo_export_integ(nmonomer, fpath, nao, H, U, mo_tei, S, C, Enuc, nelec, ev, energy,
-            homo, lumo, ent );
+            homo, lumo, ent, desc );
 
     /* Call VQE */
     const char *args[64] = {"python", vqescr, fpath, ofpath, NULL};

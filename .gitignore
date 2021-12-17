@@ -1,3 +1,4 @@
+workspace.code-workspace
 -*.inp
 #
 .vscode
@@ -19,6 +20,8 @@
 *.log.*
 *.log
 *.out
+
+!/samples/*.log
 
 #
 tests/*

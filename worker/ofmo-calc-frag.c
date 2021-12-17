@@ -1285,18 +1285,20 @@ int ofmo_calc_fragment_electronic_state(
             double * amps;
             char ** fock;
             int namps, i, j, ij;
+            double * corr_mat;
 
             //double * hf_D = (double *) malloc (sizeof(double) * nao2);
             //memcpy(hf_D, D, sizeof(double) * nao2);
 
-            ierr = ofmo_vqe_get_amplitudes(monomer_list[0], iscc, 2*nao, &namps, &amps, &fock, desc);
+            ierr = ofmo_vqe_get_amplitudes(monomer_list[0], iscc, nao, &namps, &amps, &fock, &corr_mat, desc);
             if (ierr != 0) return -1;
-            ofmo_vqe_posthf_density(namps, amps, fock, C, nao, D);
+            ofmo_vqe_posthf_density(namps, amps, fock, corr_mat, C, nao, D);
             free(amps);
             for(i=0; i<namps; i++){
                 free(fock[i]);
             }
             free(fock);
+            free(corr_mat);
 /*
             printf("===== D _ HF =====\n");
             for(i=0, ij=0; i<nao; i++){
@@ -1358,6 +1360,8 @@ int ofmo_calc_fragment_electronic_state(
 	for ( i=0; i<nat; i++ ) atpop[i] *= -1.e0;
 	for ( i=0; i<nao; i++ ) aopop[i] *= -1.e0;
 	*ddv = -4.0e0 * ofmo_dot_product( nao2, D0, U );
+    printf("# E= %16.10f E-DV= %16.10f DV= %16.10f "
+        "DDV= %16.10f\n", *energy, *energy0, dv, *ddv);
 	if ( fp_prof ) {
 	    fprintf( fp_prof,
 		    "# E= %16.10f E-DV= %16.10f DV= %16.10f "

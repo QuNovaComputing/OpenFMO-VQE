@@ -17,77 +17,6 @@
 #include <sys/wait.h>
 #include <assert.h>
 
-struct _amp_carrier_ {
-    int namp;
-    double * amp;
-    int * fock_vec;
-};
-
-static struct _amp_carrier_ **old_amp = NULL;
-static struct _amp_carrier_ **amp = NULL;
-static int _nfrag;
-
-int ofmo_amp_alloc( const int nfrag ){
-    _nfrag = nfrag;
-    old_amp = (struct _amp_carrier_**) malloc( nfrag * sizeof(struct _amp_carrier_) );
-    amp     = (struct _amp_carrier_**) malloc( nfrag * sizeof(struct _amp_carrier_) );
-    for(int ifrag=0; ifrag < nfrag; ifrag++){
-        old_amp[ifrag] = (struct _amp_carrier_ * ) malloc(sizeof(struct _amp_carrier_));
-        amp[ifrag]     = (struct _amp_carrier_ * ) malloc(sizeof(struct _amp_carrier_));
-        old_amp[ifrag]->namp = 0;
-        old_amp[ifrag]->amp = NULL;
-        old_amp[ifrag]->fock_vec = NULL;
-        amp[ifrag]->namp = 0;
-        amp[ifrag]->amp = NULL;
-        amp[ifrag]->fock_vec = NULL;
-    }
-    return 0;
-}
-
-int ofmo_amp_dealloc(){
-    for(int ifrag=0; ifrag < _nfrag; ifrag++){
-        if(old_amp[ifrag]->amp != NULL)      free(old_amp[ifrag]->amp);
-        if(old_amp[ifrag]->fock_vec != NULL) free(old_amp[ifrag]->fock_vec);
-        if(amp[ifrag]->amp != NULL)          free(old_amp[ifrag]->amp);
-        if(amp[ifrag]->fock_vec != NULL)     free(old_amp[ifrag]->fock_vec);
-        free(old_amp[ifrag]);
-        free(amp[ifrag]);
-    }
-    free(old_amp);
-    free(amp);
-    return 0;
-}
-
-int ofmo_get_amps( const int ifrag, int *namp, double **alpha, int **fock_vec){
-    *namp = amp[ifrag]->namp;
-    *alpha = amp[ifrag]->amp;
-    *fock_vec = amp[ifrag]->fock_vec;
-    return 0;
-}
-
-int ofmo_get_oldamps( const int ifrag, int *namp, double **old_alpha, int **old_fock_vec){
-    *namp = old_amp[ifrag]->namp;
-    *old_alpha = old_amp[ifrag]->amp;
-    *old_fock_vec = old_amp[ifrag]->fock_vec;
-    return 0;
-}
-
-int ofmo_update_amps(){
-    int ifrag;
-    for(ifrag = 0; ifrag < _nfrag; ifrag++){
-        int namp = amp[ifrag]->namp;
-        old_amp[ifrag]->namp = namp;
-        
-        if(old_amp[ifrag]->amp) free(old_amp[ifrag]->amp);
-        if(old_amp[ifrag]->fock_vec) free(old_amp[ifrag]->fock_vec);
-        old_amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
-        old_amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
-
-        memcpy(old_amp[ifrag]->amp, amp[ifrag]->amp, namp * sizeof(double));
-        memcpy(old_amp[ifrag]->fock_vec, amp[ifrag]->fock_vec, namp * sizeof(int));
-    }
-    return 0;
-}
 
 int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, const double H[],
     const double U[], const double mo_tei[], const double S[], const double C[], const double Enuc, const int nelec,
@@ -199,55 +128,6 @@ static int exec_prog(const char **argv)
     return 0;
 }
 
-int ofmo_parse_result(const char *ofpath, const int nmonomer, const int monomer_list[], double *energy){
-    char line[256];
-    ssize_t read;
-    FILE * fp = fopen(ofpath, "r");
-    double val;
-    char idx_str[256];
-    char *stop_idx_str;
-    int namp, iamp;
-
-    // Read energy
-    if(fgets(line, 256, fp) == NULL){
-        return -1;
-    }
-    sscanf(line, "%lf\n", &val);
-    
-    //printf("%s : energy=%lf, %s\n", ofpath, val, line);
-
-    if (nmonomer==1){
-        // Read size
-        if(fgets(line, 256, fp) == NULL){
-            return -1;
-        }
-        sscanf(line, "%d", &namp);
-        // init amps
-        /*int ifrag = monomer_list[0];
-        amp[ifrag]->namp = namp;
-        if(amp[ifrag] -> amp) free(amp[ifrag] -> amp);
-        if(amp[ifrag] -> fock_vec) free(amp[ifrag] -> fock_vec);
-        amp[ifrag]->amp = (double *) malloc(namp * sizeof(double));
-        amp[ifrag]->fock_vec = (int *) malloc(namp * sizeof(int));
-        */
-       // Read amplitudes
-        for(iamp=0; iamp<namp; iamp++){
-            if(fgets(line, 256, fp) == NULL){
-                return -1;
-            }
-            // sscanf(line, "%[0-1]\t%lf\n", idx_str, &val);
-                int ifrag = monomer_list[0];
-                //printf("%s : %s, %f\n", ofpath, idx_str, val);
-
-                //amp[ifrag]->amp[iamp] = val;
-                //amp[ifrag]->fock_vec[iamp] = (int) strtol(idx_str, &stop_idx_str, 2);
-            }
-    }
-
-    fclose(fp);
-    return 0;
-}
-
 
 int ofmo_vqe_ofpath( const int nmonomer, const int monomer_list[], const int iscc, const int mythread, char* ofpath, char* desc){
     if(mythread != 0){
@@ -327,15 +207,18 @@ int ofmo_vqe_get_energy( const int nmonomer, const int monomer_list[], const int
     return 0;
 }
 
-int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int * namps, double ** amp, char *** fock, char * desc){
+int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nao, int * namps, double ** amp, char *** fock,
+    double ** corr_mat, char * desc){
 
     char ofpath[256];
     const int mythread = 0;
+    const int nso = nao * 2;
     int ierr, monomer_list[1]={ifrag};
-    int ival, iamp;
+    int ival, iamp, m, n, nm;
     FILE * fp;
     double val;
     char line[256], idx_str[256];
+    const int size_corr_mat = ((nao) * (nao + 1))/2;
     
     ierr = ofmo_vqe_ofpath(1, monomer_list, iscc, mythread, ofpath, desc);
     if(ierr < 0){
@@ -364,6 +247,7 @@ int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int
     *namps = ival;
     *amp = (double *) malloc (sizeof(double) * (*namps));
     *fock = (char **) malloc (sizeof(char*) * (*namps));
+    *corr_mat = (double *) malloc (sizeof(double) * (size_corr_mat));
 
     // Read amplitudes
     for(iamp=0; iamp<*namps; iamp++){
@@ -374,6 +258,18 @@ int ofmo_vqe_get_amplitudes( const int ifrag, const int iscc, const int nso, int
         (*fock)[iamp] = (char *) malloc (sizeof(char) * (nso + 1));
         memcpy((*fock)[iamp], idx_str, sizeof(char) * (nso + 1));
         (*amp)[iamp] = val;
+    }
+
+    char * token;
+    for(n=0, nm=0; n<nao; n++){
+        if(fgets(line, 2048, fp) == NULL){
+            return -1;
+        }
+        token = strtok(line, "\t");
+        for(m=0; m<=n; m++, nm++){
+            (*corr_mat)[nm] = atof(token);
+            token = strtok(NULL, "\t");
+        }
     }
 
     fclose(fp);
@@ -416,14 +312,15 @@ int ofmo_vqe_call( const int mythread, const int nmonomer, const int monomer_lis
 }
 
 
-int ofmo_vqe_posthf_density( const int na, const double * A, char ** fock_vec,
+int ofmo_vqe_posthf_density( const int na, const double * A, char ** fock_vec, const double corr_mat[],
     const double C[], const int nao, double D[]){
-    int i, j, ij, ia, ifk, ifk_s;
+    int i, j, ij, ia, ifk, ifk_s, m, n, nm;
     int noe;
     char * vec;
     double alpha, dt;
     const int nsao = nao * 2;
     double * Ct, *ci, *cj;
+    const int n_cmat = (nao / 2) * (nao - 1);
 
     Ct  = (double*)malloc(sizeof(double) * nao * nao );
 
@@ -445,6 +342,11 @@ int ofmo_vqe_posthf_density( const int na, const double * A, char ** fock_vec,
                 }
             }
             D[ij] += alpha * dt;
+        }
+        for (n=0, nm=0; n< nao; n++){
+        for (m=0; m<=n; m++, nm++){
+            D[ij] += corr_mat[nm] * ci[m] * cj[n];
+        }
         }
         ij++;
     }

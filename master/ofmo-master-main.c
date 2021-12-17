@@ -1261,7 +1261,7 @@ int main( int argc, char *argv[] ) {
 			imsg_sz, imsg, dmsg_sz, dmsgs[workerid] );
 	    }
 	}
-	// すべてのワーカーの終了を待つ
+	// Wait for the end of all workers
 	ofmo_waitall_worker( nworkers, req_workers );
 	for ( workerid=0; workerid<nworkers; workerid++ ) {
 	    de0scf +=

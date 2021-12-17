@@ -1,5 +1,5 @@
 from itertools import product
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, final
 import numpy as np
 from numpy.linalg import svd
 import sys
@@ -150,7 +150,33 @@ def lst_eri_to_mat(nbasis, lst_eri):
 
     return mat_eri
 
+def get_spin_spaces(frozen, active, n_basis):
+    frozen_spin = list()
+    active_spin = list()
+    virtual_spin = list()
+    for i in frozen:
+        frozen_spin += [2*i, 2*i+1]
+    for i in active:
+        active_spin += [2*i, 2*i+1]
+    for i in range(n_basis):
+        if i not in frozen and i not in active:
+            virtual_spin += [2*i, 2*i+1]
+    frozen_spin = sorted(frozen_spin)
+    active_spin = sorted(active_spin)
+    virtual_spin = sorted(virtual_spin)
+    return frozen_spin, active_spin, virtual_spin
+
+def get_spaces(n_electron, homo_cnt, lumo_cnt, n_basis):
+    frz_idx = max(n_electron//2 - homo_cnt, 0) if homo_cnt > 0 else 0
+    vir_idx = min(n_electron//2 + lumo_cnt, n_basis) if lumo_cnt > 0 else n_basis
+    # All lists are asserted to be sorted
+    frozen = [x for x in range(frz_idx)]
+    active = [x for x in range(frz_idx, vir_idx)]
+    virtual = [x for x in range(vir_idx, n_basis)]
+    return frozen, active, virtual
+
 def call_vqe(mo_contents):
+    # Extract input
     es: ElectronicStructure ={
         "n_electrons": mo_contents['n_electrons'],
         "oei": mo_contents['oei'],
@@ -162,29 +188,19 @@ def call_vqe(mo_contents):
     n_electron = mo_contents['n_electrons']
     nmonomers = mo_contents['n_monomers']
     env_oei = mo_contents['env_oei']
-    '''
-    if nmonomers == 1:
-        homo_idx = 2
-        lumo_idx = 2
-        n_entang = 5
-    elif nmonomers == 2:
-        homo_idx = 2
-        lumo_idx = 2
-        n_entang = 5
-    else:
-        raise ValueError()
-    '''
     n_entang = mo_contents['ent']
-    homo_idx = mo_contents['homo']
-    lumo_idx = mo_contents['lumo']
-    frz_idx = max(n_electron//2 - homo_idx, 0) if homo_idx > 0 else 0
-    vir_idx = min(n_electron//2 + lumo_idx, n_basis) if lumo_idx > 0 else n_basis
-    frozen = [x for x in range(frz_idx)]
-    active = [x for x in range(frz_idx, vir_idx)]
+    homo_cnt = mo_contents['homo']
+    lumo_cnt = mo_contents['lumo']
+
+    # Extract spaces
+    frozen, active, virtual = get_spaces(n_electron, homo_cnt, lumo_cnt, n_basis)
+    frozen_spin, active_spin, virtual_spin = get_spin_spaces(frozen, active, n_basis)
     n_frozen = len(frozen)
     n_active = len(active)
-    n_virtual = n_basis - n_frozen - n_active
+    n_virtual = len(virtual)
+    assert n_frozen+n_active+n_virtual == n_basis
 
+    # Define and run VQE
     vqe_obj = QCC(electronic_structure=es,
     #vqe_obj = UCCSD(electronic_structure=es,
                   mapping=mapping,
@@ -211,6 +227,7 @@ def call_vqe(mo_contents):
         return_sv = True
     )
 
+    # Calculate environmental potential
     es_env: ElectronicStructure = {
         "n_electrons": mo_contents['n_electrons'],
         "oei": env_oei,
@@ -225,26 +242,29 @@ def call_vqe(mo_contents):
         env_pham = bravyi_kitaev(env_fham, 2*n_active)
     else:
         raise NotImplementedError
-
     dv = measurement_statevector(sv, env_pham.co_flipping_set_group) + env_pham.constant()
     assert abs(dv.imag) < 1e-7
     dv = float(dv.real)
 
-    amp_idx, amps = get_amp_from_sv(sv, mapping)
-    for i, a in enumerate(amp_idx):
-        amp_idx[i] = "1"*2*n_frozen + a + "0"*2*n_virtual
-    return amp_idx, amps, energy, dv
+    # Get data for postprocessing to density
+    amp_idx, amps = get_amp_from_sv(sv, n_basis, frozen_spin, virtual_spin, mapping) # Diagonal terms
+    corr_mat_t = get_corr_from_sv(sv, n_basis, frozen, active, virtual, mapping)
+
+    return amp_idx, amps, energy, dv, corr_mat_t
 
 #TODO: Consider electron number breaking.
 
 def get_amp_from_sv(
     final_state:Union[np.ndarray, List[complex]],
+    n_basis:int,
+    frozen_spin:List[int],
+    virtual_spin:List[int],
     mapping="JW")\
     -> Tuple[List[str], float]:
 
     num_qubits = int(np.log2(len(final_state)))
-    truncation = 10
-    eps = 1e-6
+    truncation = 100
+    eps = 1e-7
     amps = list()
 
     for i, c in enumerate(final_state):
@@ -267,20 +287,89 @@ def get_amp_from_sv(
     for i in range(len(amps)):
         amps[i][1] = amps[i][1] / a_sum
 
-    return ([x[0] for x in amps], [x[1] for x in amps])
+    amp_idx, amp_val = [x[0] for x in amps], [x[1] for x in amps]
+
+    # Add non-active orbitals
+    for i, a in enumerate(amp_idx):
+        lst_idx = list()
+        k=0
+        for j in range(n_basis * 2):
+            if j in frozen_spin:
+                lst_idx.append("1")
+            elif j in virtual_spin:
+                lst_idx.append("0")
+            else:
+                lst_idx.append(a[k])
+                k += 1
+        amp_idx[i] = "".join(lst_idx)
+        # amp_idx[i] = "1"*2*n_frozen + a + "0"*2*n_virtual
+
+    return amp_idx, amp_val
+
+def get_corr_from_sv(
+     final_state:Union[np.ndarray, List[complex]],
+     n_basis:int,
+     frozen:List[int],
+     active:List[int],
+     virtual:List[int],
+     mapping="JW")->np.ndarray:
+
+    def _make_mask(_m, _n, _N):
+        _lower_mask = int(2 ** _m - 1)
+        _middle_mask = int(2 ** (_n - _m - 1) - 1) << _m
+        _high_mask = 2 ** (_N - 2) - 1 - _middle_mask - _lower_mask
+        return _high_mask, _middle_mask, _lower_mask
+
+
+    def _recover_idx(_m, _n, _N, _i):
+        _hm, _mm, _lm = _make_mask(_m, _n, _N)
+        _i10 = (_i & _lm) ^ (1 << _m) ^ ((_i & _mm) << 1) ^ ((_i & _hm) << 2)
+        _i01 = _i10 ^ (1 << _m) ^ (1 << _n)
+        return _i10, _i01
+
+    if mapping != "JW":
+        raise NotImplementedError
+    N = int(np.log2(len(final_state)))
+    corr_mat = np.zeros((N//2, N//2))
+    for m, n in product(range(N//2), repeat=2):
+        if n<=m:
+            continue
+        tmp_val = 0
+        for i in range(len(final_state)//4):
+            i_10, j_01 = _recover_idx(2*m, 2*n, N, i) # I(2m)=1, I(2n)=0, J(2m)=0, J(2n)=1
+            tmp_val += 2*(final_state[i_10].conjugate() * final_state[j_01]).real
+            i_10, j_01 = _recover_idx(2*m+1, 2*n+1, N, i) # I(2m+1)=1, I(2n+1)=0, J(2m1+)=0, J(2n+1)=1
+            tmp_val += 2*(final_state[i_10].conjugate() * final_state[j_01]).real
+        corr_mat[m][n] = tmp_val
+
+    corr_mat_full_t = np.zeros((n_basis, n_basis))
+    for m, n in product(range(n_basis), repeat=2):
+        if m in frozen or m in virtual:
+            continue
+        if n in frozen or n in virtual:
+            continue
+        corr_mat_full_t[n][m] = corr_mat[active.index(m)][active.index(n)]
+    return corr_mat_full_t
 
 #### Need to set 
 
 # hamiltonian_optmization = False
 # backend = statevector_simulator
 
-def output_file(out_path, ai, a, e, dv):
+def output_file(out_path, ai, a, e, dv, corr_mat:np.ndarray):
     with open(out_path, "w") as of:
         of.write(f"{e}\n")
         of.write(f"{dv}\n")
         of.write(f"{len(ai)}\n")
         for i, c in zip(ai, a):
             of.write(f"{i}\t{c}\n")
+        size_corr = corr_mat.shape[0]
+        for n in range(0, size_corr):
+            for m in range(0, size_corr):
+                if m>n:
+                    break
+                of.write(f"{corr_mat[m][n]}\t")
+            of.write('\n')
 
 
 if __name__ == "__main__":
@@ -291,6 +380,6 @@ if __name__ == "__main__":
     contents = parse_input_file(ifpath)
     #mo_contents = ao_to_orth_mo(ao_contents)
     contents['tei'] = lst_eri_to_mat(contents['nbasis'], contents['lst_tei'])
-    amp_idx, amps, energy, dv = call_vqe(contents)
-    output_file(ofpath, amp_idx, amps, energy, dv)
+    amp_idx, amps, energy, dv, corr_mat = call_vqe(contents)
+    output_file(ofpath, amp_idx, amps, energy, dv, corr_mat)
     print(f"pyscript : output {ofpath} Generated.")

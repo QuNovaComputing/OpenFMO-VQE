@@ -22,6 +22,7 @@ workspace.code-workspace
 *.out
 
 !/samples/*.log
+!/samples/*/*.log
 
 #
 tests/*

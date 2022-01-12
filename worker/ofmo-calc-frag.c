@@ -774,8 +774,6 @@ int ofmo_calc_fragment_electronic_state(
     int mc = -2;	/* global counter in local process */
 #ifndef PARA_SUB
 #pragma omp parallel
-#pragma omp critical // FIXME after finding the bug
-{
 #else
     int nnewjob;
     int *newjoblist;
@@ -784,6 +782,8 @@ int ofmo_calc_fragment_electronic_state(
     double *wjob;
 #pragma omp parallel shared(nnewjob, newjoblist, amyrank, anprocs, color, wjob)
 #endif
+    {
+#pragma omp critical // FIXME after finding the bug
     {
 	int i, ifrag, flag=false;
 	//int n;
@@ -1340,21 +1340,21 @@ int ofmo_calc_fragment_electronic_state(
 
     double _dv;
     if(level == OFMO_VQE){
-        double * X = (double *)malloc(sizeof(double)*nao*nao); //Orth mat
+        //double * X = (double *)malloc(sizeof(double)*nao*nao); //Orth mat
         double * H_MO = (double *)malloc(sizeof(double)*nao2); // MO H
         double * U_MO = (double *)malloc(sizeof(double)*nao2); // MO basis U (environmental potential)
-        int orth_ret = ofmo_symm_orth(nao, S, C, X);
+        //int orth_ret = ofmo_symm_orth(nao, S, C, X);
         char * desc;
         int monhomo, monlumo, dimhomo, dimlumo, monent, diment;
         ofmo_data_get_vals("desc monhomo monlumo dimhomo dimlumo monent diment",
             &desc, &monhomo, &monlumo, &dimhomo, &dimlumo, &monent, &diment);
 
-        if(orth_ret == 0){
+        /*if(orth_ret == 0){
             ofmo_orth_C(nao, X, C);
         }else if(orth_ret < 0){
             printf("ERROR orth.\n");
             return -1;
-        }
+        }*/
         ofmo_ao2mo_H(nao, H, C, H_MO); // Diagonal components mult by 2.
         ofmo_ao2mo_H(nao, U, C, U_MO); // Diagonal components mult by 2.
         int mythread = omp_get_thread_num();
@@ -1381,11 +1381,9 @@ int ofmo_calc_fragment_electronic_state(
             fflush(stdout);
             return -1;
         }
-        if(nmonomer == 1){
-            printf("it=%d\tmon=[%d]\tenergy=%f\n", iscc, monomer_list[0], *energy);
-        }else if(nmonomer == 2){
-            printf("it=%d\tmon=[%d, %d]\tenergy=%f\n", iscc, monomer_list[0], monomer_list[1], *energy);
-        }
+
+        free(H_MO);
+        free(U_MO);
 
         if(nmonomer == 1){
             double * amps;
@@ -1426,6 +1424,7 @@ int ofmo_calc_fragment_electronic_state(
 
         }
     }
+
     if(mo_tei) free(mo_tei);
 
     /* energies */
@@ -1437,6 +1436,12 @@ int ofmo_calc_fragment_electronic_state(
         fflush(stdout);
     }
     *energy0 = *energy - dv;
+    if(nmonomer == 1){
+        printf("it=%d\tmon=[%d]\tenergy=%f\tenergy_0=%f\n", iscc, monomer_list[0], *energy, *energy0);
+    }else if(nmonomer == 2){
+        printf("it=%d\tmon=[%d, %d]\tenergy=%f\tenergy_0=%f\n", iscc, monomer_list[0], monomer_list[1], *energy, *energy0);
+    }
+
 
     /* Mulliken population */
     double *aopop = _daopop_, *atpop = _datpop_;

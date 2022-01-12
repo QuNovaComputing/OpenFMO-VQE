@@ -636,6 +636,7 @@ int main( int argc, char *argv[] ) {
             break;
           case 'q':
             printf("Will Run VQE\n");
+            fflush(stdout);
             run_vqe = 1;
             break;
           case 'h':

@@ -88,9 +88,9 @@ static int alloc( const int nlmo, const int nfunc ) {
  * @param[in] nmonomer フラグメントを構成するモノマー数
  * @param[in] monomer_list[] フラグメントを構成するモノマー番号のリスト
  * @param[in] nao フラグメントのAO数
- * @param[in] fsao2tuao[] ソートされたフラグメントAOの全体の非ソートAO
+ * @param[in] fsao2tuao[] The entire unsorted AO of the sorted fragment AO
  * 番号
- * @param[in] Ss[] ソートされた重なり行列（圧縮U形式）
+ * @param[in] Ss[] Sorted overlap matrix (compressed U format)
  * @param[out] Ps[] Sorted projection operator terms (compressed U format)
  *
  * @ingroup ofmo-calc
@@ -108,7 +108,7 @@ int ofmo_projection_operator(
     int ics0, ics1, ics, lmo, ix, lqn, iao, iao0, jao;
     int plmo, k;
     double t;
-    /* 外部で定義されているはずの変数 */
+    /* Variables that should have been defined externally */
     static int called = false;
     static double rsfact2[MAXLQN+1], sfact2[MAXLQN+1];
     static double *CLMO;
@@ -117,7 +117,7 @@ int ofmo_projection_operator(
     static int *at2frg, *welec, *woelec;
     static double *atom_x, *atom_y, *atom_z;
     static int *atm_lcs, *ushel_ini, *ushel_lqn;
-    /* 初期設定（最初の1回だけ）*/
+    /* Initial setting (only the first time) */
     if ( !called ) {
 	int ifact2[MAXLQN+1], ierr;
 	ifact2[0] = 1;

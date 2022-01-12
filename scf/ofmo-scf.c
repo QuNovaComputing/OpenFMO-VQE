@@ -876,6 +876,17 @@ int ofmo_scf_rhf(
     ofmo_twoint_eps_eri(eps0_eri);
     ofmo_twoint_eps_sch(eps0_sch);
 
+	//Orthogonalization
+	double * X = (double *)malloc(sizeof(double) * nao * nao);
+	int orth_ret = ofmo_symm_orth(nao, S, C, X);
+	if(orth_ret == 0){
+		ofmo_orth_C(nao, X, C);
+	}else if(orth_ret < 0){
+		printf("ERROR orth.\n");
+		return -1;
+	}
+	free(X);
+
 	if(mo_tei != NULL){
 		const int nao_2 = nao * nao;
 		const int nao_3 = nao_2 * nao;

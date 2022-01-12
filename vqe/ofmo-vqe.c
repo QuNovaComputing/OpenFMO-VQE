@@ -106,8 +106,8 @@ int ofmo_export_integ(const int nmonomer, const char* fpath, const int nao, cons
         mo_idx = imo4 + jmo3 + kmo2 + lmo;
         fprintf(fp, "%d %d %d %d %.7f\n", imo, jmo, kmo, lmo, mo_tei[mo_idx]);
     }}}}
-    fflush(stdout);
-    printf("%s -> %d eris\n", fpath, count_mo);
+    // fflush(stdout);
+    // printf("%s -> %d eris\n", fpath, count_mo);
 
     fclose(fp);
 
@@ -147,17 +147,19 @@ int ofmo_vqe_ofpath( const int nmonomer, const int monomer_list[], const int isc
         printf("thread is not 0.\n");
         return -1;
     }
-    char * nm_str;
-    if(nmonomer == 1) nm_str="mono";
-    else if(nmonomer ==2) nm_str="dim";
-    else{
+    if(nmonomer > 2){
         printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
         fflush(stdout);
         return -1;
     }
-    if(desc == NULL) sprintf(ofpath, "./result_temp/res_%s_%d_%d_%d.dat", nm_str, monomer_list[0], iscc, mythread);
-    else             sprintf(ofpath, "./result_temp/%s/res_%s_%s_%d_%d_%d.dat", desc, desc, nm_str, monomer_list[0], iscc, mythread);
-
+    if(desc == NULL){
+        if(nmonomer == 1) sprintf(ofpath, "./result_temp/res_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
+        else              sprintf(ofpath, "./result_temp/res_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
+    }
+    else{
+        if(nmonomer == 1) sprintf(ofpath, "./result_temp/%s/res_mono_%s_%d_%d_%d.dat", desc, desc, monomer_list[0], iscc, mythread);
+        else              sprintf(ofpath, "./result_temp/%s/res_dim_%s_%d-%d_%d_%d.dat", desc, desc, monomer_list[0], monomer_list[1], iscc, mythread);
+    }
     return 0;
 }
 
@@ -166,16 +168,19 @@ int ofmo_vqe_ifpath( const int nmonomer, const int monomer_list[], const int isc
         printf("thread is not 0.\n");
         return -1;
     }
-    char * nm_str;
-    if(nmonomer == 1) nm_str="mono";
-    else if(nmonomer ==2) nm_str="dim";
-    else{
+    if(nmonomer > 2){
         printf("nmonomer is neither 1 nor 2. ( nmonomer = %d )\n", nmonomer);
         fflush(stdout);
         return -1;
     }
-    if(desc == NULL) sprintf(fpath, "./integ_temp/int_%s_%d_%d_%d.dat", nm_str, monomer_list[0], iscc, mythread);
-    else             sprintf(fpath, "./integ_temp/%s/int_%s_%s_%d_%d_%d.dat", desc, desc, nm_str, monomer_list[0], iscc, mythread);
+    if(desc == NULL){
+        if(nmonomer == 1) sprintf(fpath, "./integ_temp/int_mono_%d_%d_%d.dat", monomer_list[0], iscc, mythread);
+        else              sprintf(fpath, "./integ_temp/int_dim_%d-%d_%d_%d.dat", monomer_list[0], monomer_list[1], iscc, mythread);
+    }
+    else{
+        if(nmonomer == 1) sprintf(fpath, "./integ_temp/%s/int_mono_%s_%d_%d_%d.dat", desc, desc, monomer_list[0], iscc, mythread);
+        else              sprintf(fpath, "./integ_temp/%s/int_dim_%s_%d-%d_%d_%d.dat", desc, desc, monomer_list[0], monomer_list[1], iscc, mythread);
+    }
     return 0;
 }
 

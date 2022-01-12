@@ -1,0 +1,37 @@
+
+ $gddi niogroup=1 nioprocs=1 $end
+ $fmo nfrag=6 ICHARG(1)=0,0,0,0,0,0
+ indat(1)=1,1,2,2,3,3,4,4,5,5,6,6 mult(1)=1,1,1,1,1,1
+ respap=12.5 resppc=12.5 resdim=12.5 $end
+ $basis gbasis=sto ngauss=3 $end
+ $fmoxyz
+ H   H   0   0   0
+ H   H   0   0   0.7237340367
+ H   H   0   0   1.9737340367
+ H   H   0   0   2.6974680734
+ H   H   0   0   3.9474680734
+ H   H   0   0   4.6712021101
+ H   H   0   0   5.9212021101
+ H   H   0   0   6.6449361468
+ H   H   0   0   7.8949361468
+ H   H   0   0   8.6186701835
+ H   H   0   0   9.8686701835
+ H   H   0   0   10.5924042202
+ $end
+ $fmoprp
+modorb=3 maxit=2000
+ $end
+ $fmobnd
+ 
+ $end
+ $FMOHYB
+sto-3g 5 5
+1 0  -0.117784    0.542251    0.000000    0.000000    0.850774
+0 1  -0.117787    0.542269    0.802107    0.000000   -0.283586
+0 1  -0.117787    0.542269   -0.401054   -0.694646   -0.283586
+0 1  -0.117787    0.542269   -0.401054    0.694646   -0.283586
+0 1   1.003621   -0.015003    0.000000    0.000000    0.000000
+ $END
+$contrl maxit=100 method=vqe vqescr=./vqe/py_script.py desc=linear_H2_6__1_25 $end
+$vqeprp monhomo=-1 monlumo=-1 dimhomo=-1 dimlumo=-1 monent=-1 diment=-1 $end
+    

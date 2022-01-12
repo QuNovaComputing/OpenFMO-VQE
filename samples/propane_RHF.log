@@ -14,47 +14,89 @@ master host name = gwonhaklee-System-Product-Name
 -----------------------------------------------------
  # of data = 11
 nfrag = 3
-##T                  Finish Initialization : lap time=   0.000125 ( total etime=   0.000125 )
+##T                  Finish Initialization : lap time=   0.000211 ( total etime=   0.000211 )
 ****** LIST OF HOST NAME (MSERV(ID=0))******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T        Finish to Create Memory Servers : lap time=   0.070623 ( total etime=   0.070766 )
+##T        Finish to Create Memory Servers : lap time=   0.030728 ( total etime=   0.030947 )
 ****** LIST OF HOST NAME (WORKER(ID=0)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
 ****** LIST OF HOST NAME (WORKER(ID=1)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T               Finish to Create Workers : lap time=   0.435997 ( total etime=   0.506780 )
 ****** LIST OF HOST NAME (WORKER(ID=2)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T     Finish to Connect Mservs & Workers : lap time=   0.315937 ( total etime=   0.822743 )
-calc. inter-frag distance list = 0
-##T    Finish to Calculate Initial Density : lap time=   0.051914 ( total etime=   0.882772 )
+##T               Finish to Create Workers : lap time=   0.090424 ( total etime=   0.121377 )
+##T     Finish to Connect Mservs & Workers : lap time=   0.047887 ( total etime=   0.169276 )
+calc. inter-frag distance list = 2
+##T    Finish to Calculate Initial Density : lap time=   0.007064 ( total etime=   0.176519 )
 ---- start SCC (maxscc=30, sccconv=7) ----
-##SCC itera= 1  conv=2  energy =    -104.39877917  energy0 =     -87.40387500  (   0.408003 )
-##SCC itera= 2  conv=2  energy =    -113.27614381  energy0 =     -87.13064143  (   0.268091 )
-##SCC itera= 3  conv=2  energy =    -112.51621312  energy0 =     -87.22394571  (   0.168077 )
-##SCC itera= 4  conv=4  energy =    -112.75474105  energy0 =     -87.21456974  (   0.128001 )
-##SCC itera= 5  conv=4  energy =    -112.72334159  energy0 =     -87.21861294  (   0.207854 )
-##SCC itera= 6  conv=4  energy =    -112.73366857  energy0 =     -87.21807671  (   0.116149 )
-##SCC itera= 7  conv=6  energy =    -112.73196278  energy0 =     -87.21827028  (   0.200164 )
-##SCC itera= 8  conv=6  energy =    -112.73245745  energy0 =     -87.21824231  (   0.128129 )
-##SCC itera= 9  conv=6  energy =    -112.73237060  energy0 =     -87.21825157  (   0.200010 )
-##SCC itera=10  conv=7  energy =    -112.73239485  energy0 =     -87.21825039  (   0.211794 )
-##SCC itera=11  conv=7  energy =    -112.73239103  energy0 =     -87.21825077  (   0.131891 )
-##SCC itera=12  conv=7  energy =    -112.73239201  energy0 =     -87.21825072  (   0.220073 )
+it=1	mon=[0]	energy=-31.776035	energy_0=-24.899208
+it=1	mon=[2]	energy=-31.775765	energy_0=-24.899242
+it=1	mon=[1]	energy=-40.846979	energy_0=-37.605425
+##SCC itera= 1  conv=2  energy =    -104.39877917  energy0 =     -87.40387500  (   0.076742 )
+it=2	mon=[1]	energy=-41.897517	energy_0=-37.575632
+it=2	mon=[2]	energy=-35.689369	energy_0=-24.777511
+it=2	mon=[0]	energy=-35.689257	energy_0=-24.777499
+##SCC itera= 2  conv=2  energy =    -113.27614381  energy0 =     -87.13064143  (   0.016744 )
+it=3	mon=[0]	energy=-35.578436	energy_0=-24.780861
+it=3	mon=[1]	energy=-41.358965	energy_0=-37.662214
+it=3	mon=[2]	energy=-35.578813	energy_0=-24.780871
+##SCC itera= 3  conv=2  energy =    -112.51621312  energy0 =     -87.22394571  (   0.078720 )
+it=4	mon=[1]	energy=-41.388446	energy_0=-37.663224
+it=4	mon=[0]	energy=-35.682983	energy_0=-24.775665
+it=4	mon=[2]	energy=-35.683312	energy_0=-24.775681
+##SCC itera= 4  conv=4  energy =    -112.75474105  energy0 =     -87.21456974  (   0.118649 )
+it=5	mon=[0]	energy=-35.680668	energy_0=-24.775709
+it=5	mon=[2]	energy=-35.681008	energy_0=-24.775724
+it=5	mon=[1]	energy=-41.361666	energy_0=-37.667180
+##SCC itera= 5  conv=4  energy =    -112.72334159  energy0 =     -87.21861294  (   0.028718 )
+it=6	mon=[0]	energy=-35.685644	energy_0=-24.775459
+it=6	mon=[2]	energy=-35.685973	energy_0=-24.775475
+it=6	mon=[1]	energy=-41.362052	energy_0=-37.667143
+##SCC itera= 6  conv=4  energy =    -112.73366857  energy0 =     -87.21807671  (   0.059554 )
+it=7	mon=[0]	energy=-35.685441	energy_0=-24.775466
+it=7	mon=[2]	energy=-35.685770	energy_0=-24.775482
+it=7	mon=[1]	energy=-41.360752	energy_0=-37.667323
+##SCC itera= 7  conv=6  energy =    -112.73196278  energy0 =     -87.21827028  (   0.094179 )
+it=8	mon=[2]	energy=-35.685996	energy_0=-24.775470
+it=8	mon=[0]	energy=-35.685668	energy_0=-24.775455
+it=8	mon=[1]	energy=-41.360794	energy_0=-37.667317
+##SCC itera= 8  conv=6  energy =    -112.73245745  energy0 =     -87.21824231  (   0.082026 )
+it=9	mon=[1]	energy=-41.360735	energy_0=-37.667326
+it=9	mon=[0]	energy=-35.685654	energy_0=-24.775455
+it=9	mon=[2]	energy=-35.685982	energy_0=-24.775471
+##SCC itera= 9  conv=6  energy =    -112.73237060  energy0 =     -87.21825157  (   0.016808 )
+it=10	mon=[1]	energy=-41.360738	energy_0=-37.667326
+it=10	mon=[2]	energy=-35.685992	energy_0=-24.775470
+it=10	mon=[0]	energy=-35.685665	energy_0=-24.775455
+##SCC itera=10  conv=7  energy =    -112.73239485  energy0 =     -87.21825039  (   0.079376 )
+it=11	mon=[1]	energy=-41.360735	energy_0=-37.667326
+it=11	mon=[2]	energy=-35.685992	energy_0=-24.775470
+it=11	mon=[0]	energy=-35.685664	energy_0=-24.775455
+##SCC itera=11  conv=7  energy =    -112.73239103  energy0 =     -87.21825077  (   0.087472 )
+it=12	mon=[0]	energy=-35.685665	energy_0=-24.775455
+it=12	mon=[2]	energy=-35.685992	energy_0=-24.775470
+it=12	mon=[1]	energy=-41.360735	energy_0=-37.667326
+##SCC itera=12  conv=7  energy =    -112.73239201  energy0 =     -87.21825072  (   0.015823 )
 ==== SCC converged ====
-##T         ---- Finish SCC procedure ---- : lap time=   2.740604 ( total etime=   3.623394 )
-##T    ---- Finish to Calc. Dimer SCF ---- : lap time=   0.343323 ( total etime=   3.966732 )
+##T         ---- Finish SCC procedure ---- : lap time=   0.756008 ( total etime=   0.932532 )
+it=130	mon=[2, 0]	energy=-70.883314	energy_0=-49.511175
+# E=   -70.8833141544 E-DV=   -49.5111752071 DV=   -21.3721389473 DDV=    -0.0053431090
+it=130	mon=[0, 1]	energy=-79.342982	energy_0=-77.284816
+# E=   -79.3429815332 E-DV=   -77.2848156471 DV=    -2.0581658861 DDV=     0.0153570944
+it=130	mon=[2, 1]	energy=-79.344189	energy_0=-77.285986
+# E=   -79.3441887424 E-DV=   -77.2859858920 DV=    -2.0582028504 DDV=     0.0156194692
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time=   0.112322 ( total etime=   1.044857 )
        ( # of scf dimer = 3 )
         dE0(SCF dimer) =     -29.61984186
-##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.012705 ( total etime=   3.979456 )
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.000047 ( total etime=   1.044907 )
     (# of ES dimer = 0)
     dE0(ES dimer) =       0.00000000
     total energy(FMO) =    -116.83809258
-##T  -- All workers have been destroyed -- : lap time=   0.017165 ( total etime=   3.996638 )
+##T  -- All workers have been destroyed -- : lap time=   0.000038 ( total etime=   1.044948 )
 ---- ATOMIC POPULATION DATA -----
    SN AN  ATOMIC POP  NET CHARGE
 ---------------------------------
@@ -72,5 +114,5 @@ calc. inter-frag distance list = 0
 ---------------------------------
 total charge =     -0.000
 ---------------------------------
-##T    -- calc AO and atomic population -- : lap time=   0.000076 ( total etime=   3.996728 )
-##T   -- All mservs have been destroyed -- : lap time=   0.000013 ( total etime=   3.996747 )
+##T    -- calc AO and atomic population -- : lap time=   0.000066 ( total etime=   1.045016 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000010 ( total etime=   1.045028 )

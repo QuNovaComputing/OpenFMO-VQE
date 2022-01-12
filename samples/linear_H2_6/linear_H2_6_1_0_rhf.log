@@ -1,0 +1,100 @@
+ngroup       = 6
+nioprocs     = 1
+niogroup     = 1
+nmaxprocs    = 10
+group size   = 1
+# of threads = 24
+nintic       = 2048
+input file name       = ./samples/linear_H2_6/linear_H2_6_1_0_rhf.inp
+prefix of output file = 
+local input dir.      = ./
+# of total invoked procs = 8 (=1iog*1iop+1+6gr*1pr)
+master host name = gwonhaklee-System-Product-Name
+-----------------------------------------------------
+ # of data = 11
+nfrag = 6
+##T                  Finish Initialization : lap time=   0.000176 ( total etime=   0.000176 )
+****** LIST OF HOST NAME (MSERV(ID=0))******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T        Finish to Create Memory Servers : lap time=   0.110183 ( total etime=   0.110385 )
+****** LIST OF HOST NAME (WORKER(ID=0)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=1)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=2)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=3)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=4)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T               Finish to Create Workers : lap time=   1.105071 ( total etime=   1.215473 )
+****** LIST OF HOST NAME (WORKER(ID=5)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T     Finish to Connect Mservs & Workers : lap time=   0.851955 ( total etime=   2.067454 )
+calc. inter-frag distance list = 1
+##T    Finish to Calculate Initial Density : lap time=   0.539983 ( total etime=   2.831410 )
+---- start SCC (maxscc=30, sccconv=7) ----
+##SCC itera= 1  conv=2  energy =     -12.24527933  energy0 =      -6.66422360  (   1.359506 )
+##SCC itera= 2  conv=2  energy =     -11.71248333  energy0 =      -6.65205603  (   1.288078 )
+##SCC itera= 3  conv=4  energy =     -11.37620196  energy0 =      -6.65417519  (   1.420117 )
+##SCC itera= 4  conv=4  energy =     -11.32838738  energy0 =      -6.65557936  (   0.980163 )
+##SCC itera= 5  conv=4  energy =     -11.33988577  energy0 =      -6.65564765  (   0.952148 )
+##SCC itera= 6  conv=6  energy =     -11.34482041  energy0 =      -6.65553312  (   0.952064 )
+##SCC itera= 7  conv=6  energy =     -11.34457946  energy0 =      -6.65551443  (   0.936109 )
+##SCC itera= 8  conv=6  energy =     -11.34412084  energy0 =      -6.65552280  (   1.080170 )
+##SCC itera= 9  conv=7  energy =     -11.34409223  energy0 =      -6.65552527  (   1.104100 )
+##SCC itera=10  conv=7  energy =     -11.34413038  energy0 =      -6.65552474  (   1.012061 )
+##SCC itera=11  conv=7  energy =     -11.34413650  energy0 =      -6.65552447  (   0.808132 )
+##SCC itera=12  conv=7  energy =     -11.34413364  energy0 =      -6.65552450  (   0.916079 )
+==== SCC converged ====
+##T         ---- Finish SCC procedure ---- : lap time=  15.431432 ( total etime=  18.271413 )
+# E=    -2.8208292145 E-DV=    -2.1730495250 DV=    -0.6477796895 DDV=    -0.0227005207
+# E=    -3.3650027653 E-DV=    -2.2153867701 DV=    -1.1496159952 DDV=     0.0016995520
+# E=    -3.8097092312 E-DV=    -2.2170027713 DV=    -1.5927064599 DDV=     0.0010046696
+# E=    -3.7439750724 E-DV=    -2.2156524103 DV=    -1.5283226621 DDV=     0.0015648450
+# E=    -3.3163980560 E-DV=    -2.1551675735 DV=    -1.1612304825 DDV=    -0.0266723104
+# E=    -3.1125940630 E-DV=    -2.2221015611 DV=    -0.8904925019 DDV=     0.0009503078
+# E=    -3.5615908367 E-DV=    -2.2233599171 DV=    -1.3382309196 DDV=     0.0000150454
+# E=    -3.5249981724 E-DV=    -2.2204024011 DV=    -1.3045957713 DDV=    -0.0006097672
+# E=    -3.3426209498 E-DV=    -2.2136260005 DV=    -1.1289949493 DDV=    -0.0055139071
+# E=    -2.9342591194 E-DV=    -2.1709841934 DV=    -0.7632749260 DDV=     0.0018073519
+# E=    -3.3412067265 E-DV=    -2.2266257360 DV=    -1.1145809906 DDV=     0.0041993092
+# E=    -3.4168253450 E-DV=    -2.2215095813 DV=    -1.1953157637 DDV=     0.0025518832
+# E=    -3.4435023211 E-DV=    -2.1646257953 DV=    -1.2788765258 DDV=    -0.0291470782
+# E=    -3.8219851868 E-DV=    -2.2227982120 DV=    -1.5991869748 DDV=     0.0011800014
+# E=    -3.4426583672 E-DV=    -2.1607329726 DV=    -1.2819253947 DDV=    -0.0281539402
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time=   1.331996 ( total etime=  19.603437 )
+       ( # of scf dimer = 15 )
+        dE0(SCF dimer) =       0.15677251
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.043951 ( total etime=  19.647410 )
+    (# of ES dimer = 0)
+    dE0(ES dimer) =       0.00000000
+    total energy(FMO) =      -6.49875199
+##T  -- All workers have been destroyed -- : lap time=   0.027990 ( total etime=  19.675415 )
+---- ATOMIC POPULATION DATA -----
+   SN AN  ATOMIC POP  NET CHARGE
+---------------------------------
+    1  1       0.982       0.018
+    2  1       0.992       0.008
+    3  1       1.016      -0.016
+    4  1       1.036      -0.036
+    5  1       1.038      -0.038
+    6  1       0.974       0.026
+    7  1       1.083      -0.083
+    8  1       0.930       0.070
+    9  1       0.916       0.084
+   10  1       1.062      -0.062
+   11  1       0.981       0.019
+   12  1       0.989       0.011
+---------------------------------
+total charge =     -0.000
+---------------------------------
+##T    -- calc AO and atomic population -- : lap time=   0.000207 ( total etime=  19.675635 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000016 ( total etime=  19.675654 )

@@ -4,7 +4,7 @@ nioprocs     = 1
 niogroup     = 1
 nmaxprocs    = 5
 group size   = 1
-# of threads = 24
+# of threads = 48
 nintic       = 2048
 input file name       = ./samples/H2_trimer.inp
 prefix of output file = 
@@ -14,272 +14,194 @@ master host name = gwonhaklee-System-Product-Name
 -----------------------------------------------------
  # of data = 11
 nfrag = 3
-##T                  Finish Initialization : lap time=   0.000136 ( total etime=   0.000136 )
+##T                  Finish Initialization : lap time=   0.000126 ( total etime=   0.000126 )
 ****** LIST OF HOST NAME (MSERV(ID=0))******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T        Finish to Create Memory Servers : lap time=   0.048650 ( total etime=   0.048808 )
+##T        Finish to Create Memory Servers : lap time=   0.047497 ( total etime=   0.047640 )
 ****** LIST OF HOST NAME (WORKER(ID=0)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
 ****** LIST OF HOST NAME (WORKER(ID=1)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T               Finish to Create Workers : lap time=   0.268699 ( total etime=   0.317519 )
 ****** LIST OF HOST NAME (WORKER(ID=2)) ******
 rank=  0 : gwonhaklee-System-Product-Name
 ********************************
-##T     Finish to Connect Mservs & Workers : lap time=   0.011447 ( total etime=   0.328989 )
-calc. inter-frag distance list = 2
-##T    Finish to Calculate Initial Density : lap time=   0.002812 ( total etime=   0.332122 )
+##T               Finish to Create Workers : lap time=   0.128193 ( total etime=   0.175847 )
+##T     Finish to Connect Mservs & Workers : lap time=   0.016082 ( total etime=   0.191938 )
+calc. inter-frag distance list = 0
+##T    Finish to Calculate Initial Density : lap time=   0.000988 ( total etime=   0.193121 )
 ---- start SCC (maxscc=30, sccconv=7) ----
-1/1/0 loop start
-1/1 init_density_loop0_0
-1/1 init_density_loop1_1
-1/1 init_density_loop2_2
-1/1/0 loop break
-1/1/0 thread timer
-1/1/1 loop start
-1/1 init_density_loop3_0
-1/1/1 loop break
-1/1/1 thread timer
-1/1 timer0
-1/1 timer1
-1/1 timer2
-1/1 timer3
-1/1 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_1_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_1_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_1_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_1_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_1_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_1_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_1_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_1_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_1_0.dat Generated.
-it=1	mon=[0]	energy=-1.187435
-it=1	mon=[2]	energy=-1.187435
-it=1	mon=[1]	energy=-1.670937
-##SCC itera= 1  conv=2  energy =      -4.04580693  energy0 =      -3.40145183  (   7.156064 )
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_2_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_2_0.dat -> 7 eris
-1/2/0 loop start
-1/2 init_density_loop0_0
-1/2 init_density_loop1_1
-1/2 init_density_loop2_2
-1/2/0 loop break
-1/2/0 thread timer
-1/2/1 loop start
-1/2 init_density_loop3_0
-1/2/1 loop break
-1/2/1 thread timer
-1/2 timer0
-1/2 timer1
-1/2 timer2
-1/2 timer3
-1/2 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_2_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_2_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_2_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_2_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_2_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_2_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_2_0.dat Generated.
-it=2	mon=[0]	energy=-1.140748
-it=2	mon=[2]	energy=-1.222681
-it=2	mon=[1]	energy=-1.705534
-##SCC itera= 2  conv=2  energy =      -4.06896313  energy0 =      -3.39887918  (   7.167801 )
-1/3/0 loop start
-1/3 init_density_loop0_0
-1/3 init_density_loop1_1
-1/3 init_density_loop2_2
-1/3/0 loop break
-1/3/0 thread timer
-1/3/1 loop start
-1/3 init_density_loop3_0
-1/3/1 loop break
-1/3/1 thread timer
-1/3 timer0
-1/3 timer1
-1/3 timer2
-1/3 timer3
-1/3 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_3_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_3_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_3_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_3_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_3_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_3_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_3_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_3_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_3_0.dat Generated.
-it=3	mon=[0]	energy=-1.132537
-it=3	mon=[2]	energy=-1.231050
-it=3	mon=[1]	energy=-1.689492
-##SCC itera= 3  conv=4  energy =      -4.05307944  energy0 =      -3.39875423  (   7.343828 )
-1/4/0 loop start
-1/4 init_density_loop0_0
-1/4 init_density_loop1_1
-1/4 init_density_loop2_2
-1/4/0 loop break
-1/4/0 thread timer
-1/4/1 loop start
-1/4 init_density_loop3_0
-1/4/1 loop break
-1/4/1 thread timer
-1/4 timer0
-1/4 timer1
-1/4 timer2
-1/4 timer3
-1/4 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_4_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_4_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_4_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_4_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_4_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_4_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_4_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_4_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_4_0.dat Generated.
-it=4	mon=[2]	energy=-1.231344
-it=4	mon=[0]	energy=-1.132265
-it=4	mon=[1]	energy=-1.686360
-##SCC itera= 4  conv=4  energy =      -4.04996957  energy0 =      -3.39874858  (   7.199329 )
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_5_0.dat -> 7 eris
-1/5/0 loop start
-1/5 init_density_loop0_0
-1/5 init_density_loop1_1
-1/5 init_density_loop2_2
-1/5/0 loop break
-1/5/0 thread timer
-1/5/1 loop start
-1/5 init_density_loop3_0
-1/5/1 loop break
-1/5/1 thread timer
-1/5 timer0
-1/5 timer1
-1/5 timer2
-1/5 timer3
-1/5 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_5_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_5_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_5_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_5_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_5_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_5_0.dat Generated.
-it=5	mon=[2]	energy=-1.231339
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_5_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_5_0.dat Generated.
-it=5	mon=[0]	energy=-1.132233
-it=5	mon=[1]	energy=-1.686306
-##SCC itera= 5  conv=6  energy =      -4.04987816  energy0 =      -3.39836287  (   7.319406 )
-1/6/0 loop start
-1/6 init_density_loop0_0
-1/6 init_density_loop1_1
-1/6 init_density_loop2_2
-1/6/0 loop break
-1/6/0 thread timer
-1/6/1 loop start
-1/6 init_density_loop3_0
-1/6/1 loop break
-1/6/1 thread timer
-1/6 timer0
-1/6 timer1
-1/6 timer2
-1/6 timer3
-1/6 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_6_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_6_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_6_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_6_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_6_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_6_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_6_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_6_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_6_0.dat Generated.
-it=6	mon=[2]	energy=-1.231372
-it=6	mon=[0]	energy=-1.132233
-it=6	mon=[1]	energy=-1.686312
-##SCC itera= 6  conv=6  energy =      -4.04991717  energy0 =      -3.39874521  (   7.348735 )
-1/7/0 loop start
-1/7 init_density_loop0_0
-1/7 init_density_loop1_1
-1/7 init_density_loop2_2
-1/7/0 loop break
-1/7/0 thread timer
-1/7/1 loop start
-1/7 init_density_loop3_0
-1/7/1 loop break
-1/7/1 thread timer
-1/7 timer0
-1/7 timer1
-1/7 timer2
-1/7 timer3
-1/7 timer done
-./integ_temp/h2_trimer/int_h2_trimer_mono_1_7_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_0_7_0.dat -> 7 eris
-./integ_temp/h2_trimer/int_h2_trimer_mono_2_7_0.dat -> 7 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_0_7_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_1_7_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_mono_2_7_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_2_7_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_1_7_0.dat Generated.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_mono_0_7_0.dat Generated.
-it=7	mon=[1]	energy=-1.686308
-it=7	mon=[0]	energy=-1.132242
-it=7	mon=[2]	energy=-1.231362
-##SCC itera= 7  conv=6  energy =      -4.04991204  energy0 =      -3.39874521  (   7.228850 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_1_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_1_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_1_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_1_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_1_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_1_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_1_0.dat Generated.
+it=1	mon=[2]	energy=-1.223430
+it=1	mon=[0]	energy=-1.285563
+it=1	mon=[1]	energy=-1.319790
+##SCC itera= 1  conv=2  energy =      -3.82878246  energy0 =      -3.41116372  (   5.005366 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_2_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_2_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_2_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_2_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_2_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_2_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_2_0.dat Generated.
+it=2	mon=[1]	energy=-1.332472
+it=2	mon=[0]	energy=-1.283435
+it=2	mon=[2]	energy=-1.231562
+##SCC itera= 2  conv=2  energy =      -3.84746909  energy0 =      -3.41112366  (   5.006107 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_3_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_3_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_3_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_3_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_3_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_3_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_3_0.dat Generated.
+it=3	mon=[1]	energy=-1.332729
+it=3	mon=[2]	energy=-1.231896
+it=3	mon=[0]	energy=-1.282658
+##SCC itera= 3  conv=4  energy =      -3.84728268  energy0 =      -3.41112222  (   5.006262 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_4_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_4_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_4_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_4_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_4_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_4_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_4_0.dat Generated.
+it=4	mon=[0]	energy=-1.282626
+it=4	mon=[1]	energy=-1.332695
+it=4	mon=[2]	energy=-1.231888
+##SCC itera= 4  conv=6  energy =      -3.84720885  energy0 =      -3.41112398  (   6.009165 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_5_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_5_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_5_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_5_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_5_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_5_0.dat Generated.
+it=5	mon=[0]	energy=-1.282634
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_5_0.dat Generated.
+it=5	mon=[1]	energy=-1.332693
+it=5	mon=[2]	energy=-1.231884
+##SCC itera= 5  conv=6  energy =      -3.84721066  energy0 =      -3.41111881  (   5.008650 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_6_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_6_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_6_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_6_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_6_0.dat Generated.
+it=6	mon=[2]	energy=-1.231884
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_6_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_6_0.dat Generated.
+it=6	mon=[0]	energy=-1.282634
+it=6	mon=[1]	energy=-1.332689
+##SCC itera= 6  conv=6  energy =      -3.84720580  energy0 =      -3.41111685  (   5.007433 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_7_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_7_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_7_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_7_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_7_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_7_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_7_0.dat Generated.
+it=7	mon=[0]	energy=-1.282600
+it=7	mon=[1]	energy=-1.332691
+it=7	mon=[2]	energy=-1.231890
+##SCC itera= 7  conv=7  energy =      -3.84718098  energy0 =      -3.41112583  (   6.008614 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_8_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_8_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_8_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_8_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_8_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_8_0.dat Generated.
+it=8	mon=[0]	energy=-1.282634
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_8_0.dat Generated.
+it=8	mon=[1]	energy=-1.332689
+it=8	mon=[2]	energy=-1.231882
+##SCC itera= 8  conv=7  energy =      -3.84720468  energy0 =      -3.41111683  (   6.008928 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_9_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_9_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_9_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_9_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_9_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_9_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_9_0.dat Generated.
+it=9	mon=[2]	energy=-1.231884
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_9_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_9_0.dat Generated.
+it=9	mon=[0]	energy=-1.282634
+it=9	mon=[1]	energy=-1.332689
+##SCC itera= 9  conv=7  energy =      -3.84720660  energy0 =      -3.41111732  (   5.009009 )
+./integ_temp/h2_trimer/int_mono_h2_trimer_2_10_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_0_10_0.dat -> 7 eris
+./integ_temp/h2_trimer/int_mono_h2_trimer_1_10_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_1_10_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_2_10_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_mono_h2_trimer_0_10_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_2_10_0.dat Generated.
+it=10	mon=[2]	energy=-1.231884
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_0_10_0.dat Generated.
+it=10	mon=[0]	energy=-1.282634
+pyscript : output ./result_temp/h2_trimer/res_mono_h2_trimer_1_10_0.dat Generated.
+it=10	mon=[1]	energy=-1.332691
+##SCC itera=10  conv=7  energy =      -3.84720860  energy0 =      -3.41111732  (   5.010926 )
 ==== SCC converged ====
-##T         ---- Finish SCC procedure ---- : lap time=  50.765257 ( total etime=  51.097394 )
-./integ_temp/h2_trimer/int_h2_trimer_dim_2_130_0.dat -> 65 eris
-1/130/0 loop start
-1/130 init_density_loop0_0
-1/130 init_density_loop1_1
-1/130 init_density_loop2_2
-1/130/0 loop break
-1/130/0 thread timer
-1/130/1 loop start
-1/130 init_density_loop3_0
-1/130/1 loop break
-1/130/1 thread timer
-1/130 timer0
-1/130 timer1
-1/130 timer2
-1/130 timer3
-1/130 timer done
-./integ_temp/h2_trimer/int_h2_trimer_dim_2_130_0.dat -> 65 eris
-./integ_temp/h2_trimer/int_h2_trimer_dim_1_130_0.dat -> 65 eris
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_dim_2_130_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_dim_1_130_0.dat spawned.
-pyscript : VQE for ./integ_temp/h2_trimer/int_h2_trimer_dim_2_130_0.dat spawned.
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_dim_1_130_0.dat Generated.
-it=130	mon=[1, 0]	energy=-2.243821
-# E=    -2.2438212103 E-DV=    -2.2189364469 DV=    -0.0248847634 DDV=    -0.0086834865
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_dim_2_130_0.dat Generated.
-it=130	mon=[2, 0]	energy=-2.261137
-# E=    -2.2611368449 E-DV=    -2.2186272650 DV=    -0.0425095799 DDV=     0.0007026023
-pyscript : output ./result_temp/h2_trimer/res_h2_trimer_dim_2_130_0.dat Generated.
-it=130	mon=[2, 1]	energy=-2.261137
-# E=    -2.2611368449 E-DV=    -2.2186272650 DV=    -0.0425095799 DDV=     0.0032152669
-##T    ---- Finish to Calc. Dimer SCF ---- : lap time= 420.282988 ( total etime= 471.380389 )
+##T         ---- Finish SCC procedure ---- : lap time=  53.081837 ( total etime=  53.274967 )
+DIM 1 0 called
+DIM 2 0 called
+DIM 2 1 called
+./integ_temp/h2_trimer/int_dim_h2_trimer_2-1_130_0.dat -> 65 eris
+./integ_temp/h2_trimer/int_dim_h2_trimer_1-0_130_0.dat -> 65 eris
+./integ_temp/h2_trimer/int_dim_h2_trimer_2-0_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer/int_dim_h2_trimer_2-0_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_dim_h2_trimer_2-1_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer/int_dim_h2_trimer_1-0_130_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer/res_dim_h2_trimer_2-0_130_0.dat Generated.
+it=130	mon=[2, 0]	energy=-2.277932
+# E=    -2.2779318725 E-DV=    -2.2743948524 DV=    -0.0035370200 DDV=     0.0000147455
+pyscript : output ./result_temp/h2_trimer/res_dim_h2_trimer_1-0_130_0.dat Generated.
+it=130	mon=[1, 0]	energy=-2.275711
+# E=    -2.2757113444 E-DV=    -2.2743630164 DV=    -0.0013483280 DDV=    -0.0000112537
+pyscript : output ./result_temp/h2_trimer/res_dim_h2_trimer_2-1_130_0.dat Generated.
+it=130	mon=[2, 1]	energy=-2.274852
+# E=    -2.2748518754 E-DV=    -2.2743600845 DV=    -0.0004917909 DDV=     0.0000114154
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time= 288.026155 ( total etime= 341.301128 )
        ( # of scf dimer = 3 )
-        dE0(SCF dimer) =       0.13653383
-##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.000073 ( total etime= 471.380479 )
+        dE0(SCF dimer) =      -0.00086841
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.000072 ( total etime= 341.301214 )
     (# of ES dimer = 0)
     dE0(ES dimer) =       0.00000000
-    total energy(FMO) =      -3.26221138
-##T  -- All workers have been destroyed -- : lap time=   0.000038 ( total etime= 471.380522 )
+    total energy(FMO) =      -3.41198573
+##T  -- All workers have been destroyed -- : lap time=   0.000032 ( total etime= 341.301250 )
 ---- ATOMIC POPULATION DATA -----
    SN AN  ATOMIC POP  NET CHARGE
 ---------------------------------
-    1  1       0.994       0.006
-    2  1       1.000       0.000
-    3  1       0.834       0.166
-    4  1       1.180      -0.180
-    5  1       1.003      -0.003
-    6  1       0.989       0.011
+    1  1       1.019      -0.019
+    2  1       0.981       0.019
+    3  1       0.967       0.033
+    4  1       1.033      -0.033
+    5  1       0.994       0.006
+    6  1       1.006      -0.006
 ---------------------------------
 total charge =      0.000
 ---------------------------------
-##T    -- calc AO and atomic population -- : lap time=   0.000073 ( total etime= 471.380599 )
-##T   -- All mservs have been destroyed -- : lap time=   0.000013 ( total etime= 471.380614 )
+##T    -- calc AO and atomic population -- : lap time=   0.000062 ( total etime= 341.301316 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000012 ( total etime= 341.301332 )

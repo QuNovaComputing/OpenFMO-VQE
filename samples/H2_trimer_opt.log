@@ -1,0 +1,77 @@
+Will Run VQE
+ngroup       = 3
+nioprocs     = 1
+niogroup     = 1
+nmaxprocs    = 5
+group size   = 1
+# of threads = 24
+nintic       = 2048
+input file name       = ./samples/H2_trimer_opt.inp
+prefix of output file = 
+local input dir.      = ./
+# of total invoked procs = 5 (=1iog*1iop+1+3gr*1pr)
+master host name = gwonhaklee-System-Product-Name
+-----------------------------------------------------
+ # of data = 11
+nfrag = 3
+##T                  Finish Initialization : lap time=   0.000130 ( total etime=   0.000130 )
+****** LIST OF HOST NAME (MSERV(ID=0))******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T        Finish to Create Memory Servers : lap time=   0.028747 ( total etime=   0.028890 )
+****** LIST OF HOST NAME (WORKER(ID=0)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=1)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=2)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T               Finish to Create Workers : lap time=   0.151158 ( total etime=   0.180060 )
+##T     Finish to Connect Mservs & Workers : lap time=   0.031925 ( total etime=   0.212005 )
+calc. inter-frag distance list = 1
+##T    Finish to Calculate Initial Density : lap time=   0.002923 ( total etime=   0.215147 )
+---- start SCC (maxscc=30, sccconv=7) ----
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_2_1_0.dat -> 7 eris
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_0_1_0.dat -> 7 eris
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_1_1_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_0_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_2_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_1_1_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_1_1_0.dat Generated.
+it=1	mon=[1]	energy=-1.137218
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_0_1_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_2_1_0.dat Generated.
+it=1	mon=[2]	energy=-1.137208
+it=1	mon=[0]	energy=-1.137208
+##SCC itera= 1  conv=2  energy =      -3.41163463  energy0 =      -3.41159377  (   6.004892 )
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_1_2_0.dat -> 7 eris
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_2_2_0.dat -> 7 eris
+./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_0_2_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_0_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_1_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_mono_h2_trimer_opt_2_2_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_1_2_0.dat Generated.
+it=2	mon=[1]	energy=-1.137216
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_2_2_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer_opt/res_mono_h2_trimer_opt_0_2_0.dat Generated.
+it=2	mon=[0]	energy=-1.137208
+it=2	mon=[2]	energy=-1.137208
+##SCC itera= 2  conv=2  energy =      -3.41163263  energy0 =      -3.41159377  (   6.001567 )
+==== SCC converged ====
+##T         ---- Finish SCC procedure ---- : lap time=  12.006728 ( total etime=  12.221887 )
+./integ_temp/h2_trimer_opt/int_dim_h2_trimer_opt_2-1_130_0.dat -> 65 eris
+./integ_temp/h2_trimer_opt/int_dim_h2_trimer_opt_1-0_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_dim_h2_trimer_opt_2-1_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_opt/int_dim_h2_trimer_opt_1-0_130_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_opt/res_dim_h2_trimer_opt_1-0_130_0.dat Generated.
+it=130	mon=[1, 0]	energy=-2.274371
+# E=    -2.2743713286 E-DV=    -2.2743630884 DV=    -0.0000082402 DDV=     0.0000002164
+MPI_DIM_SEND, 1 0
+MPI_DIM_SEND_DONE, 1 0
+pyscript : output ./result_temp/h2_trimer_opt/res_dim_h2_trimer_opt_2-1_130_0.dat Generated.
+it=130	mon=[2, 1]	energy=-2.274371
+# E=    -2.2743713289 E-DV=    -2.2743630887 DV=    -0.0000082402 DDV=     0.0000002164
+MPI_DIM_SEND, 2 1
+MPI_DIM_SEND_DONE, 2 1

@@ -1,0 +1,349 @@
+Will Run VQE
+ngroup       = 6
+nioprocs     = 1
+niogroup     = 1
+nmaxprocs    = 8
+group size   = 1
+# of threads = 48
+nintic       = 2048
+input file name       = ./samples/linear_H2_6/linear_H2_6_2_5.inp
+prefix of output file = 
+local input dir.      = ./
+# of total invoked procs = 8 (=1iog*1iop+1+6gr*1pr)
+master host name = gwonhaklee-System-Product-Name
+-----------------------------------------------------
+ # of data = 11
+nfrag = 6
+##T                  Finish Initialization : lap time=   0.000185 ( total etime=   0.000185 )
+****** LIST OF HOST NAME (MSERV(ID=0))******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T        Finish to Create Memory Servers : lap time=   0.153494 ( total etime=   0.153688 )
+****** LIST OF HOST NAME (WORKER(ID=0)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=1)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=2)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=3)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=4)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+****** LIST OF HOST NAME (WORKER(ID=5)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T               Finish to Create Workers : lap time=   1.755128 ( total etime=   1.908827 )
+##T     Finish to Connect Mservs & Workers : lap time=   0.855065 ( total etime=   2.763904 )
+calc. inter-frag distance list = 3
+##T    Finish to Calculate Initial Density : lap time=   0.658478 ( total etime=   3.758634 )
+---- start SCC (maxscc=30, sccconv=7) ----
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_1_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_1_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_1_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_1_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_1_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_1_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_1_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_1_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_1_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_1_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_1_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_1_0.dat Generated.
+it=1	mon=[3]	energy=-1.675562
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_1_0.dat Generated.
+it=1	mon=[4]	energy=-1.558071
+it=1	mon=[0]	energy=-1.494833
+it=1	mon=[5]	energy=-1.384397
+it=1	mon=[2]	energy=-1.698644
+it=1	mon=[1]	energy=-1.660173
+##SCC itera= 1  conv=2  energy =      -9.47167961  energy0 =      -6.82135789  (  78.968541 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_2_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_2_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_2_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_2_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_2_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_2_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_2_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_2_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_2_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_2_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_2_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_2_0.dat Generated.
+it=2	mon=[0]	energy=-1.501025
+it=2	mon=[5]	energy=-1.397129
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_2_0.dat Generated.
+it=2	mon=[2]	energy=-1.711588
+it=2	mon=[4]	energy=-1.569942
+it=2	mon=[1]	energy=-1.680352
+it=2	mon=[3]	energy=-1.681162
+##SCC itera= 2  conv=2  energy =      -9.54119860  energy0 =      -6.82110239  (  78.023964 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_3_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_3_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_3_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_3_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_3_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_3_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_3_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_3_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_3_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_3_0.dat Generated.
+it=3	mon=[4]	energy=-1.567262
+it=3	mon=[3]	energy=-1.678320
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_3_0.dat Generated.
+it=3	mon=[5]	energy=-1.395869
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_3_0.dat Generated.
+it=3	mon=[2]	energy=-1.708512
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_3_0.dat Generated.
+it=3	mon=[0]	energy=-1.497971
+it=3	mon=[1]	energy=-1.677716
+##SCC itera= 3  conv=4  energy =      -9.52565128  energy0 =      -6.82111107  (  85.414543 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_4_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_4_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_4_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_4_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_4_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_4_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_4_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_4_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_4_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_4_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_4_0.dat Generated.
+it=4	mon=[4]	energy=-1.567148
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_4_0.dat Generated.
+it=4	mon=[3]	energy=-1.678128
+it=4	mon=[5]	energy=-1.395778
+it=4	mon=[0]	energy=-1.497737
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_4_0.dat Generated.
+it=4	mon=[1]	energy=-1.677492
+it=4	mon=[2]	energy=-1.708322
+##SCC itera= 4  conv=6  energy =      -9.52460479  energy0 =      -6.82111756  (  78.359964 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_5_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_5_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_5_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_5_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_5_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_5_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_5_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_5_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_5_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_5_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_5_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_5_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_5_0.dat Generated.
+it=5	mon=[4]	energy=-1.567144
+it=5	mon=[2]	energy=-1.708348
+it=5	mon=[3]	energy=-1.678174
+it=5	mon=[5]	energy=-1.395763
+it=5	mon=[0]	energy=-1.497741
+it=5	mon=[1]	energy=-1.677502
+##SCC itera= 5  conv=6  energy =      -9.52467292  energy0 =      -6.82111701  (  75.399952 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_6_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_6_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_6_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_6_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_6_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_6_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_6_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_6_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_6_0.dat Generated.
+it=6	mon=[4]	energy=-1.567151
+it=6	mon=[3]	energy=-1.678194
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_6_0.dat Generated.
+it=6	mon=[0]	energy=-1.497756
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_6_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_6_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_6_0.dat Generated.
+it=6	mon=[1]	energy=-1.677534
+it=6	mon=[2]	energy=-1.708352
+it=6	mon=[5]	energy=-1.395774
+##SCC itera= 6  conv=7  energy =      -9.52476139  energy0 =      -6.82090120  (  78.351217 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_7_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_7_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_7_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_7_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_7_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_7_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_7_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_7_0.dat Generated.
+it=7	mon=[3]	energy=-1.678190
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_7_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_7_0.dat Generated.
+it=7	mon=[0]	energy=-1.497756
+it=7	mon=[4]	energy=-1.567158
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_7_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_7_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_7_0.dat Generated.
+it=7	mon=[2]	energy=-1.708346
+it=7	mon=[1]	energy=-1.677530
+it=7	mon=[5]	energy=-1.395772
+##SCC itera= 7  conv=7  energy =      -9.52475277  energy0 =      -6.82104819  (  79.964251 )
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_8_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_8_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_8_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_8_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_8_0.dat -> 7 eris
+./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_8_0.dat -> 7 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_4_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_3_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_2_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_5_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_1_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_mono_linear_h2_6__2_5_0_8_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_3_8_0.dat Generated.
+it=8	mon=[3]	energy=-1.678196
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_0_8_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_2_8_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_4_8_0.dat Generated.
+it=8	mon=[0]	energy=-1.497756
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_1_8_0.dat Generated.
+it=8	mon=[4]	energy=-1.567156
+it=8	mon=[2]	energy=-1.708350
+pyscript : output ./result_temp/linear_h2_6__2_5/res_mono_linear_h2_6__2_5_5_8_0.dat Generated.
+it=8	mon=[1]	energy=-1.677532
+it=8	mon=[5]	energy=-1.395772
+##SCC itera= 8  conv=7  energy =      -9.52476277  energy0 =      -6.82104817  (  79.051948 )
+==== SCC converged ====
+##T         ---- Finish SCC procedure ---- : lap time= 636.844528 ( total etime= 640.603183 )
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_2-1_130_0.dat -> 65 eris
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_1-0_130_0.dat -> 65 eris
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-1_130_0.dat -> 65 eris
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-0_130_0.dat -> 65 eris
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-2_130_0.dat -> 65 eris
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_2-0_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-2_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_2-1_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_1-0_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_2-0_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-1_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_3-0_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_3-0_130_0.dat Generated.
+it=130	mon=[3, 0]	energy=-3.047552
+# E=    -3.0475519112 E-DV=    -2.2737280569 DV=    -0.7738238544 DDV=     0.0003087268
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-0_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-0_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_4-0_130_0.dat Generated.
+it=130	mon=[4, 0]	energy=-2.970630
+# E=    -2.9706298451 E-DV=    -2.2728982291 DV=    -0.6977316160 DDV=     0.0002105656
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-1_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-1_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_4-1_130_0.dat Generated.
+it=130	mon=[4, 1]	energy=-3.123683
+# E=    -3.1236831173 E-DV=    -2.2733622438 DV=    -0.8503208735 DDV=     0.0003053731
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-2_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-2_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_2-0_130_0.dat Generated.
+it=130	mon=[2, 0]	energy=-3.010929
+# E=    -3.0109294750 E-DV=    -2.2739827891 DV=    -0.7369466858 DDV=     0.0003889976
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-3_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_4-3_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_3-1_130_0.dat Generated.
+it=130	mon=[3, 1]	energy=-3.169559
+# E=    -3.1695586610 E-DV=    -2.2741594133 DV=    -0.8953992477 DDV=     0.0003197195
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-0_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-0_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_1-0_130_0.dat Generated.
+it=130	mon=[1, 0]	energy=-2.771225
+# E=    -2.7712247294 E-DV=    -2.2733919680 DV=    -0.4978327614 DDV=    -0.0008628142
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-1_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-1_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_5-0_130_0.dat Generated.
+it=130	mon=[5, 0]	energy=-2.809780
+# E=    -2.8097798170 E-DV=    -2.2738529212 DV=    -0.5359268958 DDV=     0.0001082221
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-2_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-2_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_2-1_130_0.dat Generated.
+it=130	mon=[2, 1]	energy=-2.999924
+# E=    -2.9999235363 E-DV=    -2.2735716099 DV=    -0.7263519263 DDV=    -0.0010966514
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-3_130_0.dat -> 65 eris
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_4-2_130_0.dat Generated.
+it=130	mon=[4, 2]	energy=-3.094965
+# E=    -3.0949649940 E-DV=    -2.2734645760 DV=    -0.8215004181 DDV=     0.0003454254
+./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-4_130_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-3_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/linear_h2_6__2_5/int_dim_linear_h2_6__2_5_5-4_130_0.dat spawned.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_5-1_130_0.dat Generated.
+it=130	mon=[5, 1]	energy=-2.968971
+# E=    -2.9689714241 E-DV=    -2.2742617920 DV=    -0.6947096321 DDV=     0.0001559038
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_5-2_130_0.dat Generated.
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_3-2_130_0.dat Generated.
+it=130	mon=[5, 2]	energy=-2.957616
+# E=    -2.9576161682 E-DV=    -2.2740917267 DV=    -0.6835244416 DDV=     0.0000613304
+it=130	mon=[3, 2]	energy=-3.007579
+# E=    -3.0075792800 E-DV=    -2.2732777582 DV=    -0.7343015218 DDV=    -0.0009532887
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_4-3_130_0.dat Generated.
+it=130	mon=[4, 3]	energy=-2.877487
+# E=    -2.8774870579 E-DV=    -2.2727740870 DV=    -0.6047129708 DDV=    -0.0004741044
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_5-3_130_0.dat Generated.
+it=130	mon=[5, 3]	energy=-2.820233
+# E=    -2.8202328555 E-DV=    -2.2732330358 DV=    -0.5469998197 DDV=    -0.0007861488
+pyscript : output ./result_temp/linear_h2_6__2_5/res_dim_linear_h2_6__2_5_5-4_130_0.dat Generated.
+it=130	mon=[5, 4]	energy=-2.650776
+# E=    -2.6507759453 E-DV=    -2.2739107064 DV=    -0.3768652389 DDV=     0.0005301955
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time= 8073.483996 ( total etime= 8714.087218 )
+       ( # of scf dimer = 15 )
+        dE0(SCF dimer) =      -0.00015861
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.015950 ( total etime= 8714.103189 )
+    (# of ES dimer = 0)
+    dE0(ES dimer) =       0.00000000
+    total energy(FMO) =      -6.82120678
+##T  -- All workers have been destroyed -- : lap time=   0.047989 ( total etime= 8714.151192 )
+---- ATOMIC POPULATION DATA -----
+   SN AN  ATOMIC POP  NET CHARGE
+---------------------------------
+    1  1       0.996       0.004
+    2  1       1.004      -0.004
+    3  1       1.003      -0.003
+    4  1       0.997       0.003
+    5  1       1.010      -0.010
+    6  1       0.990       0.010
+    7  1       1.030      -0.030
+    8  1       0.970       0.030
+    9  1       0.966       0.034
+   10  1       1.034      -0.034
+   11  1       0.995       0.005
+   12  1       1.005      -0.005
+---------------------------------
+total charge =      0.000
+---------------------------------
+##T    -- calc AO and atomic population -- : lap time=   0.004180 ( total etime= 8714.155386 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000014 ( total etime= 8714.155410 )

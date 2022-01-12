@@ -1,0 +1,436 @@
+Will Run VQE
+ofmo-init.c 72 @ofmo_get_basis_name: WARNING:basis set names are different between 6-31G* vs 6-31G
+ngroup       = 3
+nioprocs     = 1
+niogroup     = 1
+nmaxprocs    = 5
+group size   = 1
+# of threads = 24
+nintic       = 2048
+input file name       = ./samples/H2_trimer_631G_light.inp
+prefix of output file = 
+local input dir.      = ./
+# of total invoked procs = 5 (=1iog*1iop+1+3gr*1pr)
+master host name = gwonhaklee-System-Product-Name
+-----------------------------------------------------
+ # of data = 11
+nfrag = 3
+##T                  Finish Initialization : lap time=   0.000160 ( total etime=   0.000160 )
+****** LIST OF HOST NAME (MSERV(ID=0))******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+##T        Finish to Create Memory Servers : lap time=   0.044557 ( total etime=   0.044727 )
+****** LIST OF HOST NAME (WORKER(ID=0)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+ofmo-init.c 72 @ofmo_get_basis_name: WARNING:basis set names are different between 6-31G* vs 6-31G
+****** LIST OF HOST NAME (WORKER(ID=1)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+ofmo-init.c 72 @ofmo_get_basis_name: WARNING:basis set names are different between 6-31G* vs 6-31G
+##T               Finish to Create Workers : lap time=   0.261861 ( total etime=   0.306597 )
+****** LIST OF HOST NAME (WORKER(ID=2)) ******
+rank=  0 : gwonhaklee-System-Product-Name
+********************************
+ofmo-init.c 72 @ofmo_get_basis_name: WARNING:basis set names are different between 6-31G* vs 6-31G
+##T     Finish to Connect Mservs & Workers : lap time=   0.018613 ( total etime=   0.325226 )
+calc. inter-frag distance list = 2
+##T    Finish to Calculate Initial Density : lap time=   0.002922 ( total etime=   0.328396 )
+---- start SCC (maxscc=30, sccconv=7) ----
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_1_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_1_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_1_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_1_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_1_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_1_0.dat Generated.
+it=1	mon=[1]	energy=-1.389760
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_1_0.dat Generated.
+it=1	mon=[0]	energy=-1.217854
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_1_0.dat Generated.
+it=1	mon=[2]	energy=-1.217854
+##SCC itera= 1  conv=2  energy =      -3.82546766  energy0 =      -3.44341113  ( 243.042279 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_2_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_2_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_2_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_2_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_2_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_2_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_2_0.dat Generated.
+it=2	mon=[1]	energy=-1.355721
+it=2	mon=[0]	energy=-1.173474
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_2_0.dat Generated.
+it=2	mon=[2]	energy=-1.213936
+##SCC itera= 2  conv=2  energy =      -3.74313053  energy0 =      -3.44441524  ( 221.442104 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_3_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_3_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_3_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_3_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_3_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_3_0.dat Generated.
+it=3	mon=[1]	energy=-1.363169
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_3_0.dat Generated.
+it=3	mon=[2]	energy=-1.229972
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_3_0.dat Generated.
+it=3	mon=[0]	energy=-1.162513
+##SCC itera= 3  conv=4  energy =      -3.75565431  energy0 =      -3.44396867  ( 227.121701 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_4_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_4_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_4_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_4_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_4_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_4_0.dat Generated.
+it=4	mon=[0]	energy=-1.160399
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_4_0.dat Generated.
+it=4	mon=[2]	energy=-1.231677
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_4_0.dat Generated.
+it=4	mon=[1]	energy=-1.360912
+##SCC itera= 4  conv=4  energy =      -3.75298729  energy0 =      -3.44390468  ( 223.015708 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_5_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_5_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_5_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_5_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_5_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_5_0.dat Generated.
+it=5	mon=[2]	energy=-1.232355
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_5_0.dat Generated.
+it=5	mon=[0]	energy=-1.159647
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_5_0.dat Generated.
+it=5	mon=[1]	energy=-1.360849
+##SCC itera= 5  conv=6  energy =      -3.75285021  energy0 =      -3.44354197  ( 223.361562 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_6_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_6_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_6_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_6_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_6_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_6_0.dat Generated.
+it=6	mon=[0]	energy=-1.159588
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_6_0.dat Generated.
+it=6	mon=[1]	energy=-1.360625
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_6_0.dat Generated.
+it=6	mon=[2]	energy=-1.232543
+##SCC itera= 6  conv=6  energy =      -3.75275504  energy0 =      -3.44362901  ( 230.499807 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_7_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_7_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_7_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_7_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_7_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_7_0.dat Generated.
+it=7	mon=[1]	energy=-1.360664
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_7_0.dat Generated.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_7_0.dat Generated.
+it=7	mon=[2]	energy=-1.232556
+it=7	mon=[0]	energy=-1.159588
+##SCC itera= 7  conv=6  energy =      -3.75280801  energy0 =      -3.44360055  ( 238.213927 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_8_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_8_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_8_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_8_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_8_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_8_0.dat Generated.
+it=8	mon=[0]	energy=-1.159559
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_8_0.dat Generated.
+it=8	mon=[1]	energy=-1.360739
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_8_0.dat Generated.
+it=8	mon=[2]	energy=-1.232590
+##SCC itera= 8  conv=7  energy =      -3.75288890  energy0 =      -3.44387145  ( 225.016034 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_9_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_9_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_9_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_9_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_9_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_9_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_9_0.dat Generated.
+it=9	mon=[0]	energy=-1.159550
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_9_0.dat Generated.
+it=9	mon=[1]	energy=-1.360724
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_9_0.dat Generated.
+it=9	mon=[2]	energy=-1.232589
+##SCC itera= 9  conv=7  energy =      -3.75286366  energy0 =      -3.44346133  ( 226.713441 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_10_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_10_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_10_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_10_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_10_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_10_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_10_0.dat Generated.
+it=10	mon=[1]	energy=-1.360731
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_10_0.dat Generated.
+it=10	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_10_0.dat Generated.
+it=10	mon=[0]	energy=-1.159555
+##SCC itera=10  conv=7  energy =      -3.75288048  energy0 =      -3.44387145  ( 224.147032 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_11_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_11_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_11_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_11_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_11_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_11_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_11_0.dat Generated.
+it=11	mon=[1]	energy=-1.360720
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_11_0.dat Generated.
+it=11	mon=[0]	energy=-1.159550
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_11_0.dat Generated.
+it=11	mon=[2]	energy=-1.232589
+##SCC itera=11  conv=7  energy =      -3.75285957  energy0 =      -3.44339069  ( 218.446727 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_12_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_12_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_12_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_12_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_12_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_12_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_12_0.dat Generated.
+it=12	mon=[1]	energy=-1.360720
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_12_0.dat Generated.
+it=12	mon=[2]	energy=-1.232596
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_12_0.dat Generated.
+it=12	mon=[0]	energy=-1.159555
+##SCC itera=12  conv=7  energy =      -3.75287084  energy0 =      -3.44347503  ( 238.485604 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_13_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_13_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_13_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_13_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_13_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_13_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_13_0.dat Generated.
+it=13	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_13_0.dat Generated.
+it=13	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_13_0.dat Generated.
+it=13	mon=[0]	energy=-1.159557
+##SCC itera=13  conv=7  energy =      -3.75284860  energy0 =      -3.44336760  ( 220.281519 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_14_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_14_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_14_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_14_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_14_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_14_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_14_0.dat Generated.
+it=14	mon=[1]	energy=-1.360720
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_14_0.dat Generated.
+it=14	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_14_0.dat Generated.
+it=14	mon=[0]	energy=-1.159555
+##SCC itera=14  conv=7  energy =      -3.75286949  energy0 =      -3.44337238  ( 235.132966 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_15_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_15_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_15_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_15_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_15_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_15_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_15_0.dat Generated.
+it=15	mon=[1]	energy=-1.360702
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_15_0.dat Generated.
+it=15	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_15_0.dat Generated.
+it=15	mon=[2]	energy=-1.232596
+##SCC itera=15  conv=7  energy =      -3.75285243  energy0 =      -3.44373764  ( 237.148968 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_16_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_16_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_16_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_16_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_16_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_16_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_16_0.dat Generated.
+it=16	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_16_0.dat Generated.
+it=16	mon=[0]	energy=-1.159550
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_16_0.dat Generated.
+it=16	mon=[2]	energy=-1.232594
+##SCC itera=16  conv=7  energy =      -3.75284186  energy0 =      -3.44328759  ( 234.130449 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_17_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_17_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_17_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_17_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_17_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_17_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_17_0.dat Generated.
+it=17	mon=[1]	energy=-1.360722
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_17_0.dat Generated.
+it=17	mon=[2]	energy=-1.232596
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_17_0.dat Generated.
+it=17	mon=[0]	energy=-1.159555
+##SCC itera=17  conv=7  energy =      -3.75287305  energy0 =      -3.44347752  ( 232.263204 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_18_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_18_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_18_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_18_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_18_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_18_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_18_0.dat Generated.
+it=18	mon=[1]	energy=-1.360726
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_18_0.dat Generated.
+it=18	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_18_0.dat Generated.
+it=18	mon=[0]	energy=-1.159555
+##SCC itera=18  conv=7  energy =      -3.75287545  energy0 =      -3.44347792  ( 238.260673 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_19_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_19_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_19_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_19_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_19_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_19_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_19_0.dat Generated.
+it=19	mon=[1]	energy=-1.360728
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_19_0.dat Generated.
+it=19	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_19_0.dat Generated.
+it=19	mon=[2]	energy=-1.232594
+##SCC itera=19  conv=7  energy =      -3.75287668  energy0 =      -3.44366801  ( 226.109833 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_20_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_20_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_20_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_20_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_20_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_20_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_20_0.dat Generated.
+it=20	mon=[1]	energy=-1.360728
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_20_0.dat Generated.
+it=20	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_20_0.dat Generated.
+it=20	mon=[2]	energy=-1.232594
+##SCC itera=20  conv=7  energy =      -3.75287700  energy0 =      -3.44366844  ( 233.177249 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_21_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_21_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_21_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_21_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_21_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_21_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_21_0.dat Generated.
+it=21	mon=[1]	energy=-1.360718
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_21_0.dat Generated.
+it=21	mon=[2]	energy=-1.232592
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_21_0.dat Generated.
+it=21	mon=[0]	energy=-1.159553
+##SCC itera=21  conv=7  energy =      -3.75286379  energy0 =      -3.44340187  ( 224.270739 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_22_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_22_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_22_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_22_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_22_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_22_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_22_0.dat Generated.
+it=22	mon=[1]	energy=-1.360718
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_22_0.dat Generated.
+it=22	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_22_0.dat Generated.
+it=22	mon=[2]	energy=-1.232596
+##SCC itera=22  conv=7  energy =      -3.75286890  energy0 =      -3.44340420  ( 239.440924 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_23_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_23_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_23_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_23_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_23_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_23_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_23_0.dat Generated.
+it=23	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_23_0.dat Generated.
+it=23	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_23_0.dat Generated.
+it=23	mon=[2]	energy=-1.232596
+##SCC itera=23  conv=7  energy =      -3.75284808  energy0 =      -3.44336643  ( 235.158855 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_24_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_24_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_24_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_24_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_24_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_24_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_24_0.dat Generated.
+it=24	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_24_0.dat Generated.
+it=24	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_24_0.dat Generated.
+it=24	mon=[0]	energy=-1.159555
+##SCC itera=24  conv=7  energy =      -3.75284671  energy0 =      -3.44333283  ( 222.673688 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_25_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_25_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_25_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_25_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_25_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_25_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_25_0.dat Generated.
+it=25	mon=[1]	energy=-1.360702
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_25_0.dat Generated.
+it=25	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_25_0.dat Generated.
+it=25	mon=[2]	energy=-1.232598
+##SCC itera=25  conv=7  energy =      -3.75285461  energy0 =      -3.44373753  ( 239.055598 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_26_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_26_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_26_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_26_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_26_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_26_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_26_0.dat Generated.
+it=26	mon=[1]	energy=-1.360726
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_26_0.dat Generated.
+it=26	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_26_0.dat Generated.
+it=26	mon=[0]	energy=-1.159553
+##SCC itera=26  conv=7  energy =      -3.75287412  energy0 =      -3.44347842  ( 226.277726 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_27_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_27_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_27_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_27_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_27_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_27_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_27_0.dat Generated.
+it=27	mon=[1]	energy=-1.360718
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_27_0.dat Generated.
+it=27	mon=[0]	energy=-1.159553
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_27_0.dat Generated.
+it=27	mon=[2]	energy=-1.232594
+##SCC itera=27  conv=7  energy =      -3.75286550  energy0 =      -3.44340523  ( 238.017876 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_28_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_28_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_28_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_28_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_28_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_28_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_28_0.dat Generated.
+it=28	mon=[1]	energy=-1.360720
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_28_0.dat Generated.
+it=28	mon=[0]	energy=-1.159555
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_28_0.dat Generated.
+it=28	mon=[2]	energy=-1.232596
+##SCC itera=28  conv=7  energy =      -3.75287089  energy0 =      -3.44340620  ( 221.154453 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_29_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_29_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_29_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_29_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_29_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_29_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_29_0.dat Generated.
+it=29	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_29_0.dat Generated.
+it=29	mon=[2]	energy=-1.232596
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_29_0.dat Generated.
+it=29	mon=[0]	energy=-1.159555
+##SCC itera=29  conv=7  energy =      -3.75284808  energy0 =      -3.44336643  ( 233.349909 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_30_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_30_0.dat -> 65 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_30_0.dat -> 65 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_2_30_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_0_30_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_mono_1_30_0.dat spawned.
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_1_30_0.dat Generated.
+it=30	mon=[1]	energy=-1.360697
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_2_30_0.dat Generated.
+it=30	mon=[2]	energy=-1.232594
+pyscript : output ./result_temp/h2_trimer_631g_light/res_h2_trimer_631g_light_mono_0_30_0.dat Generated.
+it=30	mon=[0]	energy=-1.159555
+##SCC itera=30  conv=7  energy =      -3.75284671  energy0 =      -3.44333283  ( 223.166314 )
+##T         ---- Finish SCC procedure ---- : lap time= 6898.582837 ( total etime= 6898.911251 )
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_2_130_0.dat -> 750 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_2_130_0.dat -> 750 eris
+./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_1_130_0.dat -> 750 eris
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_2_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_1_130_0.dat spawned.
+pyscript : VQE for ./integ_temp/h2_trimer_631g_light/int_h2_trimer_631g_light_dim_2_130_0.dat spawned.

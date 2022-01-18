@@ -153,3 +153,35 @@ it=130	mon=[2, 1]	energy=-74.475930	energy_0=-60.956226
 # E=   -74.4759300088 E-DV=   -60.9562256992 DV=   -13.5197043097 DDV=    -0.0099016633
 it=130	mon=[0, 1]	energy=-73.935524	energy_0=-62.853584
 # E=   -73.9355243029 E-DV=   -62.8535836223 DV=   -11.0819406806 DDV=     0.0269480044
+it=130	mon=[0, 2]	energy=-71.224063	energy_0=-47.542167
+# E=   -71.2240633884 E-DV=   -47.5421672270 DV=   -23.6818961614 DDV=    -0.0178503938
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time= 875778.952016 ( total etime= 878166.294315 )
+       ( # of scf dimer = 6 )
+        dE0(SCF dimer) =     -44.64968666
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.019924 ( total etime= 878166.314254 )
+    (# of ES dimer = 0)
+    dE0(ES dimer) =       0.00000000
+    total energy(FMO) =    -154.23228247
+##T  -- All workers have been destroyed -- : lap time=   0.004064 ( total etime= 878166.318330 )
+---- ATOMIC POPULATION DATA -----
+   SN AN  ATOMIC POP  NET CHARGE
+---------------------------------
+    1  6       6.164      -0.164
+    2  6       6.284      -0.284
+    3  6       6.353      -0.353
+    4  6       6.215      -0.215
+    5  1       0.957       0.043
+    6  1       0.910       0.090
+    7  1       0.957       0.043
+    8  1       0.838       0.162
+    9  1       0.838       0.162
+   10  1       0.832       0.168
+   11  1       0.832       0.168
+   12  1       0.950       0.050
+   13  1       0.920       0.080
+   14  1       0.950       0.050
+---------------------------------
+total charge =     -0.000
+---------------------------------
+##T    -- calc AO and atomic population -- : lap time=   0.000149 ( total etime= 878166.318486 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000018 ( total etime= 878166.318508 )

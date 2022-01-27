@@ -196,8 +196,8 @@ if __name__ == "__main__":
                                 mono_homo=mon_homo, mono_lumo=mon_lumo, mono_ent=mon_ent,
                                 dim_homo=dim_homo, dim_lumo=dim_lumo, dim_ent=dim_ent,
                                 fmobnd=fmobnd, 
-                                rhf=False)
-        with open(f"./{desc}.inp", 'w') as of:
+                                rhf=True)
+        with open(f"./{desc}_rhf.inp", 'w') as of:
             of.write(input_data)
     
     

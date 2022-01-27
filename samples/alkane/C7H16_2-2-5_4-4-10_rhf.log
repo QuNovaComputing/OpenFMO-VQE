@@ -1,0 +1,538 @@
+ngroup       = 7
+nioprocs     = 1
+niogroup     = 1
+nmaxprocs    = 20
+group size   = 2
+# of threads = 32
+nintic       = 2048
+input file name       = ./samples/alkane/C7H16_2-2-5_4-4-10_rhf.inp
+prefix of output file = 
+local input dir.      = ./
+# of total invoked procs = 16 (=1iog*1iop+1+7gr*2pr)
+master host name = gwonhaklee-X570-AORUS-MASTER
+-----------------------------------------------------
+ # of data = 11
+nfrag = 7
+##T                  Finish Initialization : lap time=   0.000139 ( total etime=   0.000139 )
+****** LIST OF HOST NAME (MSERV(ID=0))******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+********************************
+##T        Finish to Create Memory Servers : lap time=   0.256298 ( total etime=   0.256457 )
+****** LIST OF HOST NAME (WORKER(ID=0)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=1)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=2)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=3)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=4)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=5)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+****** LIST OF HOST NAME (WORKER(ID=6)) ******
+rank=  0 : gwonhaklee-X570-AORUS-MASTER
+rank=  1 : gwonhaklee-X570-AORUS-MASTER
+********************************
+##T               Finish to Create Workers : lap time=   1.740926 ( total etime=   1.997400 )
+##T     Finish to Connect Mservs & Workers : lap time=   0.014736 ( total etime=   2.012150 )
+calc. inter-frag distance list = 4
+##T    Finish to Calculate Initial Density : lap time=   0.010212 ( total etime=   2.022990 )
+---- start SCC (maxscc=100, sccconv=7) ----
+it=1	mon=[0]	energy=-21.206683	energy_0=-24.889317
+it=1	mon=[0]	energy=-21.206683	energy_0=-24.889317
+it=1	mon=[3]	energy=-24.772674	energy_0=-22.127452
+it=1	mon=[3]	energy=-24.772674	energy_0=-22.127452
+it=1	it=1	mon=[4]	energy=-32.272318	energy_0=-22.347252
+mon=[4]	energy=-32.272318	energy_0=-22.347252
+it=1	mon=[2]	energy=-23.064033	energy_0=-22.114125
+it=1	mon=[2]	energy=-23.064033	energy_0=-22.114125
+it=1	mon=[6]	energy=-42.206241	energy_0=-38.365981
+it=1	mon=[6]	energy=-42.206241	energy_0=-38.365981
+it=1	mon=[1]	energy=-21.181947	energy_0=-22.503461
+it=1	mon=[1]	energy=-21.181947	energy_0=-22.503461
+it=1	mon=[5]	energy=-33.986488	energy_0=-22.699738
+it=1	mon=[5]	energy=-33.986488	energy_0=-22.699738
+##SCC itera= 1  conv=2  energy =    -198.69038432  energy0 =    -175.04732690  (   0.018890 )
+it=2	mon=[2]	energy=-34.895716	energy_0=-22.588398
+it=2	mon=[2]	energy=-34.895716	energy_0=-22.588398
+it=2	mon=[3]	energy=-35.820280	energy_0=-22.557945
+it=2	mon=[3]	energy=-35.820280	energy_0=-22.557945
+it=2	mon=[5]	energy=-36.192929	energy_0=-22.818939
+it=2	mon=[5]	energy=-36.192929	energy_0=-22.818939
+it=2	mon=[1]	energy=-34.584829	energy_0=-22.543189
+it=2	mon=[1]	energy=-34.584829	energy_0=-22.543189
+it=2	mon=[4]	energy=-36.469075	energy_0=-22.585930
+it=2	mon=[4]	energy=-36.469075	energy_0=-22.585930
+it=2	mon=[6]	energy=-42.358033	energy_0=-38.553112
+it=2	mon=[6]	energy=-42.358033	energy_0=-38.553112
+it=2	mon=[0]	energy=-33.681392	energy_0=-24.847045
+it=2	mon=[0]	energy=-33.681392	energy_0=-24.847045
+##SCC itera= 2  conv=2  energy =    -254.00225320  energy0 =    -176.49455708  (   0.015029 )
+it=3	mon=[0]	energy=-34.774718	energy_0=-24.826236
+it=3	mon=[0]	energy=-34.774718	energy_0=-24.826236
+it=3	mon=[3]	energy=-35.407333	energy_0=-22.902054
+it=3	mon=[3]	energy=-35.407333	energy_0=-22.902054
+it=3	mon=[1]	energy=-35.261173	energy_0=-22.912760
+it=3	mon=[1]	energy=-35.261173	energy_0=-22.912760
+it=3	mon=[6]	energy=-41.677433	energy_0=-38.712464
+it=3	mon=[6]	energy=-41.677433	energy_0=-38.712464
+it=3	mon=[2]	energy=-35.398549	energy_0=-22.920333
+it=3	mon=[2]	energy=-35.398549	energy_0=-22.920333
+it=3	mon=[4]	energy=-35.534519	energy_0=-22.932414
+it=3	mon=[4]	energy=-35.534519	energy_0=-22.932414
+it=3	mon=[5]	energy=-35.439050	energy_0=-22.938584
+it=3	mon=[5]	energy=-35.439050	energy_0=-22.938584
+##SCC itera= 3  conv=2  energy =    -253.49277671  energy0 =    -178.14484519  (   0.022317 )
+it=4	mon=[3]	energy=-35.863213	energy_0=-23.002316
+it=4	mon=[3]	energy=-35.863213	energy_0=-23.002316
+it=4	mon=[4]	energy=-35.462893	energy_0=-23.009885
+it=4	mon=[4]	energy=-35.462893	energy_0=-23.009885
+it=4	mon=[2]	energy=-36.136642	energy_0=-23.015347
+it=4	mon=[2]	energy=-36.136642	energy_0=-23.015347
+it=4	mon=[5]	energy=-35.310591	energy_0=-22.981278
+it=4	mon=[5]	energy=-35.310591	energy_0=-22.981278
+it=4	mon=[1]	energy=-36.336608	energy_0=-22.960855
+it=4	mon=[1]	energy=-36.336608	energy_0=-22.960855
+it=4	mon=[6]	energy=-41.169434	energy_0=-38.754857
+it=4	mon=[6]	energy=-41.169434	energy_0=-38.754857
+it=4	mon=[0]	energy=-36.035226	energy_0=-24.773128
+it=4	mon=[0]	energy=-36.035226	energy_0=-24.773128
+##SCC itera= 4  conv=2  energy =    -256.31460733  energy0 =    -178.49766614  (   0.019852 )
+it=5	mon=[0]	energy=-36.459365	energy_0=-24.754376
+it=5	mon=[0]	energy=-36.459365	energy_0=-24.754376
+it=5	mon=[1]	energy=-36.699560	energy_0=-22.999033
+it=5	mon=[1]	energy=-36.699560	energy_0=-22.999033
+it=5	mon=[5]	energy=-35.186710	energy_0=-23.001164
+it=5	mon=[5]	energy=-35.186710	energy_0=-23.001164
+it=5	mon=[3]	energy=-35.921015	energy_0=-23.042212
+it=5	mon=[3]	energy=-35.921015	energy_0=-23.042212
+it=5	mon=[6]	energy=-40.944444	energy_0=-38.778715
+it=5	mon=[6]	energy=-40.944444	energy_0=-38.778715
+it=5	mon=[2]	energy=-36.420080	energy_0=-23.050783
+it=5	mon=[2]	energy=-36.420080	energy_0=-23.050783
+it=5	mon=[4]	energy=-35.368886	energy_0=-23.049813
+it=5	mon=[4]	energy=-35.368886	energy_0=-23.049813
+##SCC itera= 5  conv=2  energy =    -257.00006022  energy0 =    -178.67609555  (   0.019788 )
+it=6	mon=[3]	energy=-35.975822	energy_0=-23.062372
+it=6	mon=[3]	energy=-35.975822	energy_0=-23.062372
+it=6	mon=[5]	energy=-35.148614	energy_0=-23.009788
+it=6	mon=[5]	energy=-35.148614	energy_0=-23.009788
+it=6	mon=[1]	energy=-36.881872	energy_0=-23.014078
+it=6	mon=[1]	energy=-36.881872	energy_0=-23.014078
+it=6	mon=[4]	energy=-35.345553	energy_0=-23.067575
+it=6	mon=[4]	energy=-35.345553	energy_0=-23.067575
+it=6	mon=[2]	energy=-36.539247	energy_0=-23.069215
+it=6	mon=[2]	energy=-36.539247	energy_0=-23.069215
+it=6	mon=[6]	energy=-40.837835	energy_0=-38.786538
+it=6	mon=[6]	energy=-40.837835	energy_0=-38.786538
+it=6	mon=[0]	energy=-36.701164	energy_0=-24.741949
+it=6	mon=[0]	energy=-36.701164	energy_0=-24.741949
+##SCC itera= 6  conv=4  energy =    -257.43010857  energy0 =    -178.75151426  (   0.019283 )
+it=7	mon=[3]	energy=-35.996568	energy_0=-23.069867
+it=7	mon=[3]	energy=-35.996568	energy_0=-23.069867
+it=7	mon=[5]	energy=-35.118100	energy_0=-23.013608
+it=7	mon=[5]	energy=-35.118100	energy_0=-23.013608
+it=7	mon=[1]	energy=-36.974287	energy_0=-23.020330
+it=7	mon=[1]	energy=-36.974287	energy_0=-23.020330
+it=7	mon=[4]	energy=-35.325951	energy_0=-23.075068
+it=7	mon=[4]	energy=-35.325951	energy_0=-23.075068
+it=7	mon=[2]	energy=-36.605677	energy_0=-23.075767
+it=7	mon=[2]	energy=-36.605677	energy_0=-23.075767
+it=7	mon=[6]	energy=-40.785464	energy_0=-38.790599
+it=7	mon=[6]	energy=-40.785464	energy_0=-38.790599
+it=7	mon=[0]	energy=-36.815475	energy_0=-24.736057
+it=7	mon=[0]	energy=-36.815475	energy_0=-24.736057
+##SCC itera= 7  conv=4  energy =    -257.62152312  energy0 =    -178.78129527  (   0.014700 )
+it=8	mon=[5]	energy=-35.105903	energy_0=-23.015317
+it=8	mon=[5]	energy=-35.105903	energy_0=-23.015317
+it=8	mon=[3]	energy=-36.004904	energy_0=-23.073344
+it=8	mon=[3]	energy=-36.004904	energy_0=-23.073344
+it=8	mon=[4]	energy=-35.316772	energy_0=-23.078318
+it=8	mon=[4]	energy=-35.316772	energy_0=-23.078318
+it=8	mon=[2]	energy=-36.631620	energy_0=-23.078862
+it=8	mon=[2]	energy=-36.631620	energy_0=-23.078862
+it=8	mon=[6]	energy=-40.761801	energy_0=-38.792190
+it=8	mon=[6]	energy=-40.761801	energy_0=-38.792190
+it=8	mon=[1]	energy=-37.013948	energy_0=-23.023085
+it=8	mon=[1]	energy=-37.013948	energy_0=-23.023085
+it=8	mon=[0]	energy=-36.868585	energy_0=-24.733275
+it=8	mon=[0]	energy=-36.868585	energy_0=-24.733275
+##SCC itera= 8  conv=4  energy =    -257.70353315  energy0 =    -178.79438962  (   0.014227 )
+it=9	mon=[0]	energy=-36.892313	energy_0=-24.732025
+it=9	mon=[0]	energy=-36.892313	energy_0=-24.732025
+it=9	mon=[5]	energy=-35.099720	energy_0=-23.016101
+it=9	mon=[3]	energy=-36.008596	energy_0=-23.074840
+it=9	mon=[5]	energy=-35.099720	energy_0=-23.016101
+it=9	mon=[3]	energy=-36.008596	energy_0=-23.074840
+it=9	mon=[1]	energy=-37.032048	energy_0=-23.024342
+it=9	mon=[1]	energy=-37.032048	energy_0=-23.024342
+it=9	mon=[4]	energy=-35.312659	energy_0=-23.079792
+it=9	mon=[4]	energy=-35.312659	energy_0=-23.079792
+it=9	mon=[2]	energy=-36.644089	energy_0=-23.080184
+it=9	mon=[2]	energy=-36.644089	energy_0=-23.080184
+it=9	mon=[6]	energy=-40.751093	energy_0=-38.792965
+it=9	mon=[6]	energy=-40.751093	energy_0=-38.792965
+##SCC itera= 9  conv=6  energy =    -257.74051768  energy0 =    -178.80024954  (   0.013529 )
+it=10	mon=[5]	energy=-35.097104	energy_0=-23.016448
+it=10	mon=[5]	energy=-35.097104	energy_0=-23.016448
+it=10	mon=[4]	energy=-35.310841it=10	mon=[4]	energy=-35.310841	energy_0=-23.080443
+	energy_0=-23.080443
+it=10	mon=[3]	energy=-36.010296	energy_0=-23.075523
+it=10	mon=[3]	energy=-36.010296	energy_0=-23.075523
+it=10	mon=[2]	energy=-36.649438	energy_0=-23.080790
+it=10	mon=[2]	energy=-36.649438	energy_0=-23.080790
+it=10	mon=[1]	energy=-37.040136	energy_0=-23.024899
+it=10	mon=[1]	energy=-37.040136	energy_0=-23.024899
+it=10	mon=[6]	energy=-40.746242	energy_0=-38.793293
+it=10	mon=[6]	energy=-40.746242	energy_0=-38.793293
+it=10	mon=[0]	energy=-36.903159	energy_0=-24.731450
+it=10	mon=[0]	energy=-36.903159	energy_0=-24.731450
+##SCC itera=10  conv=6  energy =    -257.75721517  energy0 =    -178.80284571  (   0.015314 )
+it=11	mon=[0]	energy=-36.908017	energy_0=-24.731192
+it=11	mon=[0]	energy=-36.908017	energy_0=-24.731192
+it=11	mon=[3]	energy=-36.011036	energy_0=-23.075825
+it=11	mon=[3]	energy=-36.011036	energy_0=-23.075825
+it=11	mon=[2]	energy=-36.651907	energy_0=-23.081059
+it=11	mon=[2]	energy=-36.651907	energy_0=-23.081059
+it=11	mon=[4]	energy=-35.310008	energy_0=-23.080739
+it=11	mon=[4]	energy=-35.310008	energy_0=-23.080739
+it=11	mon=[1]	energy=-37.043778	it=11	mon=[1]	energy=-37.043778	energy_0=-23.025153
+energy_0=-23.025153
+it=11	mon=[6]	energy=-40.744063	energy_0=-38.793446
+it=11	mon=[6]	energy=-40.744063	energy_0=-38.793446
+it=11	mon=[5]	energy=-35.095862	energy_0=-23.016606
+it=11	mon=[5]	energy=-35.095862	energy_0=-23.016606
+##SCC itera=11  conv=6  energy =    -257.76467164  energy0 =    -178.80402024  (   0.020257 )
+it=12	mon=[5]	energy=-35.095321	energy_0=-23.016677
+it=12	mon=[5]	energy=-35.095321	energy_0=-23.016677
+it=12	mon=[3]	energy=-36.011376	energy_0=-23.075962
+it=12	mon=[3]	energy=-36.011376	energy_0=-23.075962
+it=12	mon=[2]	energy=-36.652996	energy_0=-23.081181
+it=12	mon=[2]	energy=-36.652996	energy_0=-23.081181
+it=12	mon=[1]	energy=-37.045418	energy_0=-23.025267
+it=12	mon=[1]	energy=-37.045418	energy_0=-23.025267
+it=12	mon=[4]	energy=-35.309636	energy_0=-23.080871
+it=12	mon=[4]	energy=-35.309636	energy_0=-23.080871
+it=12	mon=[6]	energy=-40.743080	energy_0=-38.793513
+it=12	mon=[6]	energy=-40.743080	energy_0=-38.793513
+it=12it=12	mon=[0]	energy=-36.910219	energy_0=-24.731075
+	mon=[0]	energy=-36.910219	energy_0=-24.731075
+##SCC itera=12  conv=7  energy =    -257.76804723  energy0 =    -178.80454516  (   0.016132 )
+it=13	mon=[0]	energy=-36.911209	energy_0=-24.731022
+it=13	mon=[0]	energy=-36.911209	energy_0=-24.731022
+it=13	mon=[5]	energy=-35.095071	energy_0=-23.016709
+it=13	mon=[5]	energy=-35.095071	energy_0=-23.016709
+it=13	mon=[3]	energy=-36.011525	energy_0=-23.076024
+it=13	mon=[3]	energy=-36.011525	energy_0=-23.076024
+it=13	mon=[2]	energy=-36.653492	energy_0=-23.081236
+it=13	mon=[2]	energy=-36.653492	energy_0=-23.081236
+it=13	mon=[6]	energy=-40.742638	energy_0=-38.793543
+it=13	mon=[6]	energy=-40.742638	energy_0=-38.793543
+it=13	mon=[1]	energy=-37.046155	energy_0=-23.025318
+it=13	mon=[1]	energy=-37.046155	energy_0=-23.025318
+it=13	mon=[4]	energy=-35.309467	energy_0=-23.080930
+it=13	mon=[4]	energy=-35.309467	energy_0=-23.080930
+##SCC itera=13  conv=7  energy =    -257.76955740  energy0 =    -178.80478255  (   0.016828 )
+it=14	mon=[5]	energy=-35.094961	energy_0=-23.016723
+it=14	mon=[5]	energy=-35.094961	energy_0=-23.016723
+it=14	mon=[1]	energy=-37.046488	energy_0=-23.025342
+it=14	mon=[1]	energy=-37.046488	energy_0=-23.025342
+it=14	mon=[3]	energy=-36.011593	energy_0=-23.076052
+it=14	mon=[3]	energy=-36.011593	energy_0=-23.076052
+it=14	mon=[4]	energy=-35.309392	energy_0=-23.080957
+it=14	mon=[4]	energy=-35.309392	energy_0=-23.080957
+it=14	mon=[2]	energy=-36.653713	energy_0=-23.081260
+it=14	mon=[2]	energy=-36.653713	energy_0=-23.081260
+it=14	mon=[6]	energy=-40.742439	energy_0=-38.793557
+it=14	mon=[6]	energy=-40.742439	energy_0=-38.793557
+it=14	mon=[0]	energy=-36.911655	energy_0=-24.730998
+it=14	mon=[0]	energy=-36.911655	energy_0=-24.730998
+##SCC itera=14  conv=7  energy =    -257.77024018  energy0 =    -178.80488904  (   0.020819 )
+it=15	mon=[0]	energy=-36.911856	energy_0=-24.730988
+it=15	mon=[0]	energy=-36.911856	energy_0=-24.730988
+it=15	mon=[3]	energy=-36.011623	energy_0=-23.076064
+it=15it=15	mon=[2]	energy=-36.653813	energy_0=-23.081271
+it=15	mon=[2]	energy=-36.653813	energy_0=-23.081271
+	mon=[3]	energy=-36.011623	energy_0=-23.076064
+it=15it=15	mon=[4]	energy=-35.309357	energy_0=-23.080969
+	mon=[4]	energy=-35.309357	energy_0=-23.080969
+it=15	mon=[6]	energy=-40.742349	energy_0=-38.793563
+it=15	mon=[6]	energy=-40.742349	energy_0=-38.793563
+it=15	it=15	mon=[1]	energy=-37.046637	energy_0=-23.025352
+mon=[1]	energy=-37.046637	energy_0=-23.025352
+it=15	mon=[5]	energy=-35.094910	energy_0=-23.016730
+it=15	mon=[5]	energy=-35.094910	energy_0=-23.016730
+##SCC itera=15  conv=7  energy =    -257.77054652  energy0 =    -178.80493711  (   0.016532 )
+it=16	mon=[5]	energy=-35.094888	energy_0=-23.016733
+it=16	mon=[5]	energy=-35.094888	energy_0=-23.016733
+it=16	mon=[1]	energy=-37.046705	energy_0=-23.025357
+it=16	mon=[1]	energy=-37.046705	energy_0=-23.025357
+it=16	mon=[4]	energy=-35.309342	energy_0=-23.080975
+it=16	mon=[2]	energy=-36.653858	energy_0=-23.081276
+it=16	mon=[2]	energy=-36.653858	energy_0=-23.081276
+it=16	mon=[4]	energy=-35.309342	energy_0=-23.080975
+it=16	mon=[3]	energy=-36.011637	energy_0=-23.076070
+it=16	mon=[3]	energy=-36.011637	energy_0=-23.076070
+it=16	mon=[6]	energy=-40.742309	energy_0=-38.793566
+it=16	mon=[6]	energy=-40.742309	energy_0=-38.793566
+it=16	mon=[0]	energy=-36.911947	energy_0=-24.730983
+it=16	mon=[0]	energy=-36.911947	energy_0=-24.730983
+##SCC itera=16  conv=7  energy =    -257.77068476  energy0 =    -178.80495871  (   0.015052 )
+it=17	mon=[0]	energy=-36.911988	energy_0=-24.730981
+it=17	mon=[0]	energy=-36.911988	energy_0=-24.730981
+it=17	mon=[3]	energy=-36.011643	energy_0=-23.076072
+it=17	mon=[3]	energy=-36.011643	energy_0=-23.076072
+it=17	mon=[2]	energy=-36.653878	energy_0=-23.081279
+it=17	mon=[2]	energy=-36.653878	energy_0=-23.081279
+it=17	mon=[4]	energy=-35.309335	energy_0=-23.080977
+it=17	mon=[4]	energy=-35.309335	energy_0=-23.080977
+it=17	mon=[6]	energy=-40.742290	energy_0=-38.793567
+it=17	mon=[6]	energy=-40.742290	energy_0=-38.793567
+it=17	mon=[1]	energy=-37.046735	energy_0=-23.025359
+it=17	mon=[1]	energy=-37.046735	energy_0=-23.025359
+it=17	mon=[5]	energy=-35.094877	energy_0=-23.016734
+it=17	mon=[5]	energy=-35.094877	energy_0=-23.016734
+##SCC itera=17  conv=7  energy =    -257.77074687  energy0 =    -178.80496846  (   0.018445 )
+it=18	mon=[0]	energy=-36.912006	energy_0=-24.730980
+it=18	mon=[0]	energy=-36.912006	energy_0=-24.730980
+it=18	mon=[3]	energy=-36.011646	energy_0=-23.076073
+it=18	mon=[3]	energy=-36.011646	energy_0=-23.076073
+it=18	mon=[1]	energy=-37.046749	energy_0=-23.025360
+it=18	mon=[1]	energy=-37.046749	energy_0=-23.025360
+it=18	mon=[4]	energy=-35.309332	energy_0=-23.080978
+it=18	mon=[4]	energy=-35.309332	energy_0=-23.080978
+it=18	mon=[2]	energy=-36.653887	energy_0=-23.081280
+it=18	mon=[2]	energy=-36.653887	energy_0=-23.081280
+it=18	mon=[6]	energy=-40.742282	energy_0=-38.793568
+it=18	mon=[6]	energy=-40.742282	energy_0=-38.793568
+it=18	mon=[5]	energy=-35.094873	energy_0=-23.016734
+it=18	mon=[5]	energy=-35.094873	energy_0=-23.016734
+##SCC itera=18  conv=7  energy =    -257.77077488  energy0 =    -178.80497276  (   0.016447 )
+it=19	mon=[0]	energy=-36.912014	energy_0=-24.730979
+it=19	mon=[0]	energy=-36.912014	energy_0=-24.730979
+it=19	mon=[5]	energy=-35.094871	energy_0=-23.016735
+it=19	mon=[5]	energy=-35.094871	energy_0=-23.016735
+it=19	mon=[3]	energy=-36.011647	energy_0=-23.076074
+it=19	mon=[3]	energy=-36.011647	energy_0=-23.076074
+it=19it=19	mon=[1]	energy=-37.046755	energy_0=-23.025360
+it=19	mon=[2]	energy=-36.653891	energy_0=-23.081280
+it=19	mon=[2]	energy=-36.653891	energy_0=-23.081280
+	mon=[1]	energy=-37.046755	energy_0=-23.025360
+it=19	mon=[6]	energy=-40.742279	energy_0=-38.793568
+it=19	mon=[6]	energy=-40.742279	energy_0=-38.793568
+it=19	mon=[4]	energy=-35.309330	energy_0=-23.080979
+it=19	mon=[4]	energy=-35.309330	energy_0=-23.080979
+##SCC itera=19  conv=7  energy =    -257.77078727  energy0 =    -178.80497458  (   0.017757 )
+it=20	mon=[0]	energy=-36.912018	energy_0=-24.730979
+it=20	mon=[0]	energy=-36.912018	energy_0=-24.730979
+it=20	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=20	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=20it=20	mon=[4]	energy=-35.309330	energy_0=-23.080979
+	mon=[4]	energy=-35.309330	energy_0=-23.080979
+it=20	mon=[2]	energy=-36.653893	energy_0=-23.081280
+it=20	mon=[2]	energy=-36.653893	energy_0=-23.081280
+it=20	mon=[1]	energy=-37.046757	energy_0=-23.025360
+it=20	mon=[1]	energy=-37.046757	energy_0=-23.025360
+it=20	mon=[6]	energy=-40.742277	energy_0=-38.793568
+it=20	mon=[6]	energy=-40.742277	energy_0=-38.793568
+it=20	mon=[5]	energy=-35.094870	energy_0=-23.016735
+it=20	mon=[5]	energy=-35.094870	energy_0=-23.016735
+##SCC itera=20  conv=7  energy =    -257.77079265  energy0 =    -178.80497559  (   0.022014 )
+it=21	mon=[5]	energy=-35.094869	energy_0=-23.016735
+it=21	mon=[5]	energy=-35.094869	energy_0=-23.016735
+it=21	mon=[4]	energy=-35.309330	energy_0=-23.080979
+it=21	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=21	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=21	mon=[4]	energy=-35.309330	energy_0=-23.080979
+it=21	mon=[1]	energy=-37.046759	energy_0=-23.025361
+it=21	mon=[1]	energy=-37.046759	energy_0=-23.025361
+it=21	mon=[2]	energy=-36.653894	energy_0=-23.081280
+it=21	mon=[2]	energy=-36.653894	energy_0=-23.081280
+it=21	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=21	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=21	mon=[0]	energy=-36.912020	energy_0=-24.730979
+it=21	mon=[0]	energy=-36.912020	energy_0=-24.730979
+##SCC itera=21  conv=7  energy =    -257.77079546  energy0 =    -178.80497602  (   0.015201 )
+it=22	mon=[0]	energy=-36.912021	it=22	mon=[0]	energy=-36.912021	energy_0=-24.730979
+energy_0=-24.730979
+it=22	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=22	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=22	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=22	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=22	mon=[2]	energy=-36.653894	energy_0=-23.081280
+it=22	mon=[2]	energy=-36.653894	energy_0=-23.081280
+it=22	mon=[1]	energy=-37.046759	energy_0=-23.025361
+it=22	mon=[1]	energy=-37.046759	energy_0=-23.025361
+it=22	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=22	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=22	mon=[5]	energy=-35.094869	energy_0=-23.016735
+it=22	mon=[5]	energy=-35.094869	energy_0=-23.016735
+##SCC itera=22  conv=7  energy =    -257.77079668  energy0 =    -178.80497624  (   0.025224 )
+it=23	mon=[0]	energy=-36.912021	energy_0=-24.730979
+it=23	mon=[0]	energy=-36.912021	energy_0=-24.730979
+it=23	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=23	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=23	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=23	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=23	mon=[2]	energy=-36.653895	energy_0=-23.081280
+it=23	mon=[2]	energy=-36.653895	energy_0=-23.081280
+it=23	mon=[1]	energy=-37.046760	energy_0=-23.025361
+it=23	mon=[1]	energy=-37.046760	energy_0=-23.025361
+it=23	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=23	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=23	mon=[5]	energy=-35.094869it=23	mon=[5]	energy=-35.094869	energy_0=-23.016735
+	energy_0=-23.016735
+##SCC itera=23  conv=7  energy =    -257.77079728  energy0 =    -178.80497635  (   0.017907 )
+it=24	mon=[0]	energy=-36.912021	energy_0=-24.730979
+it=24	mon=[0]	energy=-36.912021	energy_0=-24.730979
+it=24	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=24	mon=[3]	energy=-36.011648	energy_0=-23.076074
+it=24	mon=[1]	energy=-37.046760	energy_0=-23.025361
+it=24	mon=[1]	energy=-37.046760	energy_0=-23.025361
+it=24	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=24	mon=[4]	energy=-35.309329	energy_0=-23.080979
+it=24	mon=[2]	energy=-36.653895	energy_0=-23.081281
+it=24	mon=[2]	energy=-36.653895	energy_0=-23.081281
+it=24	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=24	mon=[6]	energy=-40.742276	energy_0=-38.793568
+it=24	mon=[5]	energy=-35.094869	energy_0=-23.016735
+it=24	mon=[5]	energy=-35.094869	energy_0=-23.016735
+##SCC itera=24  conv=7  energy =    -257.77079758  energy0 =    -178.80497641  (   0.016712 )
+==== SCC converged ====
+##T         ---- Finish SCC procedure ---- : lap time=   0.435524 ( total etime=   2.458523 )
+it=200	mon=[3, 2]	energy=-75.033425	energy_0=-61.320344
+it=200	mon=[3, 2]	energy=-75.033425	energy_0=-61.320344
+# E=   -75.0334253458 E-DV=   -61.3203443891 DV=   -13.7130809566 DDV=     0.0126270293
+# E=   -75.0334253458 E-DV=   -61.3203443891 DV=   -13.7130809566 DDV=     0.0126270293
+it=200	mon=[2, 1]	energy=-76.005639	energy_0=-61.245284
+# E=   -76.0056387347 E-DV=   -61.2452838615 DV=   -14.7603548732 DDV=     0.0025292344
+it=200	mon=[2, 1]	energy=-76.005639	energy_0=-61.245284
+# E=   -76.0056387347 E-DV=   -61.2452838615 DV=   -14.7603548732 DDV=     0.0025292344
+it=200	mon=[1, 6]	energy=-77.758497	energy_0=-61.820478
+it=200	mon=[1, 6]	energy=-77.758497	energy_0=-61.820478
+# E=   -77.7584970364 E-DV=   -61.8204781144 DV=   -15.9380189220 DDV=     0.0000000048
+# E=   -77.7584970364 E-DV=   -61.8204781144 DV=   -15.9380189220 DDV=     0.0000000048
+it=200	mon=[3, 6]	energy=-76.572131	energy_0=-61.849257
+# E=   -76.5721313458 E-DV=   -61.8492572561 DV=   -14.7228740897 DDV=    -0.0113251068
+it=200	mon=[3, 6]	energy=-76.572131	energy_0=-61.849257
+# E=   -76.5721313458 E-DV=   -61.8492572561 DV=   -14.7228740897 DDV=    -0.0113251068
+it=200	mon=[4, 6]	energy=-75.613380	energy_0=-61.634913
+it=200	mon=[4, 6]	energy=-75.613380	energy_0=-61.634913
+# E=   -75.6133798931 E-DV=   -61.6349130034 DV=   -13.9784668897 DDV=    -0.0209287526
+# E=   -75.6133798931 E-DV=   -61.6349130034 DV=   -13.9784668897 DDV=    -0.0209287526
+it=200	mon=[2, 6]	energy=-77.379778	energy_0=-61.873255
+# E=   -77.3797780938 E-DV=   -61.8732554418 DV=   -15.5065226520 DDV=     0.0000051343
+it=200	mon=[2, 6]	energy=-77.379778	energy_0=-61.873255
+# E=   -77.3797780938 E-DV=   -61.8732554418 DV=   -15.5065226520 DDV=     0.0000051343
+it=200	mon=[4, 1]	energy=-72.140185	energy_0=-46.087789
+# E=   -72.1401845680 E-DV=   -46.0877887793 DV=   -26.0523957886 DDV=    -0.0128352014
+it=200	mon=[4, 1]	energy=-72.140185	energy_0=-46.087789
+# E=   -72.1401845680 E-DV=   -46.0877887793 DV=   -26.0523957886 DDV=    -0.0128352014
+it=200	mon=[4, 3]	energy=-73.691469	energy_0=-61.311183
+# E=   -73.6914690850 E-DV=   -61.3111825254 DV=   -12.3802865596 DDV=     0.0126492552
+it=200	mon=[4, 3]	energy=-73.691469	energy_0=-61.311183
+# E=   -73.6914690850 E-DV=   -61.3111825254 DV=   -12.3802865596 DDV=     0.0126492552
+it=200	mon=[4, 2]	energy=-71.496628	energy_0=-45.913991
+it=200	mon=[4, 2]	energy=-71.496628	energy_0=-45.913991
+# E=   -71.4966281788 E-DV=   -45.9139912987 DV=   -25.5826368801 DDV=    -0.0126199634
+# E=   -71.4966281788 E-DV=   -45.9139912987 DV=   -25.5826368801 DDV=    -0.0126199634
+it=200	mon=[5, 6]	energy=-77.702436	energy_0=-76.943152
+it=200	mon=[5, 6]	energy=-77.702436	energy_0=-76.943152
+# E=   -77.7024356648 E-DV=   -76.9431520722 DV=    -0.7592835926 DDV=    -0.0059195069
+# E=   -77.7024356648 E-DV=   -76.9431520722 DV=    -0.7592835926 DDV=    -0.0059195069
+it=200	mon=[5, 1]	energy=-72.210618	energy_0=-46.036889
+it=200	mon=[5, 1]	energy=-72.210618	energy_0=-46.036889
+# E=   -72.2106176517 E-DV=   -46.0368888064 DV=   -26.1737288453 DDV=    -0.0000036828
+# E=   -72.2106176517 E-DV=   -46.0368888064 DV=   -26.1737288453 DDV=    -0.0000036828
+it=200	mon=[3, 1]	energy=-72.562846	energy_0=-45.852197
+# E=   -72.5628455988 E-DV=   -45.8521972558 DV=   -26.7106483430 DDV=    -0.0189407511
+it=200	mon=[3, 1]	energy=-72.562846	energy_0=-45.852197
+# E=   -72.5628455988 E-DV=   -45.8521972558 DV=   -26.7106483430 DDV=    -0.0189407511
+it=200	mon=[5, 2]	energy=-71.715484	energy_0=-46.080629
+# E=   -71.7154838584 E-DV=   -46.0806286646 DV=   -25.6348551938 DDV=    -0.0123127482
+it=200	mon=[5, 2]	energy=-71.715484	energy_0=-46.080629
+# E=   -71.7154838584 E-DV=   -46.0806286646 DV=   -25.6348551938 DDV=    -0.0123127482
+it=200	mon=[0, 1]	energy=-75.822859	energy_0=-62.785709
+# E=   -75.8228588942 E-DV=   -62.7857092056 DV=   -13.0371496886 DDV=     0.0317025961
+it=200	mon=[0, 1]	energy=-75.822859	energy_0=-62.785709
+# E=   -75.8228588942 E-DV=   -62.7857092056 DV=   -13.0371496886 DDV=     0.0317025961
+it=200	mon=[5, 4]	energy=-73.466742	energy_0=-61.049969
+it=200	mon=[5, 4]	energy=-73.466742	energy_0=-61.049969
+# E=   -73.4667416607 E-DV=   -61.0499691356 DV=   -12.4167725252 DDV=    -0.0101661089
+# E=   -73.4667416607 E-DV=   -61.0499691356 DV=   -12.4167725252 DDV=    -0.0101661089
+it=200	mon=[0, 6]	energy=-77.582220	energy_0=-63.523823
+# E=   -77.5822203368 E-DV=   -63.5238229023 DV=   -14.0583974345 DDV=    -0.0000000018
+it=200	mon=[0, 6]	energy=-77.582220	energy_0=-63.523823
+# E=   -77.5822203368 E-DV=   -63.5238229023 DV=   -14.0583974345 DDV=    -0.0000000018
+it=200	mon=[5, 3]	it=200	mon=[5, 3]	energy=-70.998789	energy_0=-45.822971
+# E=   -70.9987894359 E-DV=   -45.8229710123 DV=   -25.1758184236 DDV=    -0.0270585907
+energy=-70.998789	energy_0=-45.822971
+# E=   -70.9987894359 E-DV=   -45.8229710123 DV=   -25.1758184236 DDV=    -0.0270585907
+it=200	mon=[0, 2]	energy=-72.701534it=200	mon=[0, 2]	energy=-72.701534	energy_0=-47.576782
+# E=   -72.7015339228 E-DV=   -47.5767822994 DV=   -25.1247516235 DDV=    -0.0088534883
+	energy_0=-47.576782
+# E=   -72.7015339228 E-DV=   -47.5767822994 DV=   -25.1247516235 DDV=    -0.0088534883
+it=200	mon=[0, 4]	energy=-72.065695	energy_0=-47.808086
+# E=   -72.0656952077 E-DV=   -47.8080863298 DV=   -24.2576088780 DDV=     0.0000200269
+it=200	mon=[0, 4]	energy=-72.065695	energy_0=-47.808086
+# E=   -72.0656952077 E-DV=   -47.8080863298 DV=   -24.2576088780 DDV=     0.0000200269
+it=200	mon=[0, 5]	energy=-71.961636	energy_0=-47.748083
+it=200	mon=[0, 5]	energy=-71.961636	energy_0=-47.748083
+# E=   -71.9616355441 E-DV=   -47.7480827982 DV=   -24.2135527460 DDV=    -0.0000000437
+# E=   -71.9616355441 E-DV=   -47.7480827982 DV=   -24.2135527460 DDV=    -0.0000000437
+it=200	mon=[0, 3]	energy=-72.494286	energy_0=-47.773574
+# E=   -72.4942864784 E-DV=   -47.7735743567 DV=   -24.7207121218 DDV=    -0.0073797955
+it=200	mon=[0, 3]	energy=-72.494286	energy_0=-47.773574
+# E=   -72.4942864784 E-DV=   -47.7735743567 DV=   -24.7207121218 DDV=    -0.0073797955
+##T    ---- Finish to Calc. Dimer SCF ---- : lap time=   0.083551 ( total etime=   2.542080 )
+       ( # of scf dimer = 21 )
+        dE0(SCF dimer) =     -89.31731154
+##T     ---- Finish to Calc. ES Dimer ---- : lap time=   0.000110 ( total etime=   2.542197 )
+    (# of ES dimer = 0)
+    dE0(ES dimer) =       0.00000000
+    total energy(FMO) =    -268.12228794
+##T  -- All workers have been destroyed -- : lap time=   0.000098 ( total etime=   2.542301 )
+---- ATOMIC POPULATION DATA -----
+   SN AN  ATOMIC POP  NET CHARGE
+---------------------------------
+    1  6       6.193      -0.193
+    2  6       6.242      -0.242
+    3  6       6.253      -0.253
+    4  6       6.239      -0.239
+    5  6       6.276      -0.276
+    6  6       6.331      -0.331
+    7  6       6.212      -0.212
+    8  1       0.917       0.083
+    9  1       0.881       0.119
+   10  1       0.917       0.083
+   11  1       0.828       0.172
+   12  1       0.828       0.172
+   13  1       0.878       0.122
+   14  1       0.878       0.122
+   15  1       0.893       0.107
+   16  1       0.893       0.107
+   17  1       0.890       0.110
+   18  1       0.890       0.110
+   19  1       0.852       0.148
+   20  1       0.852       0.148
+   21  1       0.964       0.036
+   22  1       0.928       0.072
+   23  1       0.964       0.036
+---------------------------------
+total charge =     -0.000
+---------------------------------
+##T    -- calc AO and atomic population -- : lap time=   0.000264 ( total etime=   2.542571 )
+##T   -- All mservs have been destroyed -- : lap time=   0.000020 ( total etime=   2.542603 )

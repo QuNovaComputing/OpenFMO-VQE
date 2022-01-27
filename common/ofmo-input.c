@@ -33,6 +33,7 @@ static int NFRAG = 1;
  * nprint = 出力レベル
  * itol   = primitiveのカットオフファクタ
  * icut   = 2電子積分のカットオフファクタ
+ * method_list = ...
  * method = calculation method (RHF by default, VQE)
  * vqescr = vqe python script file name
  * ------------------------------------------------------- */
@@ -40,6 +41,7 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
     //int maxit=30, nprint=0, itol=20, icut=15;
     int maxit=30, nprint=0, itol=20, icut=12;
 	int method=OFMO_RHF;
+	int * method_list = NULL;
 	char *vqescr=(char*)malloc( sizeof(char) * MAXSTRLEN );
 	char *desc=(char*)malloc( sizeof(char) * MAXSTRLEN );
 	vqescr[0] = '\0';
@@ -47,8 +49,8 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
     // local variables
     int i, nline = 0, n, ne, errpos = -1, flag_end = false;
     if ( fp == NULL ) {
-	ofmo_data_put_vals("maxscf nprint itol icut method vqescr desc",
-		maxit, nprint, itol, icut, method, vqescr, desc);
+	ofmo_data_put_vals("maxscf nprint itol icut method method_list vqescr desc",
+		                maxit, nprint,itol,icut,method,method_list,vqescr,desc);
 	return 0;
     }
 
@@ -83,6 +85,32 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 			else if (strcmp(elems[1], "vqe") == 0){
 				method = OFMO_VQE;
 			}
+			else if (ofmo_find_char(elems[1], ',') > -1){
+				int j;
+				char** tmp_tok = (char **) malloc(NFRAG * sizeof(char *));
+				for(j=0; j<NFRAG; j++) tmp_tok[j] = (char *)malloc(MAXSTRLEN);
+				int num_tok = ofmo_split(elems[1], ",", tmp_tok, NFRAG, MAXSTRLEN);
+				if(num_tok != NFRAG){
+					for(j=0; j<NFRAG; j++) free(tmp_tok[j]);
+					free(tmp_tok);
+					dbg("line=%d, elem=%d : %s different from nfrag.\n", nline, ++i, elems[1] );
+					break;
+				}
+				method = OFMO_UNDEF;
+				method_list = (int *)malloc(NFRAG * sizeof(int));
+				for(j=0; j<NFRAG; j++){
+					if (strcmp(tmp_tok[j], "rhf") == 0) method_list[j] = OFMO_RHF;
+					else if (strcmp(tmp_tok[j], "vqe") == 0) method_list[j] = OFMO_VQE;
+					else{
+						for(j=0; j<NFRAG; j++) free(tmp_tok[j]);
+						free(tmp_tok);
+						free(method_list);
+						method_list = NULL;
+						dbg("line=%d, elem=%d : %s different from nfrag.\n", nline, ++i, elems[1] );
+						break;
+					}
+				}
+			}
 			else{
 				dbg("line=%d, elem=%d : %s not valid\n", nline, ++i, elems[1] );
 	    		break;
@@ -106,8 +134,8 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	}
     }
     if ( !flag_end ) return -1;
-    ofmo_data_put_vals("maxscf nprint itol icut method vqescr desc",
-	    maxit, nprint, itol, icut, method, vqescr, desc );
+	ofmo_data_put_vals("maxscf nprint itol icut method method_list vqescr desc",
+		                maxit, nprint,itol,icut,method,method_list,vqescr,desc);
     return 0;
 }
 

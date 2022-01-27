@@ -99,14 +99,14 @@ void ofmo_delete_prepost_space( char s[] ) {
   関数名：split
   機能  ：文字列をトークンに分割する
   引数：
-   const char* s = (in)分割する文字列
-   const char* sep = (in)区切り文字
-   char **token = (out)トークンが代入される配列
+   const char* s = (in)Character string to divide
+   const char* sep = (in)Delimiter
+   char **token = (out)Array to which tokens are assigned
 	token[maxtoken][maxtoklen]
-   int maxtoken = (in)トークンの最大値
-   int maxtoklen = (in)トークンあたりの最大文字数
+   int maxtoken = (in)Maximum value of token
+   int maxtoklen = (in)Maximum number of characters per token
   戻り値：
-   トークン数
+   Number of tokens
 */
 int ofmo_split( const char s[], const char sep[], char **token,
 	const int maxtoken, const int maxtoklen ) {
@@ -129,6 +129,16 @@ int ofmo_split( const char s[], const char sep[], char **token,
 	count++;
     }
     return count;
+}
+
+
+int ofmo_find_char( const char s[], const char f){
+    int i;
+    const int s_len = strlen(s);
+    for(i=0; i<s_len; i++){
+        if(s[i] == f) return i;
+    }
+    return -1;
 }
 
 /* 文字列のすべての表示不可能文字（スペースを含む）を削除する */

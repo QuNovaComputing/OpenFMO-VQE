@@ -1,0 +1,5 @@
+Will Run VQE
+ofmo-input.c 87 @input_contrl: line=1, elem=2 : rhf,rhf,rhf,rhf,vqe not valid
+ofmo-input.c 97 @input_contrl: line=2, elem=1 : ERROR
+ofmo-init.c 525 @ofmo_init: ERROR: in ofmo_read_input_data
+ofmo-master-main.c 712 @main: failure in input from file (./samples/S1_4j0P_FMO_5frags.inp)

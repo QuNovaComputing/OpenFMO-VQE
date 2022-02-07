@@ -108,4 +108,4 @@ $FMOXYZ
  $END
        
 $CONTRL method=rhf,rhf,rhf,rhf,vqe vqescr=./vqe/py_script.py desc=s1_4j0p_5frags $END
-$VQEPRP monhomo=2 monlumo=2 dimhomo=4 dimlumo=4 monent=5 diment=5 $end
+$VQEPRP monhomo=2 monlumo=2 dimhomo=4 dimlumo=4 monent=5 diment=10 $end

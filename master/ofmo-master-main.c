@@ -1238,9 +1238,10 @@ int main( int argc, char *argv[] ) {
                 int jm = method_list[jfrag];
                 if(im == jm) imsg[OFMO_I_METHOD] = im;
                 else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_RHF_VQE;
-                else if(jm == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
+                else if(im == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
                 else{
                     printf("methods don't belong to VQE nor RHF\n");
+                    fflush(stdout);
                     assert(0);
                 }                
                 // imsg[OFMO_I_METHOD] = method_list[];

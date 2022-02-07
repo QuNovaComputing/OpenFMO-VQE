@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <libgen.h>
+#include <assert.h>
 
 #include <math.h>
 
@@ -737,7 +738,11 @@ int main( int argc, char *argv[] ) {
 
     // Load method
     int method = OFMO_RHF;
-    ierr = ofmo_data_get_vals("method", &method);
+    int * method_list = NULL;
+    ierr = ofmo_data_get_vals("method method_list", &method, &method_list);
+    if(method_list != NULL){
+        method = OFMO_UNDEF;
+    }
 
     // Calculation of the number of processes (group size) for each worker
     if(run_vqe == 1){
@@ -979,7 +984,7 @@ int main( int argc, char *argv[] ) {
     double total_energy0_prev=0.e0, dE=HUGE_VAL;
     double scc_tol;
     imsg[OFMO_I_CMD]    = OFMO_SCF;
-    imsg[OFMO_I_METHOD] = method;
+    // imsg[OFMO_I_METHOD] = method;
     imsg[OFMO_I_NMON]   = 1;
     ofmo_data_get_vals("maxscc sccconv", &maxscc, &sccconv );
     scc_tol = pow( 0.1e0, (double)sccconv );
@@ -1004,6 +1009,8 @@ int main( int argc, char *argv[] ) {
 	// Allocate all monomer calculations to each group
 	for ( int i=0; i<nfrag; i++ ) {
 	    imsg[OFMO_I_MON1] = frag_order[i];
+        if(method == OFMO_UNDEF) imsg[OFMO_I_METHOD] = method_list[frag_order[i]];
+        else imsg[OFMO_I_METHOD]=method;
 	    //imsg[OFMO_I_MON1] = i;
 	    if ( i < nworkers ) {
 		workerid = i;
@@ -1213,7 +1220,7 @@ int main( int argc, char *argv[] ) {
 	menergy0 = (double*)malloc( sizeof(double) * nfrag );
 	ofmo_master_get( comm_mservs[0], OFMO_ENERGY0, -1, menergy0 );
 	imsg[OFMO_I_CMD]  = OFMO_SCF;
-	imsg[OFMO_I_METHOD] = method;
+	// imsg[OFMO_I_METHOD] = method;
 	imsg[OFMO_I_SCC]  = maxscc + 100;
 	imsg[OFMO_I_CONV] = scfconv;
 	imsg[OFMO_I_NMON] = 2;
@@ -1226,6 +1233,19 @@ int main( int argc, char *argv[] ) {
 		jfrag = frag_order[j];
 		if ( dist[jfrag] < ldim ) {
 		    imsg[OFMO_I_MON2] = jfrag;
+            if(method == OFMO_UNDEF){
+                int im = method_list[ifrag];
+                int jm = method_list[jfrag];
+                if(im == jm) imsg[OFMO_I_METHOD] = im;
+                else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_RHF_VQE;
+                else if(jm == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
+                else{
+                    printf("methods don't belong to VQE nor RHF\n");
+                    assert(0);
+                }                
+                // imsg[OFMO_I_METHOD] = method_list[];
+            }
+            else imsg[OFMO_I_METHOD]=method;
 		    if ( nscf_dimer < ngroup ) {
 			workerid = nscf_dimer;
 		    } else {

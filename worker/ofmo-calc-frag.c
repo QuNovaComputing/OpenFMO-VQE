@@ -626,6 +626,8 @@ int ofmo_calc_fragment_electronic_state(
 		&maxnpspair, &nbody, &ifatom, &msao2muao, &msao2tuao,
 		&maxscf, &nao_total);
 	if ( ierr != 0 ) return -1;
+    // FIXME : need modification for dimer here.
+    if ( level == OFMO_RHF_VQE || level == OFMO_VQE_RHF ) level = OFMO_VQE;
 	total_nfao   = ofmo_isum( nfrag, nfao );
 	total_nfatom = ofmo_isum( nfrag, nfatom );
 	maxlqn2 = ((maxlqn+1)*(maxlqn+2))>>1;
@@ -1318,6 +1320,7 @@ int ofmo_calc_fragment_electronic_state(
     ofmo_twoint_eps_sch(eps_sch);
 
     double * mo_tei = NULL;
+
     if ( level == OFMO_VQE ){
         const int nao_4 = nao * nao * nao * nao;
         mo_tei = (double *)malloc(sizeof(double) * nao_4);

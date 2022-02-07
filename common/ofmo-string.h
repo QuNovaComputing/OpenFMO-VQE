@@ -15,6 +15,7 @@ extern void ofmo_tolower( char s[] );
 extern void ofmo_delete_prepost_space( char s[] );
 extern int ofmo_split( const char s[], const char sep[], char **token,
 	const int maxtoken, const int maxtoklen );
+extern int ofmo_find_char( const char s[], const char f);
 extern void ofmo_delete_all_space( char s[] );
 extern void ofmo_delete_multiple_space( char s[] );
 

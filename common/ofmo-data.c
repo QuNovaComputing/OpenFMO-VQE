@@ -49,6 +49,7 @@ static struct _val_carrier_ vc[] = {
     {"nprint", INT, NULL, "output level"},
     {"itol", INT, NULL, "primitive cutoff factor ( 10^{-n} )"},
     {"icut", INT, NULL, "integrals less than 10^{-n} are ignored"},
+    {"method_list", P_INT, NULL, "list of calculation method for each monomer, either OFMO_RHF or OFMO_VQE. If it is NULL, method is used."},
     {"method", INT, NULL, "calculation method, either OFMO_RHF or OFMO_VQE"},
     {"vqescr", P_CHAR, NULL, "path to vqe script"},
     {"desc", P_CHAR, NULL, "description to differ the tmp name"},

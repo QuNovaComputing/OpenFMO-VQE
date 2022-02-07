@@ -69,6 +69,8 @@
 #define OFMO_RIMP2	2
 #define OFMO_DFT	3
 #define OFMO_VQE  4
+#define OFMO_RHF_VQE  5
+#define OFMO_VQE_RHF  6
 
 // Types of population data to transfer from the worker to the master
 #define	OFMO_BOTH_POPS	0	// AO pop. Atomic pop. Both

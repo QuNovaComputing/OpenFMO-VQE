@@ -42,19 +42,23 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
     int maxit=30, nprint=0, itol=20, icut=12;
 	int method=OFMO_RHF;
 	int * method_list = NULL;
+	int * method_dim_idx = NULL;
+	int * method_dim = NULL;
+	int method_dim_n = 0;
 	char *vqescr=(char*)malloc( sizeof(char) * MAXSTRLEN );
 	char *desc=(char*)malloc( sizeof(char) * MAXSTRLEN );
 	vqescr[0] = '\0';
 	desc[0] = '\0';
     // local variables
     int i, nline = 0, n, ne, errpos = -1, flag_end = false;
+
     if ( fp == NULL ) {
-	ofmo_data_put_vals("maxscf nprint itol icut method method_list vqescr desc",
-		                maxit, nprint,itol,icut,method,method_list,vqescr,desc);
+	ofmo_data_put_vals("maxscf nprint itol icut method method_list method_dim_idx method_dim method_dim_n vqescr desc",
+		                maxit, nprint,itol,icut,method,method_list,method_dim_idx,method_dim,method_dim_n,vqescr,desc);
 	return 0;
     }
 
-    ofmo_strcpy_2d( token, local, ntok, MAXSTRLEN );
+    ofmo_strcpy_2d( token, local, ntok, MAXSTRLEN ); // delimeters for token are " \t\n\r".
     n = ntok;
     while ( errpos < 0 && !flag_end ) {
 	nline++;
@@ -116,6 +120,42 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	    		break;
 			}
 		}
+		else if ( strcmp( elems[0], "method_dim" ) == 0){
+			int j;
+			int end_dim = false;
+			const int max_n_dim = NFRAG * (NFRAG - 1) / 2;
+			char * tmp_elem1 = (char*) malloc( MAXSTRLEN );
+			char ** contents = (char**) malloc( sizeof(char*) * max_n_dim);
+			int dbg_flag = false;
+			for(j=0; j<max_n_dim; j++) contents[j] = (char*) malloc( MAXSTRLEN );
+			
+			strcpy(tmp_elem1, elems[1]);
+			int dim_count = ofmo_split(tmp_elem1, ";", contents, max_n_dim, MAXSTRLEN);
+			method_dim_idx = (int *) malloc(sizeof(int) * 2 * dim_count);
+			method_dim = (int *) malloc(sizeof(int) * dim_count);
+			method_dim_n = dim_count;
+
+			for(j=0; j<dim_count; j++){
+				int dim1, dim2;
+				char str_method[10];
+				sscanf(contents[j], "(%d,%d):%s", &dim1, &dim2, str_method);
+				method_dim_idx[2*j] = dim1-1;
+				method_dim_idx[2*j+1] = dim2-1;
+				if      (strcmp( str_method, "rhf" ) == 0) method_dim[j] = OFMO_RHF;
+				else if (strcmp( str_method, "vqe" ) == 0) method_dim[j] = OFMO_VQE;
+				else{
+					dbg_flag = true;
+					dbg("line=%d, elem=%d : %s not valid\n", nline, ++i, elems[1] );
+					break;
+				}
+			}
+			free(tmp_elem1);
+			for(j=0; j<max_n_dim; j++) free(contents[j]);
+			free(contents);
+			if(dbg_flag){
+				break;
+			}
+		}
 		else if ( strcmp( elems[0], "vqescr" ) == 0)
 			strcpy(vqescr, elems[1]);
 		else if ( strcmp( elems[0], "desc") == 0 )
@@ -134,9 +174,9 @@ static int input_contrl( FILE *fp, char **token, const int ntok ) {
 	}
     }
     if ( !flag_end ) return -1;
-	ofmo_data_put_vals("maxscf nprint itol icut method method_list vqescr desc",
-		                maxit, nprint,itol,icut,method,method_list,vqescr,desc);
-    return 0;
+	ofmo_data_put_vals("maxscf nprint itol icut method method_list method_dim_idx method_dim method_dim_n vqescr desc",
+		                maxit, nprint,itol,icut,method,method_list,method_dim_idx,method_dim,method_dim_n,vqescr,desc);
+   return 0;
 }
 
 /* ------------------------------------------------------

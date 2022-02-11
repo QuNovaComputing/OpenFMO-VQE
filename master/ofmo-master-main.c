@@ -1210,12 +1210,16 @@ int main( int argc, char *argv[] ) {
     // =================== dimerの計算 ====================
     if ( nbody >= 2 ) {
 	int jfrag, nscf_dimer=0;
+    int * method_dim=NULL;
+    int * method_dim_idx=NULL; 
+    int method_dim_n=0;
 	double de0scf;
 	double *dist, ldim;
 	double *menergy0;
 	int scfconv;
 	et0 = MPI_Wtime();
 	ofmo_data_get_vals("ldim scfconv", &ldim, &scfconv );
+    ofmo_data_get_vals("method_dim method_dim_idx method_dim_n", &method_dim, &method_dim_idx, &method_dim_n);
 	dist = (double*)malloc( sizeof(double) * nfrag );
 	menergy0 = (double*)malloc( sizeof(double) * nfrag );
 	ofmo_master_get( comm_mservs[0], OFMO_ENERGY0, -1, menergy0 );
@@ -1233,19 +1237,34 @@ int main( int argc, char *argv[] ) {
 		jfrag = frag_order[j];
 		if ( dist[jfrag] < ldim ) {
 		    imsg[OFMO_I_MON2] = jfrag;
-            if(method == OFMO_UNDEF){
-                int im = method_list[ifrag];
-                int jm = method_list[jfrag];
-                if(im == jm) imsg[OFMO_I_METHOD] = im;
-                else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_RHF_VQE;
-                else if(jm == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
-                else{
-                    printf("methods don't belong to VQE nor RHF\n");
-                    assert(0);
-                }                
-                // imsg[OFMO_I_METHOD] = method_list[];
+            int imsg_method_def_flag = false;
+            if(method_dim != NULL){
+                int j;
+                for(j=0; j<method_dim_n; j++){
+                    int dim1 = method_dim_idx[2*j];
+                    int dim2 = method_dim_idx[2*j+1];
+                    if((dim1 == ifrag && dim2 == jfrag) || (dim1 == jfrag && dim2 == ifrag)){
+                        imsg[OFMO_I_METHOD] = method_dim[j];
+                        imsg_method_def_flag = true;
+                        break;
+                    }
+                }
             }
-            else imsg[OFMO_I_METHOD]=method;
+            if(!imsg_method_def_flag){
+                if(method == OFMO_UNDEF){
+                    int im = method_list[ifrag];
+                    int jm = method_list[jfrag];
+                    if(im == jm) imsg[OFMO_I_METHOD] = im;
+                    else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_RHF_VQE;
+                    else if(jm == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
+                    else{
+                        printf("methods don't belong to VQE nor RHF\n");
+                        assert(0);
+                    }                
+                    // imsg[OFMO_I_METHOD] = method_list[];
+                }
+                else imsg[OFMO_I_METHOD]=method;
+            }
 		    if ( nscf_dimer < ngroup ) {
 			workerid = nscf_dimer;
 		    } else {

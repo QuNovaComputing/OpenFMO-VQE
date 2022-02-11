@@ -50,7 +50,10 @@ static struct _val_carrier_ vc[] = {
     {"itol", INT, NULL, "primitive cutoff factor ( 10^{-n} )"},
     {"icut", INT, NULL, "integrals less than 10^{-n} are ignored"},
     {"method_list", P_INT, NULL, "list of calculation method for each monomer, either OFMO_RHF or OFMO_VQE. If it is NULL, method is used."},
-    {"method", INT, NULL, "calculation method, either OFMO_RHF or OFMO_VQE"},
+    {"method", INT, NULL, "calculation method, either OFMO_RHF or OFMO_VQE"}, // Need to be deprecated.
+    {"method_dim_idx", P_INT, NULL, "list of indecies for dimer which the method is designated."},
+    {"method_dim", P_INT, NULL, "list of methods for designated dimers in method_dim_idx."},
+    {"method_dim_n", INT, NULL, "number of designated dimer methods."},
     {"vqescr", P_CHAR, NULL, "path to vqe script"},
     {"desc", P_CHAR, NULL, "description to differ the tmp name"},
     // in $basis section

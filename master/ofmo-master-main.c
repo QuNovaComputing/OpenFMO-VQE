@@ -1237,8 +1237,8 @@ int main( int argc, char *argv[] ) {
                 int im = method_list[ifrag];
                 int jm = method_list[jfrag];
                 if(im == jm) imsg[OFMO_I_METHOD] = im;
-                else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_RHF_VQE;
-                else if(im == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE_RHF;
+                else if(im == OFMO_RHF && jm == OFMO_VQE) imsg[OFMO_I_METHOD] = OFMO_VQE;
+                else if(im == OFMO_VQE && jm == OFMO_RHF) imsg[OFMO_I_METHOD] = OFMO_VQE;
                 else{
                     printf("methods don't belong to VQE nor RHF\n");
                     fflush(stdout);

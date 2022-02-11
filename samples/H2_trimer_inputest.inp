@@ -25,5 +25,5 @@ sto-3g 5 5
 0 1  -0.117787    0.542269   -0.401054    0.694646   -0.283586
 0 1   1.003621   -0.015003    0.000000    0.000000    0.000000
  $END
-$contrl method=rhf,rhf,vqe method_dim=(1,3):rhf;(1,2):vqe vqescr=./vqe/py_script.py desc=H2_trimer $end
+$contrl method=rhf,rhf,vqe method_dim=(1,3):rhf;(1,2):vqe vqescr=./vqe/py_script.py desc=H2_trimer_inptest $end
 $vqeprp monhomo=-1 monlumo=-1 dimhomo=-1 dimlumo=-1 monent=-1 diment=-1 $end

@@ -1439,10 +1439,13 @@ int ofmo_calc_fragment_electronic_state(
         fflush(stdout);
     }
     *energy0 = *energy - dv;
+    char method_str[10];
+    if(level == OFMO_RHF) strcpy(method_str, "RHF");
+    else strcpy(method_str, "VQE");
     if(nmonomer == 1){
-        printf("it=%d\tmon=[%d]\tenergy=%f\tenergy_0=%f\n", iscc, monomer_list[0], *energy, *energy0);
+        printf("it=%d\tmethod=[%s]\tmon=[%d]\tenergy=%f\tenergy_0=%f\n", iscc, method_str, monomer_list[0]+1, *energy, *energy0);
     }else if(nmonomer == 2){
-        printf("it=%d\tmon=[%d, %d]\tenergy=%f\tenergy_0=%f\n", iscc, monomer_list[0], monomer_list[1], *energy, *energy0);
+        printf("it=%d\tmethod=[%s]\tmon=[%d, %d]\tenergy=%f\tenergy_0=%f\n", iscc, method_str, monomer_list[0]+1, monomer_list[1]+1, *energy, *energy0);
     }
 
 

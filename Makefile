@@ -13,7 +13,7 @@ xcOK = 0
 xcCUDA = KEPLER
 #xcCUDA = VOLTA  # not work...
 #xcCUDA = PASCAL # not work...
-xcCUDA = 0
+#xcCUDA = 0
 
 xcPROF = 0
 xcMIC = 0
@@ -230,15 +230,16 @@ DEFS1 = -DUSE_CUDA
 # ARCH
 DEFS1 += -D$(xcCUDA)
 ifeq ($(xcCUDA), KEPLER)
-ARCHFLAGS = -gencode=arch=compute_35,code=sm_35
+ARCHFLAGS = -gencode arch=compute_35,code=sm_35 -gencode arch=compute_35,code=compute_35
 DEFS1 += -DCUDA_ARCH=350
 endif
 ifeq ($(xcCUDA), PASCAL)
-ARCHFLAGS = -gencode=arch=compute_60,code=sm_60
+ARCHFLAGS = -gencode arch=compute_60,code=sm_60 -gencode arch=compute_60,code=compute_60
+
 DEFS1 += -DCUDA_ARCH=600
 endif
 ifeq ($(xcCUDA), VOLTA)
-ARCHFLAGS = -gencode=arch=compute_70,code=sm_70
+ARCHFLAGS = -gencode arch=compute_70,code=sm_70 -gencode arch=compute_70,code=compute_70
 DEFS1 += -DCUDA_ARCH=700
 endif
 

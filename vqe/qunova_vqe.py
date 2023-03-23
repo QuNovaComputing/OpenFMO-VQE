@@ -12,7 +12,7 @@ from typing import Union, List, Tuple, Optional
 from subprocess import call, Popen
 from time import sleep
 
-from client.source.object_transfer import send_object, receive_object
+from object_transfer import send_object, receive_object
 
 _port:int = 40675
 _ip:str = "localhost"

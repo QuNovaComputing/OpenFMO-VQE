@@ -1,6 +1,8 @@
 Fragment Molecular Orbital-based Variational Quantum Eigensolver (FMO/VQE)
 =======================
 
+![Figure 1](https://github.com/QuNovaComputing/OpenFMO-VQE/assets/48709737/fc92e78d-6c0b-4982-91f8-e5b217ebdabf)
+
 What is FMO/VQE?
 ----------------
 

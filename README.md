@@ -45,9 +45,9 @@ Licenses
 
 Contact Person
 --------------
-Dr. Hocheol Lim (ihc0213@yonsei.ac.kr)
-Prof. Kyoung Tai No (ktno@bmdrc.org)
-Prof. June-Koo Kevin Rhee (rhee.jk@qunovacomputing.com)
+* Dr. Hocheol Lim (ihc0213@yonsei.ac.kr)
+* Prof. Kyoung Tai No (ktno@bmdrc.org)
+* Prof. June-Koo Kevin Rhee (rhee.jk@qunovacomputing.com)
 
 Acknowledgments
 ---------------
@@ -74,6 +74,7 @@ To check out the latest FMO/VQE sources:
 
    `$ git clone https://github.com/QuNovaComputing/OpenFMO-VQE OpenFMO-VQE`
 
-
+How to Cite
+----------
 
 

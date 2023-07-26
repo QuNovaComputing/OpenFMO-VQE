@@ -27,11 +27,11 @@ Licenses
 
 1. FMO/VQE:
 
-   **Copyright (c) 2023 Qunva Inc.**
+   **Copyright (c) 2023 Qunova Inc.**
 
 2. VQE :
 
-   **Copyright (c) 2023 Qunva Inc.**
+   **Copyright (c) 2023 Qunova Inc.**
 
 3. OpenFMO:
 

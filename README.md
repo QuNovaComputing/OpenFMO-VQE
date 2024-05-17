@@ -68,7 +68,7 @@ How to Get
 
 FMO/VQE program is available through
 the repositories hosted on
-github ( https://github.com/QuNovaComputing/OpenFMO-VQE ).
+github ( https://github.com/QuNovaComputing/OpenFMO-VQE).
 
 To check out the latest FMO/VQE sources:
 
@@ -76,5 +76,5 @@ To check out the latest FMO/VQE sources:
 
 How to Cite
 ----------
-
+Lim, H., Kang, D. H., Kim, J., Pellow-Jarman, A., McFarthing, S., Pellow-Jarman, R., ... & No, K. T. (2024). Fragment molecular orbital-based variational quantum eigensolver for quantum chemistry in the age of quantum computing. Scientific Reports, 14(1), 1-13.
 
